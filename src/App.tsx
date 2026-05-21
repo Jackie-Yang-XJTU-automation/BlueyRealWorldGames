@@ -14,7 +14,9 @@ const router = createBrowserRouter([
       { path: 'game/:gameId', element: <GameDetailPage /> }
     ]
   }
-])
+], {
+  basename: import.meta.env.BASE_URL.replace(/\/$/, ''),
+})
 
 export default function App() {
   return <RouterProvider router={router} />

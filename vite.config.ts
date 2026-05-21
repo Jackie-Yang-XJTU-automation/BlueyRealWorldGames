@@ -52,7 +52,6 @@ export default defineConfig({
         display: 'standalone',
         orientation: 'any',
         lang: 'zh-CN',
-        start_url: '/',
         categories: ['kids', 'games', 'family'],
         icons: [
           { src: 'pwa-192x192.jpg', sizes: '192x192', type: 'image/jpeg' },
