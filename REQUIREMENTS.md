@@ -1,8 +1,10 @@
 # BlueyRealWorldGames 需求文档
 
 ## 项目概述
-Bluey 主题的互动儿童游戏合集，面向 3-8 岁儿童，基于 Web 平台。
-定位为游戏助手，增强在现实中和孩子玩布鲁伊里面游戏时候的趣味性
+Bluey 主题的互动儿童游戏合集，面向 3-8 岁儿童。
+**目标平台：iOS + Android App**（通过 Capacitor 打包 Web 应用为原生 App）。
+定位为游戏助手，增强在现实中和孩子玩布鲁伊里面游戏时候的趣味性。
+开发策略：先完成 Web 端全部功能，再通过 Capacitor 一键打包为 iOS/Android App。
 ---
 
 ## 需求模板
@@ -41,7 +43,7 @@ Bluey 主题的互动儿童游戏合集，面向 3-8 岁儿童，基于 Web 平�
 
 ##### 数据与隐私
 - [ ] 需求 D1：所有数据本地存储（localStorage），不收集任何个人信息
-- [ ] 需求 D2：无广告、无外链、无网络依赖（PWA 离线可用）
+- [ ] 需求 D2：无广告、无外链、无网络依赖（离线可用，本地数据存储）
 
 
 
@@ -51,25 +53,31 @@ Bluey 主题的互动儿童游戏合集，面向 3-8 岁儿童，基于 Web 平�
 #### 3. 实现方式
 | 项目 | 方案 |
 |------|------|
-| 路由 | `/xxx` |
-| 组件 | `XxxGame.tsx`, `XxxBoard.tsx` |
-| 状态管理 | useState / zustand / useReducer |
+| Web 框架 | React 19 + TypeScript + Vite 8 |
+| 样式 | Tailwind CSS 4 |
+| 路由 | react-router-dom |
+| 状态管理 | useState / useReducer（游戏级），zustand（按需） |
 | 动画 | CSS animation / framer-motion |
 | 音效 | Howler.js / Web Audio API |
-| 数据持久化 | localStorage |
-| 第三方依赖 | 无 / 列出依赖 |
+| 数据持久化 | localStorage（Web）/ Capacitor Preferences（App） |
+| App 打包 | Capacitor（iOS + Android） |
+| 第三方依赖 | 按需引入 |
 
 #### 4. UI / 交互
 - 页面布局草图（可用文字描述）
 - 色彩方案（Bluey 主题色：蓝 #1E90FF、橙 #FF8C00）
 - 字体大小适配（儿童友好，大字号）
-- 触屏适配（平板优先）
+- 触屏适配（平板 + 手机）
+- 儿童友好交互：大按钮（≥48px）、无双击缩放、无文字选中
 
 #### 5. 非功能需求
 - 加载时间 < 2 秒
-- 支持主流浏览器（Chrome, Safari, Edge）
+- 目标平台：iOS 15+ / Android 8+
 - 支持 iPad / 安卓平板
-- 无网络依赖（PWA 离线可用）
+- 无网络依赖（全部功能离线可用）
+- 安装包 < 50MB
+- 儿童隐私：不收集任何个人信息
+- 内容安全：无广告、无外链、无内购
 
 #### 6. 风险与注意事项
 - 儿童隐私：不收集个人信息
@@ -243,7 +251,8 @@ Bluey 主题的互动儿童游戏合集，面向 3-8 岁儿童，基于 Web 平�
 | 构建 | Vite 8 | 开发体验快 |
 | 样式 | Tailwind CSS | 快速出 UI |
 | 路由 | react-router-dom | SPA 路由 |
-| 状态管理 | 待定 | 简单场景用 Context，复杂场景用 zustand |
+| 状态管理 | useState + useReducer | 当前规模够用，后续按需加 zustand |
+| App 打包 | Capacitor | 复用全部 Web 代码，一键打包 iOS/Android |
 
 ---
 
@@ -251,7 +260,8 @@ Bluey 主题的互动儿童游戏合集，面向 3-8 岁儿童，基于 Web 平�
 
 | 阶段 | 目标 | 内容 |
 |------|------|------|
-| P0 | MVP | 首页（所有游戏展示 + 筛选 + 随机选游戏 + 收藏）+ 顶气球游戏页（计时器 + 排行榜 + 规则生成器 + 任务卡片） |
+| P0 | MVP | 首页（所有游戏展示 + 筛选 + 随机选游戏 + 收藏）+ 顶气球游戏（计时器 + 排行榜 + 规则生成器 + 任务卡片） |
 | P1 | 扩展 | 第二个游戏 + 音效 + 骰子组件 |
-| P2 | 打磨 | 动画优化 + PWA 离线支持 |
-| P3 | 发布 | 性能优化 + 更多游戏 |
+| P2 | 打磨 | 动画优化 + 更多游戏 + iOS/Android 适配 |
+| P3 | App 打包 | Capacitor 集成 + iOS/Android 打包 + 真机测试 |
+| P4 | 发布 | 性能优化 + App Store / Google Play 上架准备 |
