@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { games, getRandomGame } from '../data/games'
 import { GameCard } from '../components/GameCard'
 import { FilterBar } from '../components/FilterBar'
+import { QRCode } from '../components/QRCode'
 import { useFavorites } from '../hooks/useFavorites'
 import type { FilterOptions, Game } from '../types/game'
 
@@ -101,6 +102,11 @@ export function HomePage() {
           </div>
         </div>
       )}
+
+      {/* 二维码 */}
+      <div className="mb-8">
+        <QRCode />
+      </div>
 
       {/* 收藏区 */}
       {favoriteGames.length > 0 && (
