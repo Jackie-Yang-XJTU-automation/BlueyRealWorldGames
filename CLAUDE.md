@@ -4,7 +4,7 @@
 Bluey 主题的互动游戏项目，基于 React + TypeScript 构建。
 
 ## 技术栈
-- React 18+
+- React 19
 - TypeScript
 - Vite（构建工具）
 - CSS Modules 或 Tailwind CSS（样式方案）
