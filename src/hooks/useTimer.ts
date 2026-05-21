@@ -19,17 +19,6 @@ export function useTimer() {
     rafRef.current = requestAnimationFrame(tick)
   }, [tick])
 
-  const pause = useCallback(() => {
-    cancelAnimationFrame(rafRef.current)
-    setState('paused')
-  }, [])
-
-  const resume = useCallback(() => {
-    startTimeRef.current = Date.now() - elapsedMs
-    setState('running')
-    rafRef.current = requestAnimationFrame(tick)
-  }, [elapsedMs, tick])
-
   const stop = useCallback(() => {
     cancelAnimationFrame(rafRef.current)
     setState('finished')
@@ -52,5 +41,5 @@ export function useTimer() {
     return `${seconds}.${centiseconds.toString().padStart(2, '0')}`
   }, [])
 
-  return { state, elapsedMs, start, pause, resume, stop, reset, formatTime }
+  return { state, elapsedMs, start, stop, reset, formatTime }
 }
