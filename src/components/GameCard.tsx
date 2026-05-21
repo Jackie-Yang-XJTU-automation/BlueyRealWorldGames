@@ -32,7 +32,7 @@ export function GameCard({ game, isFavorite, onToggleFavorite, onClick }: GameCa
           e.stopPropagation()
           onToggleFavorite(game.id)
         }}
-        className="absolute top-4 right-4 text-2xl transition-transform hover:scale-125 active:scale-90 z-10"
+        className="absolute top-4 right-4 text-2xl transition-transform hover:scale-125 active:scale-90 z-10 min-w-[44px] min-h-[44px] flex items-center justify-center"
         aria-label={isFavorite ? '取消收藏' : '收藏'}
       >
         {isFavorite ? '❤️' : '🤍'}

@@ -86,12 +86,12 @@ export function KeepyUppyPage() {
       {/* 控制按钮 */}
       <div className="flex gap-3 justify-center mb-6">
         {game.state === 'idle' && (
-          <button onClick={game.handleStart} className="btn-btv text-2xl px-14 animate-pulse-glow-btv">
+          <button onClick={game.handleStart} className="btn-btv btn-game-action animate-pulse-glow-btv">
             🎈 像 Bluey 一样开始！
           </button>
         )}
         {game.state === 'running' && !game.currentEvent && (
-          <button onClick={game.handleLand} className="btn-btv btn-btv-red text-xl px-10">
+          <button onClick={game.handleLand} className="btn-btv btn-btv-red btn-game-action">
             💥 落地了！
           </button>
         )}
@@ -166,7 +166,7 @@ export function KeepyUppyPage() {
                   </div>
                   {isCurrent && game.state === 'running' && !isAnimating && (
                     <button onClick={(e) => { e.stopPropagation(); game.confirmTask(task.id, i) }}
-                      className="shrink-0 w-10 h-10 rounded-full bg-btv-green text-white font-extrabold text-lg flex items-center justify-center hover:scale-110 active:scale-90 transition-transform shadow-md">
+                      className="btn-task-confirm shrink-0 rounded-full bg-btv-green text-white font-extrabold text-lg flex items-center justify-center hover:scale-110 active:scale-90 transition-transform shadow-md">
                       ✓
                     </button>
                   )}

@@ -17,10 +17,35 @@
   --color-btv-cloud: #F5F9FF;
 }
 
-/* 基础样式 */
+/* ====== 移动端基础适配 ====== */
+
+html {
+  /* 防止双击缩放 */
+  touch-action: manipulation;
+  /* iOS 安全区 */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  /* 禁止文字选中（游戏交互场景） */
+  -webkit-user-select: none;
+  user-select: none;
+  /* 禁止 iOS 长按弹出菜单 */
+  -webkit-touch-callout: none;
+}
+
 body {
   font-family: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* 最小点击区域保证 */
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  /* 防止橡皮筋效果导致误触 */
+  overscroll-behavior: none;
+}
+
+/* iOS 全屏适配 */
+@supports (-webkit-touch-callout: none) {
+  .min-h-screen {
+    min-height: -webkit-fill-available;
+  }
 }
 
 /* 蓝天白云背景 */
@@ -51,7 +76,7 @@ body {
   transform: scale(0.98);
 }
 
-/* Bluey 风格主按钮 */
+/* Bluey 风格主按钮 - 儿童手指尺寸 */
 .btn-btv {
   display: inline-flex;
   align-items: center;
@@ -59,8 +84,10 @@ body {
   background: #F58634;
   color: white;
   font-weight: 800;
-  font-size: 1.25rem;
-  padding: 14px 36px;
+  font-size: 1.375rem;
+  padding: 16px 40px;
+  min-height: 56px;
+  min-width: 56px;
   border-radius: 999px;
   border: none;
   cursor: pointer;
@@ -69,6 +96,8 @@ body {
     0 2px 4px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
   letter-spacing: 0.02em;
+  /* 防止误触 */
+  touch-action: manipulation;
 }
 .btn-btv:hover {
   background: #F69B4C;
@@ -81,6 +110,15 @@ body {
   transform: scale(0.95);
   box-shadow:
     0 2px 8px rgba(245, 134, 52, 0.3);
+}
+
+/* 手机屏幕适配更小按钮（用于筛选栏等非主操作） */
+@media (max-width: 480px) {
+  .btn-btv {
+    font-size: 1.125rem;
+    padding: 14px 28px;
+    min-height: 48px;
+  }
 }
 
 /* 蓝色次要按钮 */
@@ -128,6 +166,51 @@ body {
   font-variant-numeric: tabular-nums;
   font-weight: 900;
   letter-spacing: -0.02em;
+}
+
+/* ====== 移动端响应式 ====== */
+
+@media (max-width: 480px) {
+  .page-title-btv {
+    font-size: 1.75rem;
+  }
+
+  /* 卡片在小屏上缩小 padding */
+  .card-btv {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  /* 筛选下拉框适配 */
+  select {
+    font-size: 0.875rem !important;
+    padding: 10px 14px !important;
+  }
+}
+
+/* 游戏操作按钮（落地了！等）加更大号 */
+.btn-game-action {
+  min-height: 64px;
+  font-size: 1.5rem;
+  padding: 18px 48px;
+}
+@media (max-width: 480px) {
+  .btn-game-action {
+    min-height: 56px;
+    font-size: 1.25rem;
+    padding: 14px 36px;
+  }
+}
+
+/* 确保所有可点击元素够大 */
+button, select, input[type="text"] {
+  min-height: 44px;
+}
+
+/* 任务确认按钮 - 至少 48px */
+.btn-task-confirm {
+  min-width: 48px;
+  min-height: 48px;
 }
 
 /* ========== 动画 ========== */
