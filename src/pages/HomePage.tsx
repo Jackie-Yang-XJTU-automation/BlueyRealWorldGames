@@ -50,20 +50,17 @@ export function HomePage() {
 
   return (
     <div>
-      {/* 首页标题 */}
-      <div className="text-center mb-8">
-        <div className="text-7xl mb-4 drop-shadow-lg">🎈</div>
-        <h2 className="page-title-btv mb-3">
-          今天玩什么？
-        </h2>
-        <p className="text-btv-blue/60 font-bold text-lg">
-          从 {games.length} 个 Bluey 游戏中选一个，和宝宝一起玩真的！
+      {/* 标题 */}
+      <div className="text-center mb-5">
+        <h2 className="page-title-btv mb-1">今天玩什么？</h2>
+        <p className="text-btv-blue/50 font-bold text-sm">
+          从 {games.length} 个 Bluey 游戏中选一个
         </p>
       </div>
 
       {/* 筛选栏 */}
-      <div className="card-btv mb-8 !p-4">
-        <FilterBar onFilterChange={handleFilterChange} onRandomPick={handleRandomPick} />
+      <div className="mb-5">
+        <FilterBar filters={filters} onFilterChange={handleFilterChange} onRandomPick={handleRandomPick} />
       </div>
 
       {/* 随机选中弹窗 */}
@@ -71,31 +68,18 @@ export function HomePage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
           <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-btv-yellow">
             <div className="text-7xl mb-3">{randomGame.emoji}</div>
-            <h3 className="text-xl font-extrabold text-btv-orange mb-2">
-              🎲 命运选择了...
-            </h3>
-            <p className="text-3xl font-extrabold text-btv-dark mb-4">
-              {randomGame.name}！
-            </p>
+            <h3 className="text-xl font-extrabold text-btv-orange mb-2">🎲 命运选择了...</h3>
+            <p className="text-3xl font-extrabold text-btv-dark mb-4">{randomGame.name}！</p>
             <div className="flex items-center justify-center gap-2 text-sm text-gray-400 font-bold mb-5">
               <span>{randomGame.difficulty === 1 ? '⭐' : randomGame.difficulty === 2 ? '⭐⭐' : '⭐⭐⭐'}</span>
               <span className="text-gray-300">·</span>
               <span>{randomGame.minPlayers}-{randomGame.maxPlayers}人</span>
             </div>
             <div className="flex gap-3">
-              <button
-                onClick={() => setRandomGame(null)}
-                className="flex-1 bg-gray-100 text-gray-500 font-extrabold py-3.5 rounded-full hover:bg-gray-200 transition-colors"
-              >
+              <button onClick={() => setRandomGame(null)} className="flex-1 bg-gray-100 text-gray-500 font-extrabold py-3.5 rounded-full hover:bg-gray-200 transition-colors">
                 再选一次
               </button>
-              <button
-                onClick={() => {
-                  setRandomGame(null)
-                  navigate(`/game/${randomGame.id}`)
-                }}
-                className="btn-btv flex-1"
-              >
+              <button onClick={() => { setRandomGame(null); navigate(`/game/${randomGame.id}`) }} className="btn-btv flex-1">
                 就玩这个！
               </button>
             </div>
@@ -103,31 +87,38 @@ export function HomePage() {
         </div>
       )}
 
-      {/* 二维码 */}
-      <div className="mb-8">
-        <QRCode />
-      </div>
-
-      {/* 收藏区 */}
+      {/* 收藏区 - 紧凑标签条 */}
       {favoriteGames.length > 0 && (
-        <div className="mb-8">
-          <button
-            onClick={() => setFavoritesExpanded(!favoritesExpanded)}
-            className="flex items-center gap-2 text-lg font-extrabold text-red-400 mb-4 cursor-pointer"
-          >
-            <span>{favoritesExpanded ? '▼' : '▶'}</span>
-            <span>❤️ 我的收藏 ({favoriteGames.length})</span>
-          </button>
+        <div className="mb-5">
+          <div className="flex items-center justify-between mb-2.5">
+            <button
+              onClick={() => setFavoritesExpanded(!favoritesExpanded)}
+              className="flex items-center gap-1.5 font-extrabold text-red-400"
+            >
+              <span>{favoritesExpanded ? '▼' : '▶'}</span>
+              <span className="text-sm">❤️ 我的最爱 ({favoriteGames.length})</span>
+            </button>
+          </div>
           {favoritesExpanded && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
               {favoriteGames.map(game => (
-                <GameCard
+                <div
                   key={game.id}
-                  game={game}
-                  isFavorite={true}
-                  onToggleFavorite={handleToggleFavorite}
                   onClick={() => navigate(`/game/${game.id}`)}
-                />
+                  className="shrink-0 flex items-center gap-1.5 bg-red-50 border border-red-200 rounded-full pl-2.5 pr-1.5 py-1.5 cursor-pointer active:scale-95 transition-transform"
+                >
+                  <span className="text-xs">{game.emoji}</span>
+                  <span className="text-xs font-extrabold text-red-400">{game.name}</span>
+                  <button
+                    onClick={e => {
+                      e.stopPropagation()
+                      handleToggleFavorite(game.id)
+                    }}
+                    className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center text-[10px] hover:bg-red-200 transition-colors"
+                  >
+                    ✕
+                  </button>
+                </div>
               ))}
             </div>
           )}
@@ -136,13 +127,9 @@ export function HomePage() {
 
       {/* 全部游戏 */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-extrabold text-btv-blue/40 uppercase tracking-widest">
-            {filters.type === 'all' && filters.location === 'all' && filters.energy === 'all' && filters.difficulty === 'all'
-              ? `全部游戏 · ${filteredGames.length}`
-              : `筛选结果 · ${filteredGames.length}`}
-          </h3>
-        </div>
+        <h3 className="text-sm font-extrabold text-btv-blue/40 uppercase tracking-wider mb-3">
+          全部游戏 · {filteredGames.length}
+        </h3>
         {filteredGames.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-6xl mb-3">🔍</p>
@@ -150,7 +137,7 @@ export function HomePage() {
             <p className="text-sm text-gray-300 mt-1 font-bold">试试调整筛选条件</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             {filteredGames.map(game => (
               <GameCard
                 key={game.id}
@@ -162,6 +149,11 @@ export function HomePage() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* 二维码 - 底部 */}
+      <div className="mt-8">
+        <QRCode />
       </div>
     </div>
   )

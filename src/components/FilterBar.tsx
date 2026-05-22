@@ -1,79 +1,73 @@
-import { useState } from 'react'
 import type { FilterOptions } from '../types/game'
 
 interface FilterBarProps {
   onFilterChange: (filters: FilterOptions) => void
   onRandomPick: () => void
+  filters: FilterOptions
 }
 
-const typeLabels: Record<string, string> = {
-  all: '全部类型',
-  active: '运动型',
-  roleplay: '角色扮演',
-  story: '故事型',
-  quiet: '安静型'
-}
+const typeOptions = [
+  { key: 'all', label: '全部' },
+  { key: 'active', label: '🏃 运动型' },
+  { key: 'roleplay', label: '🎭 扮演型' },
+  { key: 'quiet', label: '🧘 安静型' },
+] as const
 
-const locationLabels: Record<string, string> = {
-  all: '全部场地',
-  indoor: '室内',
-  outdoor: '户外',
-  both: '室内外'
-}
-
-export function FilterBar({ onFilterChange, onRandomPick }: FilterBarProps) {
-  const [filters, setFilters] = useState<FilterOptions>({
-    type: 'all',
-    location: 'all',
-    energy: 'all',
-    difficulty: 'all'
-  })
-
-  const update = (key: keyof FilterOptions, value: string) => {
-    const next = { ...filters, [key]: value === 'all' ? 'all' : (key === 'energy' || key === 'difficulty') ? (value === 'all' ? 'all' : Number(value)) : value } as FilterOptions
-    setFilters(next)
-    onFilterChange(next)
-  }
-
+export function FilterBar({ onFilterChange, onRandomPick, filters }: FilterBarProps) {
   return (
-    <div className="flex flex-wrap gap-2.5 items-center justify-center px-2 py-3">
-      <select
-        className="bg-white rounded-full px-5 py-3 text-sm font-extrabold border-2 border-[#E3F2FD] text-btv-dark cursor-pointer hover:border-btv-blue/30 transition-colors"
-        value={filters.type}
-        onChange={e => update('type', e.target.value)}
-      >
-        {Object.entries(typeLabels).map(([k, v]) => (
-          <option key={k} value={k}>{v}</option>
+    <div className="space-y-2">
+      {/* 第一行：类型 */}
+      <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+        {typeOptions.map(o => (
+          <button
+            key={o.key}
+            onClick={() => onFilterChange({ ...filters, type: o.key as FilterOptions['type'] })}
+            className={`shrink-0 tag-btv text-xs py-2 px-3.5 transition-all ${
+              filters.type === o.key
+                ? 'bg-btv-blue text-white shadow-sm'
+                : 'bg-gray-100 text-gray-500'
+            }`}
+          >
+            {o.label}
+          </button>
         ))}
-      </select>
+      </div>
 
-      <select
-        className="bg-white rounded-full px-5 py-3 text-sm font-extrabold border-2 border-[#E3F2FD] text-btv-dark cursor-pointer hover:border-btv-blue/30 transition-colors"
-        value={filters.location}
-        onChange={e => update('location', e.target.value)}
-      >
-        {Object.entries(locationLabels).map(([k, v]) => (
-          <option key={k} value={k}>{v}</option>
-        ))}
-      </select>
+      {/* 第二行：场地 + 体力 + 随机 */}
+      <div className="flex items-center gap-1.5">
+        <button
+          onClick={() => onFilterChange({ ...filters, location: filters.location === 'all' ? 'indoor' : filters.location === 'indoor' ? 'outdoor' : 'all' })}
+          className={`shrink-0 tag-btv text-xs py-2 px-3 transition-all ${
+            filters.location === 'indoor' ? 'bg-btv-blue text-white shadow-sm'
+            : filters.location === 'outdoor' ? 'bg-btv-green text-white shadow-sm'
+            : 'bg-gray-100 text-gray-500'
+          }`}
+        >
+          {filters.location === 'indoor' ? '🏠 室内' : filters.location === 'outdoor' ? '🌳 户外' : '🏠🌳 场地'}
+        </button>
 
-      <select
-        className="bg-white rounded-full px-5 py-3 text-sm font-extrabold border-2 border-[#E3F2FD] text-btv-dark cursor-pointer hover:border-btv-blue/30 transition-colors"
-        value={String(filters.energy)}
-        onChange={e => update('energy', e.target.value)}
-      >
-        <option value="all">全部体力</option>
-        <option value="1">🪶 轻度</option>
-        <option value="2">⚡ 中等</option>
-        <option value="3">🔥 高能</option>
-      </select>
+        <button
+          onClick={() => {
+            const levels: FilterOptions['energy'][] = ['all', 1, 2, 3]
+            const idx = levels.indexOf(filters.energy)
+            onFilterChange({ ...filters, energy: levels[(idx + 1) % levels.length] })
+          }}
+          className={`shrink-0 tag-btv text-xs py-2 px-3 transition-all ${
+            filters.energy === 1 ? 'bg-btv-green text-white shadow-sm'
+            : filters.energy === 2 ? 'bg-btv-yellow text-white shadow-sm'
+            : filters.energy === 3 ? 'bg-btv-red text-white shadow-sm'
+            : 'bg-gray-100 text-gray-500'
+          }`}
+        >
+          {filters.energy === 1 ? '🪶 轻度' : filters.energy === 2 ? '⚡ 中等' : filters.energy === 3 ? '🔥 高能' : '🪶⚡🔥 体力'}
+        </button>
 
-      <button
-        onClick={onRandomPick}
-        className="btn-btv text-lg px-6 !rounded-full"
-      >
-        🎲 随机选一个！
-      </button>
+        <div className="flex-1" />
+
+        <button onClick={onRandomPick} className="shrink-0 btn-btv !py-2.5 !px-4 !text-sm !min-h-0 !font-extrabold">
+          🎲 随机
+        </button>
+      </div>
     </div>
   )
 }
