@@ -11,7 +11,7 @@
   --color-btv-green: #4CAF50;
   --color-btv-purple: #AB47BC;
   --color-btv-pink: #EC407A;
-  --color-btv-dark: #37474F;
+  --color-btv-dark: #5a5a87;
   --color-btv-grass: #81C784;
   --color-btv-white: #FFFFFF;
   --color-btv-cloud: #F5F9FF;
@@ -76,12 +76,12 @@ body {
   transform: scale(0.98);
 }
 
-/* Bluey 风格主按钮 - 儿童手指尺寸 */
+/* Bluey 风格主按钮 - 儿童手指尺寸（官网紫灰） */
 .btn-btv {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #F58634;
+  background: #5a5a87;
   color: white;
   font-weight: 800;
   font-size: 1.375rem;
@@ -92,7 +92,7 @@ body {
   border: none;
   cursor: pointer;
   box-shadow:
-    0 4px 14px rgba(245, 134, 52, 0.35),
+    0 4px 14px rgba(90, 90, 135, 0.35),
     0 2px 4px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
   letter-spacing: 0.02em;
@@ -100,16 +100,16 @@ body {
   touch-action: manipulation;
 }
 .btn-btv:hover {
-  background: #F69B4C;
+  background: #6e6e9e;
   box-shadow:
-    0 6px 20px rgba(245, 134, 52, 0.45),
+    0 6px 20px rgba(90, 90, 135, 0.45),
     0 3px 6px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
 }
 .btn-btv:active {
   transform: scale(0.95);
   box-shadow:
-    0 2px 8px rgba(245, 134, 52, 0.3);
+    0 2px 8px rgba(90, 90, 135, 0.3);
 }
 
 /* 手机屏幕适配更小按钮（用于筛选栏等非主操作） */
@@ -156,9 +156,19 @@ body {
 .page-title-btv {
   font-size: 2.25rem;
   font-weight: 900;
-  color: #37474F;
+  color: #5a5a87;
   letter-spacing: -0.01em;
-  text-shadow: 2px 2px 0 rgba(28, 152, 237, 0.1);
+  text-shadow: 2px 2px 0 rgba(90, 90, 135, 0.1);
+}
+
+/* Hero 区装饰 — 悬浮角色 emoji */
+.hero-float {
+  display: inline-block;
+  animation: hero-bounce 3s ease-in-out infinite;
+}
+@keyframes hero-bounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
 /* 计时器数字 */
@@ -239,8 +249,8 @@ button, select, input[type="text"] {
 }
 
 @keyframes pulse-glow-btv {
-  0%, 100% { box-shadow: 0 4px 14px rgba(245, 134, 52, 0.35); }
-  50% { box-shadow: 0 4px 28px rgba(245, 134, 52, 0.6); }
+  0%, 100% { box-shadow: 0 4px 14px rgba(90, 90, 135, 0.35); }
+  50% { box-shadow: 0 4px 28px rgba(90, 90, 135, 0.6); }
 }
 
 @keyframes cloud-drift {

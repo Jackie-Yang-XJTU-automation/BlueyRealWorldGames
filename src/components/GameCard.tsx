@@ -48,8 +48,8 @@ export function GameCard({ game, isFavorite, onToggleFavorite, onClick }: GameCa
       </div>
 
       {/* 底部信息 */}
-      <div className="p-3">
-        <span className={`inline-block text-[10px] font-extrabold px-2 py-0.5 rounded-full mb-1.5 ${label.pill}`}>
+      <div className="p-4">
+        <span className={`inline-block text-[11px] font-extrabold px-2.5 py-1 rounded-full mb-1.5 ${label.pill}`}>
           {label.emoji} {label.text}
         </span>
         <h3 className="text-sm font-extrabold text-btv-dark leading-tight mb-1 line-clamp-1">

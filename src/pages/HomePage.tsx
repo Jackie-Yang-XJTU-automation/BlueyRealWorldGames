@@ -52,9 +52,10 @@ export function HomePage() {
     <div>
       {/* 标题 */}
       <div className="text-center mb-5">
+        <div className="hero-float text-6xl mb-2">🐾</div>
         <h2 className="page-title-btv mb-1">今天玩什么？</h2>
-        <p className="text-btv-blue/50 font-bold text-sm">
-          从 {games.length} 个 Bluey 游戏中选一个
+        <p className="text-btv-blue/40 font-bold text-sm">
+          For Real Life · 和宝宝一起，玩真的！
         </p>
       </div>
 
