@@ -289,6 +289,17 @@ button, select, input[type="text"] {
   100% { transform: scale(1); }
 }
 
+@keyframes sun-glow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px #FFD54F); }
+  50% { transform: scale(1.08); filter: drop-shadow(0 0 40px #FFB300); }
+}
+
+@keyframes shadow-dance {
+  0%, 100% { transform: translateX(0) scale(1); }
+  25% { transform: translateX(-8px) scale(1.03); }
+  75% { transform: translateX(8px) scale(0.97); }
+}
+
 .animate-balloon-float {
   animation: balloon-float 4s ease-in-out infinite;
 }
@@ -315,6 +326,14 @@ button, select, input[type="text"] {
 
 .animate-score-bump {
   animation: score-bump 0.4s ease-out;
+}
+
+.animate-sun-glow {
+  animation: sun-glow 3s ease-in-out infinite;
+}
+
+.animate-shadow-dance {
+  animation: shadow-dance 2.5s ease-in-out infinite;
 }
 
 .animate-task-slide-out {

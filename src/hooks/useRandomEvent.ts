@@ -4,6 +4,7 @@ import { keepyUppyEvents } from '../data/keepyUppyEvents'
 
 interface UseRandomEventOptions {
   onEventExpire?: (event: RandomEvent) => void
+  events?: RandomEvent[]
 }
 
 export function useRandomEvent(options?: UseRandomEventOptions) {
@@ -13,6 +14,7 @@ export function useRandomEvent(options?: UseRandomEventOptions) {
   const usedRef = useRef<Set<string>>(new Set())
   const onExpireRef = useRef(options?.onEventExpire)
   onExpireRef.current = options?.onEventExpire
+  const pool = options?.events ?? keepyUppyEvents
 
   const clearEvent = useCallback(() => {
     if (timeoutRef.current) {
@@ -23,11 +25,10 @@ export function useRandomEvent(options?: UseRandomEventOptions) {
   }, [])
 
   const triggerEvent = useCallback(() => {
-    const available = keepyUppyEvents.filter(e => !usedRef.current.has(e.id))
+    const available = pool.filter(e => !usedRef.current.has(e.id))
     if (available.length === 0) {
       usedRef.current.clear()
-      const fresh = keepyUppyEvents
-      const event = fresh[Math.floor(Math.random() * fresh.length)]
+      const event = pool[Math.floor(Math.random() * pool.length)]
       usedRef.current.add(event.id)
       setCurrentEvent(event)
       timeoutRef.current = setTimeout(() => {
@@ -48,7 +49,7 @@ export function useRandomEvent(options?: UseRandomEventOptions) {
       onExpireRef.current?.(event)
       scheduleNext()
     }, event.duration * 1000)
-  }, [])
+  }, [pool])
 
   const scheduleNext = useCallback(() => {
     const delay = 15000 + Math.random() * 25000

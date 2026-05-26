@@ -2,10 +2,10 @@ import { useCallback } from 'react'
 import { loadFromStorage, saveToStorage } from '../utils/storage'
 import type { LeaderboardEntry } from '../types/game'
 
-export function useLeaderboard() {
+export function useLeaderboard(storageKey = 'keepy-uppy-leaderboard') {
   const getLeaderboard = useCallback((): LeaderboardEntry[] => {
-    return loadFromStorage<LeaderboardEntry[]>('keepy-uppy-leaderboard', [])
-  }, [])
+    return loadFromStorage<LeaderboardEntry[]>(storageKey, [])
+  }, [storageKey])
 
   const addEntry = useCallback((name: string, time: number, score: number): LeaderboardEntry[] => {
     const current = getLeaderboard()
@@ -18,9 +18,9 @@ export function useLeaderboard() {
     const next = [...current, entry]
       .sort((a, b) => b.score - a.score)
       .slice(0, 10)
-    saveToStorage('keepy-uppy-leaderboard', next)
+    saveToStorage(storageKey, next)
     return next
-  }, [getLeaderboard])
+  }, [getLeaderboard, storageKey])
 
   const getRank = useCallback((score: number): number => {
     const board = getLeaderboard()

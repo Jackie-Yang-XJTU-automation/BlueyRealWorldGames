@@ -28,6 +28,7 @@ export function GameDetailPage() {
   }
 
   const isKeepyUppy = game.id === 'keepy-uppy'
+  const isShadowLands = game.id === 'shadowlands'
 
   return (
     <div className="max-w-lg mx-auto">
@@ -107,6 +108,13 @@ export function GameDetailPage() {
           className="btn-btv w-full text-2xl animate-pulse-glow-btv"
         >
           🎈 开始玩！
+        </button>
+      ) : isShadowLands ? (
+        <button
+          onClick={() => navigate('/game/shadowlands/play')}
+          className="btn-btv w-full text-2xl animate-pulse-glow-btv"
+        >
+          ☀️ 进入影子陆地！
         </button>
       ) : (
         <div className="text-center py-6 bg-[#E3F2FD] rounded-[28px] border-2 border-dashed border-btv-blue/20">
