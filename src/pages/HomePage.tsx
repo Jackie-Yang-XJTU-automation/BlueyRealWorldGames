@@ -6,6 +6,7 @@ import { FilterBar } from '../components/FilterBar'
 import { QRCode } from '../components/QRCode'
 import { useFavorites } from '../hooks/useFavorites'
 import type { FilterOptions, Game } from '../types/game'
+import blueyFamily from '../assets/Family_Pose_Wave_Loop_18.png'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -52,7 +53,7 @@ export function HomePage() {
     <div>
       {/* 标题 */}
       <div className="text-center mb-5">
-        <div className="hero-float text-6xl mb-2">🐾</div>
+        <img src={blueyFamily} alt="Bluey Family" className="w-36 h-auto mx-auto mb-2 drop-shadow-lg" />
         <h2 className="page-title-btv mb-1">今天玩什么？</h2>
         <p className="text-btv-blue/40 font-bold text-sm">
           For Real Life · 和宝宝一起，玩真的！
