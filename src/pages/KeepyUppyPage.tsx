@@ -3,6 +3,7 @@ import { useKeepyUppyGame } from '../hooks/useKeepyUppyGame'
 import { GameTimer } from '../components/GameTimer'
 import { RandomEventPopup } from '../components/RandomEventPopup'
 import { Leaderboard } from '../components/Leaderboard'
+import { LottieCelebration } from '../components/LottieCelebration'
 
 const BALLOON_COLORS = ['#F44336', '#F58634', '#FFC107', '#4CAF50', '#1C98ED', '#AB47BC', '#EC407A']
 const TASK_SCORES = [100, 200, 300, 500, 800]
@@ -209,7 +210,7 @@ function ResultModal({ game }: { game: ReturnType<typeof useKeepyUppyGame> }) {
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
       <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center">
-        <div className="text-7xl mb-3">{game.totalStars > 3000 ? '🎉' : game.totalStars > 1000 ? '👍' : '💪'}</div>
+        <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
           {game.totalStars > 5000 ? '太厉害了！' : game.totalStars > 2000 ? '真棒！' : '不错哦！'}
         </h2>
@@ -248,7 +249,7 @@ function VictoryModal({ game }: { game: ReturnType<typeof useKeepyUppyGame> }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
       <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-[#FFD54F]">
-        <div className="text-7xl mb-2">🏆</div>
+        <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
         <p className="text-xl font-extrabold text-btv-dark mb-1">全关卡通关！</p>
         <p className="text-sm text-gray-400 font-bold mb-4">Bluey 和 Bingo 为你欢呼！</p>

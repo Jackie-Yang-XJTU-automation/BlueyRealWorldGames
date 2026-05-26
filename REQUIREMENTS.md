@@ -84,6 +84,46 @@ Bluey 主题的互动儿童游戏合集，面向 3-8 岁儿童。
 - 内容安全：无广告、无外链
 - 无障碍：简单交互，适合低龄儿童
 
+#### 7. 参考资源
+
+##### A. Claude Code 前端设计 Skills（提升开发输出质量）
+
+| 优先级 | 工具 | 说明 | 状态 |
+|--------|------|------|------|
+| ⭐⭐⭐ | [Frontend Design Toolkit](https://github.com/wilwaldon/Claude-Code-Frontend-Design-Toolkit) | 70+ 工具：React + Tailwind + 动画 + Figma + 测试。解决「Claude 输出不够好看的界面」 | 待安装 |
+| ⭐⭐ | [anthropic/frontend-design](https://skywork.ai/blog/claude-code-front-end-skill-ultimate-guide/) | 官方设计 skill，强制先定美学方向再写代码 | 待评估 |
+| ⭐ | [UI/UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | 240+ 风格模板，自动匹配产品类型 | 备选 |
+
+##### B. 动画素材（替代静态 emoji，增强活力）
+
+| 优先级 | 资源 | 说明 | 状态 |
+|--------|------|------|------|
+| ⭐⭐⭐ | [IconScout 儿童 Lottie](https://iconscout.com/lottie-animations/kid-cartoon) | 2346 个免费儿童动画（加载/得分/庆祝） | 待探索 |
+| ⭐⭐ | [3d-emoji](https://www.npmjs.com/package/3d-emoji) | npm 包，动画 emoji SVG，移动端优化 | 备选 |
+
+##### C. 测试 / 调试工具（保障质量）
+
+| 优先级 | 工具 | 说明 | 状态 |
+|--------|------|------|------|
+| ⭐⭐⭐ | Playwright MCP | 浏览器自动化 + E2E 测试 + 视觉回归 | 待安装 |
+| ⭐⭐ | Chrome DevTools MCP | 性能分析 + DOM / Network 调试 | 待安装 |
+
+##### D. 音效（暂缓，效果不满意）
+
+| 工具 | 说明 |
+|------|------|
+| [ZzFX](https://www.npmjs.com/package/zzfx) | <1KB 程序生成，已试用，效果一般 |
+| [Kenney.nl](https://kenney.nl) | CC0 免费 730+ 音效，后续可试 |
+| [ZzFXM](https://github.com/keithclark/ZzFXM) | ZzFX 配套音乐生成器，后续可试 |
+
+##### E. Bluey 官方参考
+
+| 资源 | 说明 | 状态 |
+|------|------|------|
+| [bluey.tv/play/](https://www.bluey.tv/play/) | 官网游戏页面结构，本地已保存 HTML | ✅ 已参考 |
+| Bluey 官网设计令牌 | 文字 #5a5a87 紫灰，主按钮紫灰，字体 Nunito | ✅ 已应用 |
+| Bluey "For Real Life" 游戏库 | 13 个现实游戏，部分可补充到项目 | 待扩充 |
+
 ---
 
 ## 游戏列表
