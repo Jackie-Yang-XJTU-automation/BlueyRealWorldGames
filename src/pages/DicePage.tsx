@@ -14,7 +14,7 @@ function Dice({ value, rolling }: { value: number; rolling: boolean }) {
     <div
       className={`w-24 h-24 rounded-3xl shadow-lg border-2 flex items-center justify-center relative transition-all duration-300 ${
         rolling
-          ? 'bg-white border-btv-yellow shadow-yellow-200 animate-balloon-wobble'
+          ? 'bg-white border-btv-yellow shadow-[#FDE9B0] animate-balloon-wobble'
           : 'bg-white border-[#E3F2FD]'
       }`}
     >

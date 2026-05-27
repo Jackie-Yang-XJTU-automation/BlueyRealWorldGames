@@ -217,7 +217,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
-      <div className={`bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 transition-colors duration-300 ${
+      <div className={`bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 transition-colors duration-300 animate-jelly ${
         isFixed ? 'border-btv-green' : 'border-[#AB47BC]'
       }`}>
         <div className="text-7xl mb-3">

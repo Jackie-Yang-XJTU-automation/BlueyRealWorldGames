@@ -34,7 +34,7 @@ export function CountdownOverlay({ onComplete, emoji = '🎈' }: CountdownOverla
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm">
       <div
         key={step}
-        className="text-[120px] font-black text-[#5a5a87] drop-shadow-2xl select-none animate-event-pop-in"
+        className="text-[120px] font-black text-[#5a5a87] drop-shadow-2xl select-none animate-jelly"
       >
         {step === 0 ? '3' : step === 1 ? '2' : step === 2 ? '1' : emoji}
       </div>

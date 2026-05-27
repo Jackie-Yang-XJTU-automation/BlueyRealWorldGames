@@ -6,6 +6,7 @@ import { FaultPopup } from '../components/FaultPopup'
 import { Leaderboard } from '../components/Leaderboard'
 import { LottieCelebration } from '../components/LottieCelebration'
 import { CountdownOverlay } from '../components/CountdownOverlay'
+import { triggerHaptic } from '../utils/haptic'
 import type { GameFault } from '../types/game'
 
 const PRESET_NAMES = ['爸爸', '妈妈', '宝宝', '爷爷', '奶奶']
@@ -46,6 +47,16 @@ export function DaddyRobotPage() {
     }
   }, [game.state])
 
+  const prevStateRef = useRef(game.state)
+  const prevEventRef = useRef(game.currentEvent)
+  useEffect(() => {
+    if (game.state === 'running' && prevStateRef.current !== 'running') triggerHaptic('tap')
+    if (game.currentEvent && !prevEventRef.current) triggerHaptic('event')
+    if ((game.showResult || game.showVictory) && prevStateRef.current === 'running') triggerHaptic('finish')
+    prevStateRef.current = game.state
+    prevEventRef.current = game.currentEvent
+  }, [game.state, game.currentEvent, game.showResult, game.showVictory])
+
   return (
     <div className="max-w-lg mx-auto">
       {/* 标题 + 积分 */}
@@ -57,7 +68,7 @@ export function DaddyRobotPage() {
 
         <div className="inline-flex items-center gap-2 mt-3 bg-white rounded-full px-5 py-2.5 shadow-md border-2 border-[#AB47BC] relative">
           <span className="text-2xl">⭐</span>
-          <span className={`text-3xl font-extrabold text-yellow-500 timer-text transition-all duration-300 ${game.scoreBump ? 'animate-score-bump' : ''}`}>
+          <span className={`text-3xl font-extrabold text-[#DCA018] timer-text transition-all duration-300 ${game.scoreBump ? 'animate-score-bump' : ''}`}>
             {game.totalStars}
           </span>
           <button
@@ -65,7 +76,7 @@ export function DaddyRobotPage() {
             className="w-5 h-5 rounded-full bg-[#F0F4FF] text-[#5a5a87]/50 text-[10px] font-extrabold flex items-center justify-center hover:bg-[#E3ECFD] transition-colors"
           >?</button>
           {showScoreHelp && (
-            <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-20 bg-white rounded-2xl px-4 py-3 shadow-lg border-2 border-[#E3F2FD] text-left whitespace-nowrap animate-event-pop-in">
+            <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-20 bg-white rounded-2xl px-4 py-3 shadow-lg border-2 border-[#E3F2FD] text-left whitespace-nowrap animate-jelly">
               <p className="text-xs font-bold text-[#5a5a87]/60 mb-1.5">星星怎么来的？</p>
               <p className="text-xs font-extrabold text-[#5a5a87]/70">⏱ 坚持越久分越高（每秒 +10⭐）</p>
               <p className="text-xs font-extrabold text-[#5a5a87]/70">🎯 完成挑战任务加分</p>
@@ -84,7 +95,7 @@ export function DaddyRobotPage() {
       {game.flyingStars.map(star => (
         <div
           key={star.id}
-          className="fixed z-30 pointer-events-none text-2xl font-extrabold text-yellow-500 drop-shadow-lg"
+          className="fixed z-30 pointer-events-none text-2xl font-extrabold text-[#DCA018] drop-shadow-lg"
           style={{
             left: '50%', top: '45%',
             '--fly-x': `${star.x}px`, '--fly-y': `${star.y}px`,
@@ -192,7 +203,7 @@ export function DaddyRobotPage() {
                   className={`w-full text-left px-4 py-3.5 rounded-2xl flex items-center gap-3 border-2 overflow-hidden transition-all duration-500 ${
                     isAnimating ? 'animate-task-slide-out bg-[#E8F5E9] border-[#A5D6A7]'
                     : locked ? 'bg-[#F0F4FF]/50 border-[#5a5a87]/10 opacity-40'
-                    : isCurrent ? 'bg-[#FFF8E1] border-[#FFD54F] animate-pulse-glow-btv'
+                    : isCurrent ? 'bg-[#FFF9EE] border-[#F9D06B] animate-pulse-glow-btv'
                     : 'bg-[#F0F4FF]/50 border-[#5a5a87]/10'
                   }`}
                 >
@@ -205,7 +216,7 @@ export function DaddyRobotPage() {
                         {task.title}
                       </p>
                       {!locked && (
-                        <span className="text-xs font-extrabold text-yellow-500 shrink-0 ml-2">
+                        <span className="text-xs font-extrabold text-[#DCA018] shrink-0 ml-2">
                           +{TASK_SCORES[i]}⭐
                         </span>
                       )}
@@ -215,7 +226,7 @@ export function DaddyRobotPage() {
                     </p>
                   </div>
                   {isCurrent && game.state === 'running' && !isAnimating && (
-                    <button onClick={(e) => { e.stopPropagation(); game.confirmTask(task.id, i) }}
+                    <button onClick={(e) => { e.stopPropagation(); triggerHaptic('success'); game.confirmTask(task.id, i) }}
                       className="btn-task-confirm shrink-0 rounded-full bg-btv-green text-white font-extrabold text-lg flex items-center justify-center hover:scale-110 active:scale-90 transition-transform shadow-md">
                       ✓
                     </button>
@@ -243,7 +254,7 @@ export function DaddyRobotPage() {
       {/* 停止确认弹窗 */}
       {showLandConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C98ED]/40 backdrop-blur-sm animate-event-pop-in px-4">
-          <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-btv-red">
+          <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-btv-red animate-jelly">
             <div className="text-7xl mb-3">🤖</div>
             <h2 className="text-2xl font-extrabold text-btv-dark mb-1">确定关闭机器人？</h2>
             <p className="text-[#5a5a87]/50 font-bold text-sm mb-5">还没玩够的话，继续玩！</p>
@@ -284,16 +295,16 @@ export function DaddyRobotPage() {
 function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-[#AB47BC]/20 backdrop-blur-sm animate-event-pop-in px-4">
-      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center">
+      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
           {game.totalStars > 5000 ? '机器人大师！' : game.totalStars > 2000 ? '干得好，指挥官！' : '继续操控！'}
         </h2>
         <p className="text-sm text-[#5a5a87]/50 font-bold mb-3">Bandit 机器人向你致敬 🤖</p>
 
-        <div className="inline-flex items-center gap-2 bg-[#FFF8E1] rounded-2xl px-5 py-3 mb-3">
+        <div className="inline-flex items-center gap-2 bg-[#FFF9EE] rounded-2xl px-5 py-3 mb-3">
           <span className="text-3xl">⭐</span>
-          <span className="text-4xl font-extrabold text-yellow-500 timer-text">{game.totalStars}</span>
+          <span className="text-4xl font-extrabold text-[#DCA018] timer-text">{game.totalStars}</span>
         </div>
         <div className="flex justify-center gap-4 text-xs font-bold text-gray-400 mb-4">
           <span>⏱ 时长 {game.timeStars}⭐</span>
@@ -302,7 +313,7 @@ function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
         </div>
         <p className="text-5xl font-extrabold text-btv-orange timer-text mb-3">{game.formatTime(game.elapsedMs)}</p>
         {game.currentRank && game.currentRank <= 3 && (
-          <p className="text-base font-extrabold text-yellow-500 mb-3">🏆 星星排名第 {game.currentRank} 名！</p>
+          <p className="text-base font-extrabold text-[#DCA018] mb-3">🏆 星星排名第 {game.currentRank} 名！</p>
         )}
 
         <div className="mb-4">
@@ -331,15 +342,15 @@ function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
 function VictoryModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#AB47BC]/20 backdrop-blur-sm animate-event-pop-in px-4">
-      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-[#AB47BC]">
+      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-[#AB47BC] animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
         <p className="text-xl font-extrabold text-btv-dark mb-1">全指令通关！</p>
         <p className="text-sm text-[#5a5a87]/50 font-bold mb-4">Bluey 和 Bingo 为你欢呼！</p>
 
-        <div className="inline-flex items-center gap-2 bg-[#FFF8E1] rounded-2xl px-5 py-3 mb-3">
+        <div className="inline-flex items-center gap-2 bg-[#FFF9EE] rounded-2xl px-5 py-3 mb-3">
           <span className="text-3xl">⭐</span>
-          <span className="text-4xl font-extrabold text-yellow-500 timer-text">{game.totalStars}</span>
+          <span className="text-4xl font-extrabold text-[#DCA018] timer-text">{game.totalStars}</span>
         </div>
         <div className="flex justify-center gap-4 text-xs font-bold text-gray-400 mb-3">
           <span>⏱ {game.timeStars}⭐</span>

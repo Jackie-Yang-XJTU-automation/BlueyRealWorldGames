@@ -106,7 +106,7 @@ export function TimerPage() {
           <circle cx="100" cy="100" r="90" fill="none" stroke="#E3F2FD" strokeWidth="12" />
           <circle
             cx="100" cy="100" r="90" fill="none"
-            stroke={state === 'done' ? '#F44336' : '#1C98ED'}
+            stroke={state === 'done' ? '#D96B62' : '#1C98ED'}
             strokeWidth="12" strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={dashOffset}
@@ -190,7 +190,7 @@ export function TimerPage() {
       {/* 完成弹窗 */}
       {state === 'done' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
-          <div className="bg-white rounded-[32px] p-7 max-w-xs w-full shadow-2xl text-center border-4 border-btv-red">
+          <div className="bg-white rounded-[32px] p-7 max-w-xs w-full shadow-2xl text-center border-4 border-btv-red animate-jelly">
             <div className="text-8xl mb-3">⏰</div>
             <h2 className="text-2xl font-extrabold text-btv-red mb-1">时间到！</h2>
             <p className="text-gray-500 font-bold mb-4">

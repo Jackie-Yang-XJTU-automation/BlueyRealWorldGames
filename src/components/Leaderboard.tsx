@@ -25,7 +25,7 @@ export function Leaderboard({ entries, currentRank }: LeaderboardProps) {
         <div
           key={`${entry.name}-${entry.date}-${i}`}
           className={`flex items-center justify-between px-5 py-3.5 rounded-2xl ${
-            i === 0 ? 'bg-[#FFF8E1] border-2 border-[#FFD54F]' :
+            i === 0 ? 'bg-[#FFF9EE] border-2 border-[#F9D06B]' :
             i === 1 ? 'bg-[#F5F5F5] border border-[#E0E0E0]' :
             i === 2 ? 'bg-[#FFF3E0] border border-[#FFCC80]' :
             'bg-white border border-[#E3F2FD]'
@@ -41,7 +41,7 @@ export function Leaderboard({ entries, currentRank }: LeaderboardProps) {
             </div>
           </div>
           <div className="text-right flex items-center gap-3">
-            <span className="text-sm font-extrabold text-yellow-500">⭐{entry.score}</span>
+            <span className="text-sm font-extrabold text-[#DCA018]">⭐{entry.score}</span>
             <p className="text-lg font-extrabold text-btv-blue timer-text">
               {formatLeaderboardTime(entry.time)}
             </p>

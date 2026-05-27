@@ -84,7 +84,7 @@ export function GameDetailPage() {
       </div>
 
       {/* 亲子小贴士 */}
-      <div className="bg-[#FFF8E1] rounded-[28px] p-5 border-2 border-[#FFD54F] mb-4">
+      <div className="bg-[#FFF9EE] rounded-[28px] p-5 border-2 border-[#F9D06B] mb-4">
         <h3 className="text-lg font-extrabold text-btv-dark mb-2">💡 亲子小贴士</h3>
         <p className="text-[#5a5a87]/70 leading-relaxed font-medium">{game.tips}</p>
       </div>

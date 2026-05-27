@@ -11,7 +11,7 @@ const COMMANDS: CommandButton[] = [
   { id: 'jump', emoji: '🦘', label: '跳跃', color: '#F58634' },
   { id: 'fetch', emoji: '🤖', label: '拿取', color: '#AB47BC' },
   { id: 'dance', emoji: '💃', label: '跳舞', color: '#EC407A' },
-  { id: 'custom', emoji: '🎤', label: '自定义', color: '#FFC107' },
+  { id: 'custom', emoji: '🎤', label: '自定义', color: '#FCD882' },
 ]
 
 interface CommandPanelProps {

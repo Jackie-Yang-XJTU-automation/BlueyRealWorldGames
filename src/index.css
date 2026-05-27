@@ -1,19 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  /* Bluey.tv 风格配色 */
-  --color-btv-blue: #1C98ED;
-  --color-btv-sky: #87CEEB;
-  --color-btv-light-sky: #E3F2FD;
-  --color-btv-orange: #F58634;
-  --color-btv-yellow: #FFC107;
-  --color-btv-red: #F44336;
-  --color-btv-green: #4CAF50;
+  /* Bluey.tv 风格配色 - 完美融入布鲁伊官方温暖拙朴家族色 */
+  --color-btv-cream: #F9F6EE;        /* 奇莉妈妈的奶油色 */
+  --color-btv-soft-white: #FDFBF7;   /* 柔和白卡片背景 */
+  --color-btv-blue: #8CBAE6;         /* 布鲁伊蓝 */
+  --color-btv-sky: #87CEEB;          /* 天空蓝 */
+  --color-btv-light-sky: #E3F2FD;    /* 极浅蓝 */
+  --color-btv-orange: #F39C62;       /* 宾果橙 */
+  --color-btv-yellow: #FCD882;       /* 玛芬黄 */
+  --color-btv-red: #D96B62;          /* 奇莉红 */
+  --color-btv-green: #90C79A;        /* 柔和草绿 */
   --color-btv-purple: #AB47BC;
   --color-btv-pink: #EC407A;
-  --color-btv-dark: #5a5a87;
-  --color-btv-grass: #81C784;
-  --color-btv-white: #FFFFFF;
+  --color-btv-dark: #2C4364;         /* 班底特深蓝（用于主要文字和重要边框） */
+  --color-btv-text-muted: #5C728D;   /* 辅助文字深蓝灰 */
+  --color-btv-grass: #90C79A;        /* 柔和草地绿 */
+  --color-btv-white: #FDFBF7;        /* 用柔和白代替纯白，消除刺眼白色 */
   --color-btv-cloud: #F5F9FF;
 }
 
@@ -48,27 +51,22 @@ body {
   }
 }
 
-/* 蓝天白云背景 */
+/* 蓝天白云背景 - 底色渐变无缝融合奇莉妈妈的温暖奶油色 */
 .bg-btv-sky {
-  background: linear-gradient(180deg, #87CEEB 0%, #B3E5FC 30%, #E1F5FE 60%, #FFFFFF 100%);
+  background: linear-gradient(180deg, #87CEEB 0%, #B3E5FC 30%, #E1F5FE 60%, #F9F6EE 100%);
 }
 
-
-/* Bluey 风格卡片 */
+/* Bluey 风格卡片 - 采用温暖柔和白背景与班底特深蓝物理阴影 */
 .card-btv {
-  background: white;
+  background-color: #FDFBF7; /* 奇莉妈妈的柔和白 */
   border-radius: 28px;
   padding: 20px;
-  box-shadow:
-    0 6px 20px rgba(28, 152, 237, 0.08),
-    0 2px 6px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 8px 30px rgba(44, 67, 100, 0.08); /* 班底特深蓝物理阴影，绝不硬质死板 */
   border: 2px solid #E3F2FD;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .card-btv:hover {
-  box-shadow:
-    0 14px 36px rgba(28, 152, 237, 0.16),
-    0 6px 14px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 14px 40px rgba(44, 67, 100, 0.16); /* 悬浮时加深物理阴影 */
   border-color: #BBDEFB;
   transform: translateY(-4px) scale(1.02);
 }
@@ -84,8 +82,8 @@ body {
   position: relative;
   overflow: hidden;
   z-index: 1; /* 创建层叠上下文使 z-index 隔离起作用 */
-  background: #5a5a87;
-  color: white;
+  background: #2C4364; /* 班底特深蓝 */
+  color: #FDFBF7; /* 柔和白 */
   font-weight: 800;
   font-size: 1.375rem;
   padding: 16px 40px;
@@ -95,7 +93,7 @@ body {
   border: none;
   cursor: pointer;
   box-shadow:
-    0 4px 14px rgba(90, 90, 135, 0.35),
+    0 4px 14px rgba(44, 67, 100, 0.35), /* 使用班底特深蓝柔和物理阴影 */
     0 2px 4px rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.1, 0.8, 0.25, 1);
   letter-spacing: 0.02em;
@@ -110,7 +108,7 @@ body {
   width: 140%;
   padding-bottom: 140%; /* 形成宽高比 1:1 的圆形 */
   border-radius: 50%;
-  background: #4e4e7a; /* 官网主按钮 hover 变色原色 */
+  background: #3b577f; /* 官网主按钮 hover 稍微变软的深蓝变色 */
   transform: translate(-50%, -50%) scale(0);
   transition: transform 0.45s cubic-bezier(0.1, 0.8, 0.25, 1);
   will-change: transform;
@@ -118,7 +116,7 @@ body {
 .btn-btv:hover {
   transform: translateY(-2px);
   box-shadow:
-    0 8px 24px rgba(90, 90, 135, 0.45),
+    0 8px 24px rgba(44, 67, 100, 0.45),
     0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .btn-btv:hover::before {
@@ -126,7 +124,7 @@ body {
 }
 .btn-btv:active {
   transform: scale(0.95);
-  box-shadow: 0 2px 8px rgba(90, 90, 135, 0.3);
+  box-shadow: 0 2px 8px rgba(44, 67, 100, 0.3);
 }
 
 /* 手机屏幕适配更小按钮 */
@@ -138,7 +136,7 @@ body {
   }
 }
 
-/* 经典浅蓝次要按钮 (官网 .mainbutton--secondary 风格，带圆形扩散动效) */
+/* 经典浅蓝次要按钮 (官网 .mainbutton--secondary 风格，带圆形由内向外扩散变色动效) */
 .btn-btv-secondary {
   display: inline-flex;
   align-items: center;
@@ -146,8 +144,8 @@ body {
   position: relative;
   overflow: hidden;
   z-index: 1;
-  background: #abe0fa; /* 官网经典浅蓝 */
-  color: #5a5a87; /* 官网经典紫灰 */
+  background: #8CBAE6; /* 布鲁伊蓝 */
+  color: #2C4364; /* 班底特深蓝 */
   font-weight: 800;
   font-size: 1.375rem;
   padding: 16px 40px;
@@ -157,7 +155,7 @@ body {
   border: none;
   cursor: pointer;
   box-shadow:
-    0 4px 14px rgba(171, 224, 250, 0.35),
+    0 4px 14px rgba(44, 67, 100, 0.15),
     0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.3s cubic-bezier(0.1, 0.8, 0.25, 1);
   letter-spacing: 0.02em;
@@ -172,16 +170,16 @@ body {
   width: 140%;
   padding-bottom: 140%;
   border-radius: 50%;
-  background: #9edefd; /* 官网次要按钮 hover 变色原色 */
+  background: #abe0fa; /* 稍微变淡变柔和的天空蓝 */
   transform: translate(-50%, -50%) scale(0);
   transition: transform 0.45s cubic-bezier(0.1, 0.8, 0.25, 1);
   will-change: transform;
 }
 .btn-btv-secondary:hover {
-  color: #4e4e7a;
+  color: #2C4364;
   transform: translateY(-2px);
   box-shadow:
-    0 8px 24px rgba(171, 224, 250, 0.5),
+    0 8px 24px rgba(44, 67, 100, 0.25),
     0 4px 8px rgba(0, 0, 0, 0.08);
 }
 .btn-btv-secondary:hover::before {
@@ -189,10 +187,71 @@ body {
 }
 .btn-btv-secondary:active {
   transform: scale(0.95);
-  box-shadow: 0 2px 8px rgba(171, 224, 250, 0.3);
+  box-shadow: 0 2px 8px rgba(44, 67, 100, 0.15);
 }
 @media (max-width: 480px) {
   .btn-btv-secondary {
+    font-size: 1.125rem;
+    padding: 14px 28px;
+    min-height: 48px;
+  }
+}
+
+/* 经典宾果橙色主要/次要按钮 (用于温馨互动、特殊奖励强调) */
+.btn-btv-orange {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  background: #F39C62; /* 宾果橙 */
+  color: #2C4364; /* 班底特深蓝 */
+  font-weight: 800;
+  font-size: 1.375rem;
+  padding: 16px 40px;
+  min-height: 56px;
+  min-width: 56px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 4px 14px rgba(243, 156, 98, 0.35),
+    0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.1, 0.8, 0.25, 1);
+  letter-spacing: 0.02em;
+  touch-action: manipulation;
+}
+.btn-btv-orange::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: 140%;
+  padding-bottom: 140%;
+  border-radius: 50%;
+  background: #e88b4f; /* 橙色变深变暖变色 */
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.45s cubic-bezier(0.1, 0.8, 0.25, 1);
+  will-change: transform;
+}
+.btn-btv-orange:hover {
+  color: #2C4364;
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(243, 156, 98, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+}
+.btn-btv-orange:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+.btn-btv-orange:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(243, 156, 98, 0.3);
+}
+@media (max-width: 480px) {
+  .btn-btv-orange {
     font-size: 1.125rem;
     padding: 14px 28px;
     min-height: 48px;
@@ -213,14 +272,14 @@ body {
 
 /* 红色危险按钮 — 复用 btn-btv 的圆形扩散结构 */
 .btn-btv-red {
-  background: #F44336;
-  box-shadow: 0 4px 14px rgba(244, 67, 54, 0.35);
+  background: #D96B62;
+  box-shadow: 0 4px 14px rgba(217, 107, 98, 0.35);
 }
 .btn-btv-red::before {
-  background: #EF5350;
+  background: #E88580;
 }
 .btn-btv-red:hover {
-  box-shadow: 0 8px 24px rgba(244, 67, 54, 0.45);
+  box-shadow: 0 8px 24px rgba(217, 107, 98, 0.45);
 }
 
 /* 标签/徽章 */
@@ -238,9 +297,9 @@ body {
 .page-title-btv {
   font-size: 2.25rem;
   font-weight: 900;
-  color: #5a5a87;
+  color: #2C4364; /* 班底特深蓝 */
   letter-spacing: -0.01em;
-  text-shadow: 2px 2px 0 rgba(90, 90, 135, 0.1);
+  text-shadow: 3px 3px 0 rgba(44, 67, 100, 0.12); /* 班底特深蓝卡通软立体字重阴影 */
 }
 
 /* Hero 区装饰 — 悬浮角色 emoji */
@@ -372,7 +431,7 @@ button, select, input[type="text"] {
 }
 
 @keyframes sun-glow {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px #FFD54F); }
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px #FCD882); }
   50% { transform: scale(1.08); filter: drop-shadow(0 0 40px #FFB300); }
 }
 
@@ -392,6 +451,16 @@ button, select, input[type="text"] {
 
 .animate-event-pop-in {
   animation: event-pop-in 0.4s ease-out forwards;
+}
+
+/* 果冻弹跳 — 卡片/弹窗出现时的 overshoot 回弹 */
+@keyframes jelly {
+  0% { transform: scale(0.9); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-jelly {
+  animation: jelly 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 .animate-pulse-glow-btv {
@@ -420,6 +489,16 @@ button, select, input[type="text"] {
 
 .animate-task-slide-out {
   animation: task-slide-out 0.5s ease-out forwards;
+}
+
+/* Q弹进入果冻动画 (Spring Animation) */
+@keyframes jelly {
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+.animate-jelly {
+  animation: jelly 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 /* ========== Reduced Motion ========== */
