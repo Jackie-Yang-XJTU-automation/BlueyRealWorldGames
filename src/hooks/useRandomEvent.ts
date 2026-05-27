@@ -25,6 +25,7 @@ export function useRandomEvent(options?: UseRandomEventOptions) {
   }, [])
 
   const triggerEvent = useCallback(() => {
+    if (timeoutRef.current !== null) return
     const available = pool.filter(e => !usedRef.current.has(e.id))
     if (available.length === 0) {
       usedRef.current.clear()
@@ -58,6 +59,15 @@ export function useRandomEvent(options?: UseRandomEventOptions) {
 
   const startEvents = useCallback(() => {
     usedRef.current.clear()
+    if (scheduleRef.current) {
+      clearTimeout(scheduleRef.current)
+      scheduleRef.current = null
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+      setCurrentEvent(null)
+    }
     const initialDelay = 10000 + Math.random() * 15000
     scheduleRef.current = setTimeout(triggerEvent, initialDelay)
   }, [triggerEvent])

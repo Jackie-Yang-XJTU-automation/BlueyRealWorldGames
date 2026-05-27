@@ -51,3 +51,10 @@ export type FilterOptions = {
   energy: EnergyLevel | 'all'
   difficulty: number | 'all'
 }
+
+export type FaultInteractionType = 'tap' | 'longpress' | 'shake' | 'voice'
+
+export interface GameFault extends RandomEvent {
+  interactionType: FaultInteractionType
+  totalRequired: number
+}
