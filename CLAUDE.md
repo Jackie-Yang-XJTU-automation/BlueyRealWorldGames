@@ -76,6 +76,9 @@ src/
 2. **结束确认**：点击结束按钮弹出确认弹窗（"确定要结束吗？"）→「还没！继续玩」/「是，结束！」→ 确认后才执行 handleLand
 实现方式：useTimer 已有 pause/resume，game hook 添加 handlePause/handleResume，页面添加 showLandConfirm 状态控制确认弹窗
 
+### 可玩游戏必需模式（Delight）
+3. **倒计时动画**：点「开始」后显示 `<CountdownOverlay emoji="🎈" onComplete={...} />` 而非直接启动，3→2→1→emoji 依次弹出，2.3 秒后自动开始。组件位于 `src/components/CountdownOverlay.tsx`，传入游戏对应 emoji 即可复用。
+
 ## 会话规则
 - 使用中文回复
 - git 操作需要手动确认后才能提交，不自动提交
