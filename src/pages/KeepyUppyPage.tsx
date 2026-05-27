@@ -15,13 +15,22 @@ const BLUEY_PHRASES = [
   '记住，这可是 Bluey 最爱的红气球！',
 ]
 
+const PRESET_NAMES = ['爸爸', '妈妈', '宝宝', '爷爷', '奶奶']
+const STORAGE_KEY_PLAYED = 'keepyuppy_played'
+
 export function KeepyUppyPage() {
   const game = useKeepyUppyGame()
   const [balloonColor] = useState(() => BALLOON_COLORS[Math.floor(Math.random() * BALLOON_COLORS.length)])
   const [showTasks, setShowTasks] = useState(true)
   const [showLandConfirm, setShowLandConfirm] = useState(false)
+  const [showScoreHelp, setShowScoreHelp] = useState(false)
+  const [hasPlayedBefore] = useState(() => localStorage.getItem(STORAGE_KEY_PLAYED) === 'true')
   const [encourageIndex, setEncourageIndex] = useState(0)
   const encourageTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const markPlayed = () => {
+    if (!hasPlayedBefore) localStorage.setItem(STORAGE_KEY_PLAYED, 'true')
+  }
 
   useEffect(() => {
     if (game.state === 'running') {
@@ -53,7 +62,19 @@ export function KeepyUppyPage() {
           <span className={`text-3xl font-extrabold text-yellow-500 timer-text transition-all duration-300 ${game.scoreBump ? 'animate-score-bump' : ''}`}>
             {game.totalStars}
           </span>
-          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-1 text-[10px] font-bold text-gray-300 whitespace-nowrap">
+          <button
+            onClick={() => setShowScoreHelp(!showScoreHelp)}
+            className="w-5 h-5 rounded-full bg-[#F0F4FF] text-[#5a5a87]/50 text-[10px] font-extrabold flex items-center justify-center hover:bg-[#E3ECFD] transition-colors"
+          >?</button>
+          {showScoreHelp && (
+            <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-20 bg-white rounded-2xl px-4 py-3 shadow-lg border-2 border-[#E3F2FD] text-left whitespace-nowrap animate-event-pop-in">
+              <p className="text-xs font-bold text-[#5a5a87]/60 mb-1.5">星星怎么来的？</p>
+              <p className="text-xs font-extrabold text-[#5a5a87]/70">⏱ 坚持越久分越高（每秒 +10⭐）</p>
+              <p className="text-xs font-extrabold text-[#5a5a87]/70">🎯 完成挑战任务加分</p>
+              <p className="text-xs font-extrabold text-[#5a5a87]/70">⚡ 应对突发状况加分</p>
+            </div>
+          )}
+          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-1 text-[10px] font-bold text-[#5a5a87]/35 whitespace-nowrap">
             <span>⏱{game.timeStars}</span><span>+</span>
             <span>🎯{game.taskStars}</span><span>+</span>
             <span>⚡{game.eventStars}</span>
@@ -91,9 +112,16 @@ export function KeepyUppyPage() {
       {/* 控制按钮 */}
       <div className="flex gap-3 justify-center mb-6">
         {game.state === 'idle' && (
-          <button onClick={game.handleStart} className="btn-btv btn-game-action animate-pulse-glow-btv">
-            🎈 像 Bluey 一样开始！
-          </button>
+          <div className="flex flex-col items-center gap-2">
+            {!hasPlayedBefore && (
+              <p className="text-center text-[#5a5a87]/50 text-sm font-bold animate-pulse">
+                💡 和宝宝一起顶气球，坚持越久星星越多！
+              </p>
+            )}
+            <button onClick={() => { markPlayed(); game.handleStart() }} className="btn-btv btn-game-action animate-pulse-glow-btv">
+              🎈 像 Bluey 一样开始！
+            </button>
+          </div>
         )}
         {game.state === 'running' && (
           <div className="flex gap-3">
@@ -147,7 +175,7 @@ export function KeepyUppyPage() {
           <h3 className="text-lg font-extrabold text-btv-dark">
             🎯 今日挑战 ({game.completedTasks}/{game.tasks.length})
           </h3>
-          <span className="text-gray-300 font-bold">{showTasks ? '▲' : '▼'}</span>
+          <span className="text-[#5a5a87]/25 font-bold">{showTasks ? '▲' : '▼'}</span>
         </button>
 
         {showTasks && (
@@ -168,9 +196,9 @@ export function KeepyUppyPage() {
                 <div key={task.id}
                   className={`w-full text-left px-4 py-3.5 rounded-2xl flex items-center gap-3 border-2 overflow-hidden transition-all duration-500 ${
                     isAnimating ? 'animate-task-slide-out bg-[#E8F5E9] border-[#A5D6A7]'
-                    : locked ? 'bg-gray-50 border-gray-100 opacity-40'
+                    : locked ? 'bg-[#F0F4FF]/50 border-[#5a5a87]/10 opacity-40'
                     : isCurrent ? 'bg-[#FFF8E1] border-[#FFD54F] animate-pulse-glow-btv'
-                    : 'bg-gray-50 border-gray-100'
+                    : 'bg-[#F0F4FF]/50 border-[#5a5a87]/10'
                   }`}
                 >
                   <span className="text-xl shrink-0">
@@ -178,7 +206,7 @@ export function KeepyUppyPage() {
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <p className={`font-extrabold truncate ${locked ? 'text-gray-300' : 'text-btv-dark'}`}>
+                      <p className={`font-extrabold truncate ${locked ? 'text-[#5a5a87]/25' : 'text-btv-dark'}`}>
                         {task.title}
                       </p>
                       {!locked && (
@@ -187,7 +215,7 @@ export function KeepyUppyPage() {
                         </span>
                       )}
                     </div>
-                    <p className={`text-sm font-medium ${locked ? 'text-gray-300' : 'text-gray-400'}`}>
+                    <p className={`text-sm font-medium ${locked ? 'text-[#5a5a87]/25' : 'text-[#5a5a87]/50'}`}>
                       {task.description}
                     </p>
                   </div>
@@ -259,13 +287,13 @@ function ResultModal({ game }: { game: ReturnType<typeof useKeepyUppyGame> }) {
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
           {game.totalStars > 5000 ? '太厉害了！' : game.totalStars > 2000 ? '真棒！' : '不错哦！'}
         </h2>
-        <p className="text-sm text-gray-400 font-bold mb-3">Bandit 爸爸对你竖起大拇指 👍</p>
+        <p className="text-sm text-[#5a5a87]/50 font-bold mb-3">Bandit 爸爸对你竖起大拇指 👍</p>
 
         <div className="inline-flex items-center gap-2 bg-[#FFF8E1] rounded-2xl px-5 py-3 mb-3">
           <span className="text-3xl">⭐</span>
           <span className="text-4xl font-extrabold text-yellow-500 timer-text">{game.totalStars}</span>
         </div>
-        <div className="flex justify-center gap-4 text-xs font-bold text-gray-400 mb-4">
+        <div className="flex justify-center gap-4 text-xs font-bold text-[#5a5a87]/50 mb-4">
           <span>⏱ 时长 {game.timeStars}⭐</span>
           <span>🎯 任务 {game.taskStars}⭐</span>
           <span>⚡ 事件 {game.eventStars}⭐</span>
@@ -278,8 +306,16 @@ function ResultModal({ game }: { game: ReturnType<typeof useKeepyUppyGame> }) {
         <div className="mb-4">
           <input type="text" value={game.playerName} onChange={e => game.setPlayerName(e.target.value)}
             placeholder="留下你的名字" maxLength={10}
-            className="w-full text-center text-lg font-extrabold rounded-full px-5 py-3 border-2 border-[#E3F2FD] focus:border-btv-blue outline-none text-btv-dark placeholder-gray-300"
+            className="w-full text-center text-lg font-extrabold rounded-full px-5 py-3 border-2 border-[#E3F2FD] focus:border-btv-blue outline-none text-btv-dark placeholder-[#5a5a87]/25"
             onKeyDown={e => e.key === 'Enter' && game.handleSaveScore()} />
+          <div className="flex gap-1.5 justify-center mt-2 flex-wrap">
+            {PRESET_NAMES.map(name => (
+              <button key={name}
+                onClick={() => game.setPlayerName(name)}
+                className="text-xs font-extrabold px-3 py-1.5 rounded-full bg-[#F0F4FF] text-[#5a5a87]/60 hover:bg-[#E3ECFD] active:scale-95 transition-all"
+              >{name}</button>
+            ))}
+          </div>
         </div>
         <div className="flex gap-3">
           <button onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">跳过</button>
@@ -297,13 +333,13 @@ function VictoryModal({ game }: { game: ReturnType<typeof useKeepyUppyGame> }) {
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
         <p className="text-xl font-extrabold text-btv-dark mb-1">全关卡通关！</p>
-        <p className="text-sm text-gray-400 font-bold mb-4">Bluey 和 Bingo 为你欢呼！</p>
+        <p className="text-sm text-[#5a5a87]/50 font-bold mb-4">Bluey 和 Bingo 为你欢呼！</p>
 
         <div className="inline-flex items-center gap-2 bg-[#FFF8E1] rounded-2xl px-5 py-3 mb-3">
           <span className="text-3xl">⭐</span>
           <span className="text-4xl font-extrabold text-yellow-500 timer-text">{game.totalStars}</span>
         </div>
-        <div className="flex justify-center gap-4 text-xs font-bold text-gray-400 mb-3">
+        <div className="flex justify-center gap-4 text-xs font-bold text-[#5a5a87]/50 mb-3">
           <span>⏱ {game.timeStars}⭐</span>
           <span>🎯 {game.taskStars}⭐</span>
           <span>⚡ {game.eventStars}⭐</span>
@@ -314,8 +350,16 @@ function VictoryModal({ game }: { game: ReturnType<typeof useKeepyUppyGame> }) {
         <div className="mb-4">
           <input type="text" value={game.playerName} onChange={e => game.setPlayerName(e.target.value)}
             placeholder="留下冠军的名字" maxLength={10}
-            className="w-full text-center text-lg font-extrabold rounded-full px-5 py-3 border-2 border-[#FFD54F] focus:border-btv-yellow outline-none text-btv-dark placeholder-gray-300"
+            className="w-full text-center text-lg font-extrabold rounded-full px-5 py-3 border-2 border-[#FFD54F] focus:border-btv-yellow outline-none text-btv-dark placeholder-[#5a5a87]/25"
             onKeyDown={e => e.key === 'Enter' && game.handleSaveScore()} />
+          <div className="flex gap-1.5 justify-center mt-2 flex-wrap">
+            {PRESET_NAMES.map(name => (
+              <button key={name}
+                onClick={() => game.setPlayerName(name)}
+                className="text-xs font-extrabold px-3 py-1.5 rounded-full bg-[#F0F4FF] text-[#5a5a87]/60 hover:bg-[#E3ECFD] active:scale-95 transition-all"
+              >{name}</button>
+            ))}
+          </div>
         </div>
         <div className="flex gap-3">
           <button onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">跳过</button>
