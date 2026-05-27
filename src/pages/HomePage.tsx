@@ -52,16 +52,16 @@ export function HomePage() {
   return (
     <div>
       {/* 标题 */}
-      <div className="text-center mb-5">
-        <img src={blueyFamily} alt="Bluey Family" className="w-36 h-auto mx-auto mb-2 drop-shadow-lg" />
+      <div className="text-center mb-4">
+        <img src={blueyFamily} alt="Bluey Family" className="w-28 sm:w-36 h-auto mx-auto mb-2 drop-shadow-lg" />
         <h2 className="page-title-btv mb-1">今天玩什么？</h2>
-        <p className="text-btv-blue/40 font-bold text-sm">
+        <p className="text-[#5a5a87]/50 font-bold text-sm">
           For Real Life · 和宝宝一起，玩真的！
         </p>
       </div>
 
       {/* 筛选栏 */}
-      <div className="mb-5">
+      <div className="mb-4">
         <FilterBar filters={filters} onFilterChange={handleFilterChange} onRandomPick={handleRandomPick} />
       </div>
 
@@ -72,13 +72,13 @@ export function HomePage() {
             <div className="text-7xl mb-3">{randomGame.emoji}</div>
             <h3 className="text-xl font-extrabold text-btv-orange mb-2">🎲 命运选择了...</h3>
             <p className="text-3xl font-extrabold text-btv-dark mb-4">{randomGame.name}！</p>
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-400 font-bold mb-5">
+            <div className="flex items-center justify-center gap-2 text-sm text-[#5a5a87]/50 font-bold mb-5">
               <span>{randomGame.difficulty === 1 ? '⭐' : randomGame.difficulty === 2 ? '⭐⭐' : '⭐⭐⭐'}</span>
-              <span className="text-gray-300">·</span>
+              <span className="text-[#5a5a87]/25">·</span>
               <span>{randomGame.minPlayers}-{randomGame.maxPlayers}人</span>
             </div>
             <div className="flex gap-3">
-              <button onClick={() => setRandomGame(null)} className="flex-1 bg-gray-100 text-gray-500 font-extrabold py-3.5 rounded-full hover:bg-gray-200 transition-colors">
+              <button onClick={() => setRandomGame(null)} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">
                 再选一次
               </button>
               <button onClick={() => { setRandomGame(null); navigate(`/game/${randomGame.id}`) }} className="btn-btv flex-1">
@@ -129,14 +129,14 @@ export function HomePage() {
 
       {/* 全部游戏 */}
       <div>
-        <h3 className="text-sm font-extrabold text-btv-blue/40 uppercase tracking-wider mb-3">
+        <h3 className="text-sm font-extrabold text-[#5a5a87]/50 uppercase tracking-wider mb-3">
           全部游戏 · {filteredGames.length}
         </h3>
         {filteredGames.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-6xl mb-3">🔍</p>
-            <p className="text-xl font-extrabold text-gray-400">没有匹配的游戏</p>
-            <p className="text-sm text-gray-300 mt-1 font-bold">试试调整筛选条件</p>
+            <p className="text-xl font-extrabold text-[#5a5a87]/50">没有符合筛选的游戏</p>
+            <p className="text-sm text-[#5a5a87]/35 mt-1 font-bold">试试换个类型或场地看看？</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3">

@@ -199,24 +199,28 @@ body {
   }
 }
 
-/* 经典深蓝高光次要按钮 (即原有 btn-btv-blue 别称，用于特殊功能强调) */
+/* 经典深蓝高光次要按钮 — 复用 btn-btv 的圆形扩散结构 */
 .btn-btv-blue {
   background: #1C98ED;
   box-shadow: 0 4px 14px rgba(28, 152, 237, 0.35);
 }
-.btn-btv-blue:hover {
+.btn-btv-blue::before {
   background: #42A5F5;
-  box-shadow: 0 6px 20px rgba(28, 152, 237, 0.45);
+}
+.btn-btv-blue:hover {
+  box-shadow: 0 8px 24px rgba(28, 152, 237, 0.45);
 }
 
-/* 红色危险按钮 */
+/* 红色危险按钮 — 复用 btn-btv 的圆形扩散结构 */
 .btn-btv-red {
   background: #F44336;
   box-shadow: 0 4px 14px rgba(244, 67, 54, 0.35);
 }
-.btn-btv-red:hover {
+.btn-btv-red::before {
   background: #EF5350;
-  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.45);
+}
+.btn-btv-red:hover {
+  box-shadow: 0 8px 24px rgba(244, 67, 54, 0.45);
 }
 
 /* 标签/徽章 */
@@ -416,4 +420,13 @@ button, select, input[type="text"] {
 
 .animate-task-slide-out {
   animation: task-slide-out 0.5s ease-out forwards;
+}
+
+/* ========== Reduced Motion ========== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

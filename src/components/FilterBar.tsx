@@ -25,7 +25,7 @@ export function FilterBar({ onFilterChange, onRandomPick, filters }: FilterBarPr
             className={`shrink-0 tag-btv text-xs py-2 px-3.5 transition-all ${
               filters.type === o.key
                 ? 'bg-btv-blue text-white shadow-sm'
-                : 'bg-gray-100 text-gray-500'
+                : 'bg-[#F0F4FF] text-[#5a5a87]/60 hover:bg-[#E3ECFD]'
             }`}
           >
             {o.label}
@@ -40,7 +40,7 @@ export function FilterBar({ onFilterChange, onRandomPick, filters }: FilterBarPr
           className={`shrink-0 tag-btv text-xs py-2 px-3 transition-all ${
             filters.location === 'indoor' ? 'bg-btv-blue text-white shadow-sm'
             : filters.location === 'outdoor' ? 'bg-btv-green text-white shadow-sm'
-            : 'bg-gray-100 text-gray-500'
+            : 'bg-[#F0F4FF] text-[#5a5a87]/60 hover:bg-[#E3ECFD]'
           }`}
         >
           {filters.location === 'indoor' ? '🏠 室内' : filters.location === 'outdoor' ? '🌳 户外' : '🏠🌳 场地'}
@@ -56,7 +56,7 @@ export function FilterBar({ onFilterChange, onRandomPick, filters }: FilterBarPr
             filters.energy === 1 ? 'bg-btv-green text-white shadow-sm'
             : filters.energy === 2 ? 'bg-btv-yellow text-white shadow-sm'
             : filters.energy === 3 ? 'bg-btv-red text-white shadow-sm'
-            : 'bg-gray-100 text-gray-500'
+            : 'bg-[#F0F4FF] text-[#5a5a87]/60 hover:bg-[#E3ECFD]'
           }`}
         >
           {filters.energy === 1 ? '🪶 轻度' : filters.energy === 2 ? '⚡ 中等' : filters.energy === 3 ? '🔥 高能' : '🪶⚡🔥 体力'}

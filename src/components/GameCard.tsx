@@ -29,8 +29,12 @@ export function GameCard({ game, isFavorite, onToggleFavorite, onClick }: GameCa
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={`${game.name} - ${game.type === 'active' ? '运动型' : game.type === 'roleplay' ? '扮演型' : game.type === 'quiet' ? '安静型' : '故事型'}游戏，${game.minPlayers}-${game.maxPlayers}人`}
       className="rounded-[28px] bg-white border-2 border-[#E3F2FD] hover:border-[#BBDEFB] shadow-[0_6px_20px_rgba(28,152,237,0.08)] hover:shadow-[0_14px_36px_rgba(28,152,237,0.16)] cursor-pointer group overflow-hidden active:scale-[0.98] hover:-translate-y-1 hover:scale-[1.02] transition-all duration-400 ease-[cubic-bezier(0.175,0.885,0.32,1.275)]"
       onClick={onClick}
+      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick() } }}
     >
       {/* 彩色顶部区 - 放 emoji */}
       <div className={`${style.bg} h-20 flex items-center justify-center relative overflow-hidden`}>
@@ -41,6 +45,7 @@ export function GameCard({ game, isFavorite, onToggleFavorite, onClick }: GameCa
             e.stopPropagation()
             onToggleFavorite(game.id)
           }}
+          aria-label={isFavorite ? '取消收藏' : '收藏游戏'}
           className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center text-base shadow-sm hover:scale-110 active:scale-90 transition-transform z-10"
         >
           {isFavorite ? '❤️' : '🤍'}
@@ -55,9 +60,9 @@ export function GameCard({ game, isFavorite, onToggleFavorite, onClick }: GameCa
         <h3 className="text-sm font-extrabold text-btv-dark leading-tight mb-1 line-clamp-1">
           {game.name}
         </h3>
-        <div className="flex items-center gap-1 text-xs text-gray-400 font-bold">
+        <div className="flex items-center gap-1 text-xs text-[#5a5a87]/50 font-bold">
           <span>{difficultyStars[game.difficulty]}</span>
-          <span className="text-gray-300">·</span>
+          <span className="text-[#5a5a87]/25">·</span>
           <span>{game.minPlayers}-{game.maxPlayers}人</span>
         </div>
       </div>

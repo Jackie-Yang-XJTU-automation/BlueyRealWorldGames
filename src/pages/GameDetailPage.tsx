@@ -10,7 +10,7 @@ export function GameDetailPage() {
     return (
       <div className="text-center py-16">
         <p className="text-6xl mb-3">🔍</p>
-        <p className="text-xl font-extrabold text-gray-400">找不到这个游戏</p>
+        <p className="text-xl font-extrabold text-[#5a5a87]/50">找不到这个游戏</p>
         <button onClick={() => navigate('/')} className="btn-btv mt-6">
           回到首页
         </button>
@@ -50,7 +50,7 @@ export function GameDetailPage() {
 
       {/* 描述 */}
       <div className="card-btv p-5 mb-4">
-        <p className="text-gray-600 leading-relaxed font-medium">{game.description}</p>
+        <p className="text-[#5a5a87]/70 leading-relaxed font-medium">{game.description}</p>
       </div>
 
       {/* 玩法规则 */}
@@ -58,7 +58,7 @@ export function GameDetailPage() {
         <h3 className="text-lg font-extrabold text-btv-dark mb-3">📋 玩法规则</h3>
         <ol className="space-y-2">
           {game.rules.map((rule, i) => (
-            <li key={i} className="flex gap-2 text-gray-600 font-medium">
+            <li key={i} className="flex gap-2 text-[#5a5a87]/70 font-medium">
               <span className="font-extrabold text-btv-blue shrink-0">{i + 1}.</span>
               <span>{rule}</span>
             </li>
@@ -70,11 +70,11 @@ export function GameDetailPage() {
       <div className="card-btv p-5 mb-4">
         <h3 className="text-lg font-extrabold text-btv-dark mb-3">🎒 材料清单</h3>
         {game.materials.length === 0 ? (
-          <p className="text-gray-400 font-medium">无需准备材料，直接开始玩！</p>
+          <p className="text-[#5a5a87]/50 font-medium">无需准备材料，直接开始玩！</p>
         ) : (
           <ul className="space-y-1">
             {game.materials.map((m, i) => (
-              <li key={i} className="flex gap-2 text-gray-600 font-medium">
+              <li key={i} className="flex gap-2 text-[#5a5a87]/70 font-medium">
                 <span>✅</span>
                 <span>{m}</span>
               </li>
@@ -86,7 +86,7 @@ export function GameDetailPage() {
       {/* 亲子小贴士 */}
       <div className="bg-[#FFF8E1] rounded-[28px] p-5 border-2 border-[#FFD54F] mb-4">
         <h3 className="text-lg font-extrabold text-btv-dark mb-2">💡 亲子小贴士</h3>
-        <p className="text-gray-600 leading-relaxed font-medium">{game.tips}</p>
+        <p className="text-[#5a5a87]/70 leading-relaxed font-medium">{game.tips}</p>
       </div>
 
       {/* 趣味升级 */}
@@ -94,7 +94,7 @@ export function GameDetailPage() {
         <h3 className="text-lg font-extrabold text-btv-dark mb-3">🎮 趣味升级</h3>
         <ul className="space-y-2">
           {game.upgrades.map((up, i) => (
-            <li key={i} className="flex gap-2 text-gray-600 font-medium">
+            <li key={i} className="flex gap-2 text-[#5a5a87]/70 font-medium">
               <span>✨</span>
               <span>{up}</span>
             </li>

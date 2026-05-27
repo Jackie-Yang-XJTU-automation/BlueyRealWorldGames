@@ -237,7 +237,7 @@ function ResultModal({ game }: { game: ReturnType<typeof useKeepyUppyGame> }) {
             onKeyDown={e => e.key === 'Enter' && game.handleSaveScore()} />
         </div>
         <div className="flex gap-3">
-          <button onClick={game.handleReset} className="flex-1 bg-gray-100 text-gray-500 font-extrabold py-3.5 rounded-full hover:bg-gray-200 transition-colors">跳过</button>
+          <button onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">跳过</button>
           <button onClick={game.handleSaveScore} className="btn-btv flex-1">保存成绩！</button>
         </div>
       </div>
@@ -273,7 +273,7 @@ function VictoryModal({ game }: { game: ReturnType<typeof useKeepyUppyGame> }) {
             onKeyDown={e => e.key === 'Enter' && game.handleSaveScore()} />
         </div>
         <div className="flex gap-3">
-          <button onClick={game.handleReset} className="flex-1 bg-gray-100 text-gray-500 font-extrabold py-3.5 rounded-full hover:bg-gray-200 transition-colors">跳过</button>
+          <button onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">跳过</button>
           <button onClick={game.handleSaveScore} className="btn-btv flex-1 animate-pulse-glow-btv">🏆 记录辉煌！</button>
         </div>
       </div>

@@ -227,7 +227,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
           {isFixed ? '修复成功！' : '🤖 机器人故障！'}
         </h2>
         <h3 className="text-xl font-extrabold text-btv-dark mb-2">{fault.title}</h3>
-        <p className="text-base text-gray-500 mb-5 leading-relaxed font-medium">
+        <p className="text-base text-[#5a5a87]/60 mb-5 leading-relaxed font-medium">
           {fault.description}
         </p>
 

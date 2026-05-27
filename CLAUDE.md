@@ -118,6 +118,96 @@ Always design with Bluey cartoon + official website aesthetic:
 - 官网设计令牌：卡片圆角 8px（App 改为 16px 更适合儿童）
 </always_use_bluey_theme>
 
+## UI 工艺规范（精选自 Impeccable，已适配 Bluey 儿童风格）
+
+### 交互状态 — 8 态检查表
+每个可交互元素必须覆盖：
+
+| 状态 | 处理方式 |
+|------|---------|
+| Default | 基础样式 |
+| Hover | 弹性缩放+阴影提升（Bluey 特有：`cubic-bezier(0.175,0.885,0.32,1.275)`） |
+| Focus | `:focus-visible` 显示 2px 紫灰轮廓，鼠标点击不显示 |
+| Active | `scale(0.95)` 按压反馈 |
+| Disabled | `opacity: 0.5`，`pointer-events: none` |
+| Loading | 骨架屏或旋转动画，禁用按钮防重复提交 |
+| Error | 红色边框 + 图标 + 具体错误信息 |
+| Success | 绿色勾 + 确认文案 |
+
+**聚焦环规则**：永远不用 `outline: none` 而不给替代。用 `:focus-visible` 区分键盘和鼠标：
+```css
+button:focus { outline: none; }
+button:focus-visible { outline: 2px solid #5a5a87; outline-offset: 2px; }
+```
+
+### 动效规范（Bluey 覆盖 Impeccable 原生规则）
+- **弹性缓动允许**：`cubic-bezier(0.175,0.885,0.32,1.275)` 用于卡片 hover/emoji 旋转，这是 Bluey 卡通感的核心，**不走 Impeccable 的"禁止弹性"规则**
+- 过渡时长：150-300ms 用于微交互，300-500ms 用于卡片/弹窗
+- **必须**支持 `prefers-reduced-motion`：
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+- 按钮禁用弹性缓动，用标准 ease-out（`cubic-bezier(0.1,0.8,0.25,1)`）
+
+### 间距系统
+- 4px 基准：4, 8, 12, 16, 24, 32, 48, 64px
+- 优先用 `gap` 而非 `margin` 处理兄弟元素间距
+- 触控目标 ≥ 44px，推荐 48px
+
+### 文案规范（适配中国家长）
+- **按钮标签**：用具体动词+对象，不用"确定/提交/是/否"
+  - ✅ "保存更改" / "删除游戏" / "开始顶气球"
+  - ❌ "OK" / "Submit" / "Yes"
+- **错误信息**：说清 (1) 发生什么 (2) 为什么 (3) 怎么办
+  - ✅ "计时器还没开始，请先点「开始玩」"
+  - ❌ "错误"
+- **空状态**：简短承认 + 价值说明 + 行动引导
+  - ✅ "还没有收藏游戏，去游戏库里找喜欢的吧！"
+  - ❌ "无数据"
+- **加载状态**：说清在加载什么，不用通用文案
+  - ✅ "正在准备你的气球..."
+  - ❌ "Loading..."
+  - ❌ 不用 AI 陈词滥调（"正在召集像素小马..." 之类）
+- **术语一致性**：全文统一用词
+  - 收藏（不用"收藏/喜欢/点赞"混用）
+  - 游戏（不用"游戏/活动/玩法"混用）
+  - 开始玩（不用"开始/启动/进入"混用）
+
+### 破坏性操作：撤销 > 确认框
+- 删除等操作：立即从界面移除 → 显示底部撤销 Toast → 等 5 秒后真删
+- 确认弹窗仅用于：账号删除、批量操作、高代价操作
+
+### 空状态 & 边界用例
+- 空列表 → 有插画/emoji + 引导文案 + CTA 按钮
+- 长文本 → `truncate` 或 `line-clamp`，flex 子元素加 `min-width: 0`
+- 加载中 → 骨架屏优于空白 spinner
+- 错误 → 说明原因 + 重试按钮
+- 离线 → 不崩溃，已有数据正常展示（PWA 已支持）
+
+### 设计审计检查表（实现新功能后自查）
+- [ ] 8 个交互状态都覆盖了吗？
+- [ ] 触控区域 ≥ 44px？
+- [ ] 动画尊重 `prefers-reduced-motion`？
+- [ ] 文案一致（术语、语气、句式）？
+- [ ] 空状态有引导？
+- [ ] 长文本/短文本/缺失数据都处理了？
+- [ ] 键盘可导航（Tab 顺序正确）？
+- [ ] 无 console 报错或未使用导入？
+- [ ] `z-index` 使用语义层级（dropdown 100 → sticky 200 → modal 400 → toast 500）而非随意写 9999？
+
+### Impeccable 规则中明确不采纳的部分
+以下 Impeccable 原生规则与 Bluey 儿童风格冲突，**故意不遵守**：
+- ❌ "禁止弹性/回弹缓动" → Bluey 需要弹性动效营造卡通趣味
+- ❌ "禁止纯白底色" → 儿童卡片白底干净清晰，不适用
+- ❌ "禁止嵌套卡片" → Bluey 部分场景需要内嵌信息区，不过度嵌套即可
+- ❌ "灰色文字不能放在彩色背景上" → Bluey 浅蓝背景上紫灰文字是官网标准做法
+- ❌ "错误信息禁止幽默" → 儿童产品可以有温和的趣味表达，但要对家长保持清晰
+
 ## 待探索工具
 - Frontend Design Toolkit: github.com/wilwaldon/Claude-Code-Frontend-Design-Toolkit — 70+ 前端设计工具
 - IconScout 儿童 Lottie 动画: iconscout.com/lottie-animations/kid-cartoon — 2346 个免费动画
