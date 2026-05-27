@@ -29,19 +29,19 @@ export function GameCard({ game, isFavorite, onToggleFavorite, onClick }: GameCa
 
   return (
     <div
-      className="rounded-2xl bg-white border-2 border-[#E3F2FD] shadow-sm cursor-pointer group overflow-hidden active:scale-[0.98] transition-transform"
+      className="rounded-[28px] bg-white border-2 border-[#E3F2FD] hover:border-[#BBDEFB] shadow-[0_6px_20px_rgba(28,152,237,0.08)] hover:shadow-[0_14px_36px_rgba(28,152,237,0.16)] cursor-pointer group overflow-hidden active:scale-[0.98] hover:-translate-y-1 hover:scale-[1.02] transition-all duration-400 ease-[cubic-bezier(0.175,0.885,0.32,1.275)]"
       onClick={onClick}
     >
       {/* 彩色顶部区 - 放 emoji */}
-      <div className={`${style.bg} h-20 flex items-center justify-center relative`}>
-        <span className="text-5xl drop-shadow-sm">{game.emoji}</span>
+      <div className={`${style.bg} h-20 flex items-center justify-center relative overflow-hidden`}>
+        <span className="text-5xl drop-shadow-sm group-hover:scale-115 group-hover:rotate-3 transition-transform duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)]">{game.emoji}</span>
         {/* 收藏 */}
         <button
           onClick={e => {
             e.stopPropagation()
             onToggleFavorite(game.id)
           }}
-          className="absolute top-2 right-2 w-8 h-8 bg-white/80 rounded-full flex items-center justify-center text-base shadow-sm active:scale-90 transition-transform"
+          className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center text-base shadow-sm hover:scale-110 active:scale-90 transition-transform z-10"
         >
           {isFavorite ? '❤️' : '🤍'}
         </button>

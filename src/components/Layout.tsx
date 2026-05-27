@@ -56,10 +56,10 @@ export function Layout() {
             {!isHome && (
               <Link
                 to="/"
-                className="shrink-0 bg-btv-light-sky text-btv-blue font-extrabold px-4 py-2 rounded-full
-                           hover:bg-btv-blue hover:text-white transition-all duration-200 text-xs"
+                className="shrink-0 bg-[#abe0fa] text-[#5a5a87] font-extrabold px-4.5 py-2 rounded-full border-2 border-white/60
+                           hover:bg-[#9edefd] hover:scale-105 active:scale-95 transition-all duration-200 text-xs shadow-sm flex items-center gap-1"
               >
-                ← 返回
+                <span>← 返回首页</span>
               </Link>
             )}
           </div>
@@ -70,8 +70,8 @@ export function Layout() {
         <Outlet />
       </main>
 
-      <footer className="text-center py-10 text-btv-blue/35 text-sm font-bold">
-        <p>Bluey Real World Games · 和宝宝一起玩真的！</p>
+      <footer className="text-center py-12 text-[#5a5a87]/40 text-xs font-black tracking-widest uppercase">
+        <p>© Ludo Studio · Bluey Real World Games · 和宝宝一起玩真的！</p>
       </footer>
     </div>
   )

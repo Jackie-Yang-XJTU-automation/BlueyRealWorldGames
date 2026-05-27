@@ -60,27 +60,30 @@ body {
   border-radius: 28px;
   padding: 20px;
   box-shadow:
-    0 4px 16px rgba(28, 152, 237, 0.08),
-    0 2px 6px rgba(0, 0, 0, 0.04);
+    0 6px 20px rgba(28, 152, 237, 0.08),
+    0 2px 6px rgba(0, 0, 0, 0.03);
   border: 2px solid #E3F2FD;
-  transition: all 0.25s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .card-btv:hover {
   box-shadow:
-    0 8px 28px rgba(28, 152, 237, 0.14),
-    0 4px 10px rgba(0, 0, 0, 0.06);
+    0 14px 36px rgba(28, 152, 237, 0.16),
+    0 6px 14px rgba(0, 0, 0, 0.06);
   border-color: #BBDEFB;
-  transform: translateY(-2px);
+  transform: translateY(-4px) scale(1.02);
 }
 .card-btv:active {
   transform: scale(0.98);
 }
 
-/* Bluey 风格主按钮 - 儿童手指尺寸（官网紫灰） */
+/* Bluey 风格主按钮 - 带官网圆形由内向外扩散变色动效 */
 .btn-btv {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 1; /* 创建层叠上下文使 z-index 隔离起作用 */
   background: #5a5a87;
   color: white;
   font-weight: 800;
@@ -94,25 +97,39 @@ body {
   box-shadow:
     0 4px 14px rgba(90, 90, 135, 0.35),
     0 2px 4px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.1, 0.8, 0.25, 1);
   letter-spacing: 0.02em;
-  /* 防止误触 */
   touch-action: manipulation;
 }
+.btn-btv::before {
+  content: "";
+  position: absolute;
+  z-index: -1; /* 确保堆叠在父背景上方，但在任何按钮内文本的下方 */
+  top: 50%;
+  left: 50%;
+  width: 140%;
+  padding-bottom: 140%; /* 形成宽高比 1:1 的圆形 */
+  border-radius: 50%;
+  background: #4e4e7a; /* 官网主按钮 hover 变色原色 */
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.45s cubic-bezier(0.1, 0.8, 0.25, 1);
+  will-change: transform;
+}
 .btn-btv:hover {
-  background: #6e6e9e;
+  transform: translateY(-2px);
   box-shadow:
-    0 6px 20px rgba(90, 90, 135, 0.45),
-    0 3px 6px rgba(0, 0, 0, 0.1);
-  transform: translateY(-1px);
+    0 8px 24px rgba(90, 90, 135, 0.45),
+    0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.btn-btv:hover::before {
+  transform: translate(-50%, -50%) scale(1);
 }
 .btn-btv:active {
   transform: scale(0.95);
-  box-shadow:
-    0 2px 8px rgba(90, 90, 135, 0.3);
+  box-shadow: 0 2px 8px rgba(90, 90, 135, 0.3);
 }
 
-/* 手机屏幕适配更小按钮（用于筛选栏等非主操作） */
+/* 手机屏幕适配更小按钮 */
 @media (max-width: 480px) {
   .btn-btv {
     font-size: 1.125rem;
@@ -121,7 +138,68 @@ body {
   }
 }
 
-/* 蓝色次要按钮 */
+/* 经典浅蓝次要按钮 (官网 .mainbutton--secondary 风格，带圆形扩散动效) */
+.btn-btv-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  background: #abe0fa; /* 官网经典浅蓝 */
+  color: #5a5a87; /* 官网经典紫灰 */
+  font-weight: 800;
+  font-size: 1.375rem;
+  padding: 16px 40px;
+  min-height: 56px;
+  min-width: 56px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  box-shadow:
+    0 4px 14px rgba(171, 224, 250, 0.35),
+    0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.1, 0.8, 0.25, 1);
+  letter-spacing: 0.02em;
+  touch-action: manipulation;
+}
+.btn-btv-secondary::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 50%;
+  width: 140%;
+  padding-bottom: 140%;
+  border-radius: 50%;
+  background: #9edefd; /* 官网次要按钮 hover 变色原色 */
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.45s cubic-bezier(0.1, 0.8, 0.25, 1);
+  will-change: transform;
+}
+.btn-btv-secondary:hover {
+  color: #4e4e7a;
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(171, 224, 250, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+}
+.btn-btv-secondary:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+}
+.btn-btv-secondary:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(171, 224, 250, 0.3);
+}
+@media (max-width: 480px) {
+  .btn-btv-secondary {
+    font-size: 1.125rem;
+    padding: 14px 28px;
+    min-height: 48px;
+  }
+}
+
+/* 经典深蓝高光次要按钮 (即原有 btn-btv-blue 别称，用于特殊功能强调) */
 .btn-btv-blue {
   background: #1C98ED;
   box-shadow: 0 4px 14px rgba(28, 152, 237, 0.35);
