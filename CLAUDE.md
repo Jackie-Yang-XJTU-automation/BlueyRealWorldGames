@@ -51,15 +51,16 @@ src/
 ```
 
 ## 当前进度
-- ✅ P0 MVP：首页 + 顶气球完整游戏
+- ✅ P0 MVP：首页 + 3 款可玩游戏（顶气球、影子陆地、爸爸机器人）
 - ✅ PWA：可安装、离线可用
 - ✅ 移动端触摸适配
 - ✅ GitHub Pages 自动部署
 - ✅ 通用计时器（TimerPage）
 - ✅ 虚拟骰子（DicePage）
-- ✅ 音效系统（ZzFX <1KB 程序生成）
+- ✅ P1：第二个可玩游戏（已超额，实际完成 3 款）
+- ⬜ 音效系统（ZzFX <1KB 程序生成）
 - ⬜ T8 今日游戏推荐
-- ⬜ P1：第二个可玩游戏
+- ⬜ 其余 6 款游戏可玩版本
 
 ## 编码规范
 - 组件文件和目录使用 PascalCase 命名
@@ -91,12 +92,13 @@ src/
 Always design with Bluey cartoon + official website aesthetic:
 
 **色彩体系**
-- 主文字：`#5a5a87`（紫灰，Bluey 官网正文色）
-- 主按钮：`#5a5a87`（紫灰 bg + 白色字）
-- 天空背景：`linear-gradient(180deg, #87CEEB, #B3E5FC, #E1F5FE, #FFFFFF)`
-- 点缀暖色：`#F58634`（橙，用于标签/收藏）、`#FFC107`（黄，用于星级）
+- 主文字/主按钮：`#2C4364`（班底特深蓝，CSS `--color-btv-dark`）
+- 辅助文字：`#5a5a87`（紫灰，用于次要信息和半透明叠加）、`#5C728D`（`--color-btv-text-muted`）
+- 主按钮：`#2C4364` bg + 白色（`#FDFBF7`）字
+- 天空背景：`linear-gradient(180deg, #87CEEB, #B3E5FC, #E1F5FE, #F9F6EE)`
+- 点缀暖色：`#F39C62`（宾果橙，用于标签/收藏）、`#FCD882`（玛芬黄，用于星级）
 - 卡片边框：`#E3F2FD`（浅蓝），hover 边框 `#BBDEFB`
-- 绿色：`#4CAF50`（成功/确认按钮）、红色：`#F44336`（危险操作）
+- 绿色：`#90C79A`（成功/确认按钮）、红色：`#D96B62`（危险操作）
 
 **排版**
 - 字体：Nunito（优先），fallback 到 system-ui

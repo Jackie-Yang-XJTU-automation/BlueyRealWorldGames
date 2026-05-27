@@ -12,7 +12,7 @@ export function Layout() {
     <div className="min-h-screen bg-btv-sky relative" onClick={() => setShowTools(false)}>
       <Clouds />
 
-      <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b-2 border-[#BBDEFB]">
+      <header className="sticky top-0 z-[200] bg-white/85 backdrop-blur-md border-b-2 border-[#BBDEFB]">
         <div className="max-w-5xl mx-auto px-3 py-2 flex items-center justify-between">
           <Link to="/" className="flex items-center no-underline shrink-0">
             <img
@@ -33,7 +33,7 @@ export function Layout() {
                 🧰
               </button>
               {showTools && (
-                <div className="absolute right-0 top-full mt-2 bg-white rounded-2xl shadow-xl border-2 border-[#E3F2FD] py-2 min-w-36 z-50 animate-event-pop-in">
+                <div className="absolute right-0 top-full mt-2 bg-white rounded-2xl shadow-xl border-2 border-[#E3F2FD] py-2 min-w-36 z-[100] animate-event-pop-in">
                   <Link
                     to="/tools/timer"
                     onClick={() => setShowTools(false)}

@@ -10,8 +10,8 @@ export function Leaderboard({ entries, currentRank }: LeaderboardProps) {
     return (
       <div className="text-center py-8">
         <p className="text-4xl mb-2">🏆</p>
-        <p className="text-gray-400 font-bold text-lg">还没有记录</p>
-        <p className="text-gray-300 text-sm mt-1">快来挑战第一个纪录吧！</p>
+        <p className="text-[#5a5a87]/50 font-bold text-lg">还没有记录</p>
+        <p className="text-[#5a5a87]/35 text-sm mt-1">快来挑战第一个纪录吧！</p>
       </div>
     )
   }
@@ -37,7 +37,7 @@ export function Leaderboard({ entries, currentRank }: LeaderboardProps) {
             </span>
             <div>
               <p className="font-extrabold text-btv-dark">{entry.name}</p>
-              <p className="text-xs text-gray-400 font-bold">{entry.date}</p>
+              <p className="text-xs text-[#5a5a87]/50 font-bold">{entry.date}</p>
             </div>
           </div>
           <div className="text-right flex items-center gap-3">
@@ -49,7 +49,7 @@ export function Leaderboard({ entries, currentRank }: LeaderboardProps) {
         </div>
       ))}
       {currentRank && currentRank > entries.length && (
-        <div className="text-center py-2 text-sm text-gray-400 font-bold">
+        <div className="text-center py-2 text-sm text-[#5a5a87]/50 font-bold">
           你排在第 {currentRank} 名
         </div>
       )}

@@ -71,7 +71,7 @@ export function DicePage() {
   return (
     <div className="max-w-sm mx-auto">
       <h2 className="page-title-btv text-center mb-1">🎲 虚拟骰子</h2>
-      <p className="text-center text-gray-400 font-bold text-sm mb-6">
+      <p className="text-center text-[#5a5a87]/50 font-bold text-sm mb-6">
         需要随机数？直接掷骰子！
       </p>
 
@@ -99,13 +99,13 @@ export function DicePage() {
         <button
           onClick={removeDice}
           disabled={diceCount <= 1}
-          className="w-10 h-10 rounded-full bg-gray-100 text-gray-400 font-extrabold text-lg disabled:opacity-30"
+          className="w-10 h-10 rounded-full bg-gray-100 text-[#5a5a87]/50 font-extrabold text-lg disabled:opacity-50 disabled:pointer-events-none"
         >−</button>
         <span className="text-lg font-extrabold text-btv-dark">{diceCount} 颗</span>
         <button
           onClick={addDice}
           disabled={diceCount >= 4}
-          className="w-10 h-10 rounded-full bg-gray-100 text-btv-dark font-extrabold text-lg disabled:opacity-30"
+          className="w-10 h-10 rounded-full bg-gray-100 text-btv-dark font-extrabold text-lg disabled:opacity-50 disabled:pointer-events-none"
         >+</button>
       </div>
 

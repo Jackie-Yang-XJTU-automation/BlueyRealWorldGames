@@ -67,7 +67,7 @@ export function HomePage() {
 
       {/* 随机选中弹窗 */}
       {randomGame && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
+        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
           <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-btv-yellow">
             <div className="text-7xl mb-3">{randomGame.emoji}</div>
             <h3 className="text-xl font-extrabold text-btv-orange mb-2">🎲 命运选择了...</h3>

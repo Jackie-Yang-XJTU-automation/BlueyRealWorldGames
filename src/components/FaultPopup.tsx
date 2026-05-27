@@ -185,7 +185,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
               <span>快速点击修复！</span>
             </button>
             {showTapHint && (
-              <p className="text-xs text-gray-400 font-bold">
+              <p className="text-xs text-[#5a5a87]/50 font-bold">
                 💡 摇晃功能需要 HTTPS 连接，当前请点击按钮修复
               </p>
             )}
@@ -206,7 +206,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
               <span>快速点击修复！</span>
             </button>
             {showTapHint && (
-              <p className="text-xs text-gray-400 font-bold">
+              <p className="text-xs text-[#5a5a87]/50 font-bold">
                 💡 声控需要麦克风权限和 HTTPS，当前请点击按钮修复
               </p>
             )}
@@ -216,7 +216,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
+    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
       <div className={`bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 transition-colors duration-300 animate-jelly ${
         isFixed ? 'border-btv-green' : 'border-[#AB47BC]'
       }`}>

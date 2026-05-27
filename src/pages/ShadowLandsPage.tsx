@@ -73,10 +73,10 @@ export function ShadowLandsPage() {
           </span>
           <button
             onClick={() => setShowScoreHelp(!showScoreHelp)}
-            className="w-5 h-5 rounded-full bg-[#F0F4FF] text-[#5a5a87]/50 text-[10px] font-extrabold flex items-center justify-center hover:bg-[#E3ECFD] transition-colors"
+            className="w-11 h-11 rounded-full bg-[#F0F4FF] text-[#5a5a87]/50 text-sm font-extrabold flex items-center justify-center hover:bg-[#E3ECFD] transition-colors"
           >?</button>
           {showScoreHelp && (
-            <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-20 bg-white rounded-2xl px-4 py-3 shadow-lg border-2 border-[#E3F2FD] text-left whitespace-nowrap animate-jelly">
+            <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-[100] bg-white rounded-2xl px-4 py-3 shadow-lg border-2 border-[#E3F2FD] text-left whitespace-nowrap animate-jelly">
               <p className="text-xs font-bold text-[#5a5a87]/60 mb-1.5">星星怎么来的？</p>
               <p className="text-xs font-extrabold text-[#5a5a87]/70">⏱ 坚持越久分越高（每秒 +10⭐）</p>
               <p className="text-xs font-extrabold text-[#5a5a87]/70">🎯 完成挑战任务加分</p>
@@ -255,7 +255,7 @@ export function ShadowLandsPage() {
 
       {/* 落地确认弹窗 */}
       {showLandConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C98ED]/40 backdrop-blur-sm animate-event-pop-in px-4">
+        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/40 backdrop-blur-sm animate-event-pop-in px-4">
           <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-btv-red animate-jelly">
             <div className="text-7xl mb-3">☀️</div>
             <h2 className="text-2xl font-extrabold text-btv-dark mb-1">确定踩到阳光了？</h2>
@@ -294,7 +294,7 @@ export function ShadowLandsPage() {
 
 function ResultModal({ game }: { game: ReturnType<typeof useShadowLandsGame> }) {
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-[#4CAF50]/20 backdrop-blur-sm animate-event-pop-in px-4">
+    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#4CAF50]/20 backdrop-blur-sm animate-event-pop-in px-4">
       <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
@@ -306,7 +306,7 @@ function ResultModal({ game }: { game: ReturnType<typeof useShadowLandsGame> }) 
           <span className="text-3xl">⭐</span>
           <span className="text-4xl font-extrabold text-[#DCA018] timer-text">{game.totalStars}</span>
         </div>
-        <div className="flex justify-center gap-4 text-xs font-bold text-gray-400 mb-4">
+        <div className="flex justify-center gap-4 text-xs font-bold text-[#5a5a87]/50 mb-4">
           <span>⏱ 时长 {game.timeStars}⭐</span>
           <span>🎯 任务 {game.taskStars}⭐</span>
           <span>⚡ 事件 {game.eventStars}⭐</span>
@@ -341,7 +341,7 @@ function ResultModal({ game }: { game: ReturnType<typeof useShadowLandsGame> }) 
 
 function VictoryModal({ game }: { game: ReturnType<typeof useShadowLandsGame> }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#4CAF50]/20 backdrop-blur-sm animate-event-pop-in px-4">
+    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#4CAF50]/20 backdrop-blur-sm animate-event-pop-in px-4">
       <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-[#A5D6A7] animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
@@ -352,7 +352,7 @@ function VictoryModal({ game }: { game: ReturnType<typeof useShadowLandsGame> })
           <span className="text-3xl">⭐</span>
           <span className="text-4xl font-extrabold text-[#DCA018] timer-text">{game.totalStars}</span>
         </div>
-        <div className="flex justify-center gap-4 text-xs font-bold text-gray-400 mb-3">
+        <div className="flex justify-center gap-4 text-xs font-bold text-[#5a5a87]/50 mb-3">
           <span>⏱ {game.timeStars}⭐</span>
           <span>🎯 {game.taskStars}⭐</span>
           <span>⚡ {game.eventStars}⭐</span>

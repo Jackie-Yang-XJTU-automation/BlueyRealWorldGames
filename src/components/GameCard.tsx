@@ -46,7 +46,7 @@ export function GameCard({ game, isFavorite, onToggleFavorite, onClick }: GameCa
             onToggleFavorite(game.id)
           }}
           aria-label={isFavorite ? '取消收藏' : '收藏游戏'}
-          className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 hover:bg-white rounded-full flex items-center justify-center text-base shadow-sm hover:scale-110 active:scale-90 transition-transform z-10"
+          className="absolute top-2.5 right-2.5 w-11 h-11 bg-white/90 hover:bg-white rounded-full flex items-center justify-center text-lg shadow-sm hover:scale-110 active:scale-90 transition-transform z-10"
         >
           {isFavorite ? '❤️' : '🤍'}
         </button>

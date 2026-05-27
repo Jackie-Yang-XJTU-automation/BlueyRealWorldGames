@@ -32,7 +32,7 @@ export function CommandPanel({ onCommand, counts, disabled }: CommandPanelProps)
             disabled={disabled}
             className="relative flex flex-col items-center justify-center gap-1 rounded-2xl p-4 min-h-[80px]
                        text-white font-extrabold shadow-md transition-all duration-150
-                       active:scale-95 disabled:opacity-30 disabled:scale-100 disabled:cursor-not-allowed
+                       active:scale-95 disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed disabled:pointer-events-none
                        touch-action-manipulation select-none"
             style={{ backgroundColor: cmd.color }}
           >
