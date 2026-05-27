@@ -15,7 +15,9 @@ export function GameTimer({ state, elapsedMs, formatTime }: GameTimerProps) {
             ? 'text-btv-orange'
             : state === 'finished'
               ? 'text-btv-red'
-              : 'text-gray-300'
+              : state === 'paused'
+                ? 'text-[#5a5a87]/40'
+                : 'text-[#5a5a87]/25'
         }`}
       >
         {state === 'idle' ? '0.00' : formatTime(elapsedMs)}

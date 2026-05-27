@@ -8,6 +8,7 @@ interface RandomEventPopupProps {
 
 export function RandomEventPopup({ event, onLand }: RandomEventPopupProps) {
   const [remaining, setRemaining] = useState(event.duration)
+  const [showConfirm, setShowConfirm] = useState(false)
 
   useEffect(() => {
     setRemaining(event.duration)
@@ -45,9 +46,23 @@ export function RandomEventPopup({ event, onLand }: RandomEventPopupProps) {
             />
           </div>
         </div>
-        <button onClick={onLand} className="btn-btv btn-btv-red w-full text-lg">
-          💥 落地了！
-        </button>
+        {!showConfirm ? (
+          <button onClick={() => setShowConfirm(true)} className="btn-btv btn-btv-red w-full text-lg">
+            💥 落地了！
+          </button>
+        ) : (
+          <div>
+            <p className="text-sm font-extrabold text-[#5a5a87]/50 mb-3">确定气球真的落地了吗？</p>
+            <div className="flex gap-3">
+              <button onClick={() => setShowConfirm(false)} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">
+                还没！
+              </button>
+              <button onClick={onLand} className="btn-btv btn-btv-red flex-1">
+                是，落地了！
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -17,6 +17,7 @@ const SHADOW_PHRASES = [
 export function ShadowLandsPage() {
   const game = useShadowLandsGame()
   const [showTasks, setShowTasks] = useState(true)
+  const [showLandConfirm, setShowLandConfirm] = useState(false)
   const [encourageIndex, setEncourageIndex] = useState(0)
   const encourageTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -25,6 +26,8 @@ export function ShadowLandsPage() {
       encourageTimerRef.current = setInterval(() => {
         setEncourageIndex(i => (i + 1) % SHADOW_PHRASES.length)
       }, 8000)
+    } else if (game.state === 'paused') {
+      if (encourageTimerRef.current) clearInterval(encourageTimerRef.current)
     } else {
       if (encourageTimerRef.current) clearInterval(encourageTimerRef.current)
     }
@@ -89,19 +92,36 @@ export function ShadowLandsPage() {
             ☀️ 进入影子陆地！
           </button>
         )}
-        {game.state === 'running' && !game.currentEvent && (
-          <button onClick={game.handleLand} className="btn-btv btn-btv-red btn-game-action">
-            🐊 踩到阳光了！
-          </button>
+        {game.state === 'running' && (
+          <div className="flex gap-3">
+            <button onClick={game.handlePause} className="btn-btv-secondary !text-lg !min-h-0 !py-3 !px-5">
+              ⏸ 暂停
+            </button>
+            {!game.currentEvent && (
+              <button onClick={() => setShowLandConfirm(true)} className="btn-btv btn-btv-red btn-game-action">
+                🐊 踩到阳光了！
+              </button>
+            )}
+          </div>
         )}
-        {(game.state === 'finished' || game.state === 'paused') && (
+        {game.state === 'paused' && (
+          <div className="flex gap-3">
+            <button onClick={game.handleResume} className="btn-btv btn-game-action animate-pulse-glow-btv">
+              ▶ 继续玩
+            </button>
+            <button onClick={game.handleReset} className="btn-btv btn-btv-blue text-lg">
+              🔄 重来
+            </button>
+          </div>
+        )}
+        {game.state === 'finished' && (
           <button onClick={game.handleReset} className="btn-btv btn-btv-blue text-lg">
             🔄 重新开始
           </button>
         )}
       </div>
 
-      {/* 加油语 */}
+      {/* 加油语 / 暂停提示 */}
       {game.state === 'running' && !game.currentEvent && (
         <p className="text-center text-btv-blue/70 text-sm font-extrabold animate-pulse mb-3">
           {SHADOW_PHRASES[encourageIndex]}
@@ -110,6 +130,11 @@ export function ShadowLandsPage() {
       {game.state === 'running' && game.currentEvent && (
         <p className="text-center text-btv-orange text-sm font-extrabold animate-pulse mb-3">
           ⚡ 突发状况！小心鳄鱼！
+        </p>
+      )}
+      {game.state === 'paused' && (
+        <p className="text-center text-[#5a5a87]/40 text-sm font-extrabold mb-3">
+          ⏸ 游戏已暂停，休息一下～
         </p>
       )}
 
@@ -187,6 +212,25 @@ export function ShadowLandsPage() {
       <div className="card-btv">
         <Leaderboard entries={game.leaderboard} currentRank={game.currentRank} />
       </div>
+
+      {/* 落地确认弹窗 */}
+      {showLandConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1C98ED]/40 backdrop-blur-sm animate-event-pop-in px-4">
+          <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-btv-red">
+            <div className="text-7xl mb-3">☀️</div>
+            <h2 className="text-2xl font-extrabold text-btv-dark mb-1">确定踩到阳光了？</h2>
+            <p className="text-[#5a5a87]/50 font-bold text-sm mb-5">还在影子里的话，继续玩！</p>
+            <div className="flex gap-3">
+              <button onClick={() => setShowLandConfirm(false)} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">
+                还没！继续玩
+              </button>
+              <button onClick={() => { setShowLandConfirm(false); game.handleLand() }} className="btn-btv btn-btv-red flex-1">
+                是，踩到了！
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 落地弹窗 */}
       {game.showResult && <ResultModal game={game} />}

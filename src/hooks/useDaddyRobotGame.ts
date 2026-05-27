@@ -17,7 +17,7 @@ interface FlyingStar {
 }
 
 export function useDaddyRobotGame() {
-  const { state, elapsedMs, start, stop, reset, formatTime } = useTimer()
+  const { state, elapsedMs, start, pause, resume, stop, reset, formatTime } = useTimer()
   const { getLeaderboard, addEntry, getRank } = useLeaderboard('daddy-robot-leaderboard')
 
   const [tasks, setTasks] = useState<TaskCard[]>(initialTasks)
@@ -126,6 +126,18 @@ export function useDaddyRobotGame() {
     startEvents()
   }, [start, startEvents])
 
+  const handlePause = useCallback(() => {
+    if (state !== 'running') return
+    pause()
+    stopEvents()
+  }, [state, pause, stopEvents])
+
+  const handleResume = useCallback(() => {
+    if (state !== 'paused') return
+    resume()
+    startEvents()
+  }, [state, resume, startEvents])
+
   const handleLand = useCallback(() => {
     if (state !== 'running') return
     stop()
@@ -204,7 +216,7 @@ export function useDaddyRobotGame() {
     showResult, showVictory,
     playerName, setPlayerName,
     leaderboard, currentRank,
-    handleStart, handleLand, handleSaveScore, handleReset,
+    handleStart, handlePause, handleResume, handleLand, handleSaveScore, handleReset,
     confirmTask, isLocked,
   }
 }
