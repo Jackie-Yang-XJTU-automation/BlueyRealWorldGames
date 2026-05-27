@@ -4,6 +4,7 @@ import { GameTimer } from '../components/GameTimer'
 import { RandomEventPopup } from '../components/RandomEventPopup'
 import { Leaderboard } from '../components/Leaderboard'
 import { LottieCelebration } from '../components/LottieCelebration'
+import { CountdownOverlay } from '../components/CountdownOverlay'
 
 const BALLOON_COLORS = ['#F44336', '#F58634', '#FFC107', '#4CAF50', '#1C98ED', '#AB47BC', '#EC407A']
 const TASK_SCORES = [100, 200, 300, 500, 800]
@@ -23,6 +24,7 @@ export function KeepyUppyPage() {
   const [balloonColor] = useState(() => BALLOON_COLORS[Math.floor(Math.random() * BALLOON_COLORS.length)])
   const [showTasks, setShowTasks] = useState(true)
   const [showLandConfirm, setShowLandConfirm] = useState(false)
+  const [showCountdown, setShowCountdown] = useState(false)
   const [showScoreHelp, setShowScoreHelp] = useState(false)
   const [hasPlayedBefore] = useState(() => localStorage.getItem(STORAGE_KEY_PLAYED) === 'true')
   const [encourageIndex, setEncourageIndex] = useState(0)
@@ -118,7 +120,7 @@ export function KeepyUppyPage() {
                 💡 和宝宝一起顶气球，坚持越久星星越多！
               </p>
             )}
-            <button onClick={() => { markPlayed(); game.handleStart() }} className="btn-btv btn-game-action animate-pulse-glow-btv">
+            <button onClick={() => { markPlayed(); setShowCountdown(true) }} className="btn-btv btn-game-action animate-pulse-glow-btv">
               🎈 像 Bluey 一样开始！
             </button>
           </div>
@@ -272,6 +274,11 @@ export function KeepyUppyPage() {
       {/* 随机事件 */}
       {game.currentEvent && game.state === 'running' && (
         <RandomEventPopup event={game.currentEvent} onLand={game.handleLand} />
+      )}
+
+      {/* 倒计时 */}
+      {showCountdown && (
+        <CountdownOverlay emoji="🎈" onComplete={() => { setShowCountdown(false); game.handleStart() }} />
       )}
     </div>
   )

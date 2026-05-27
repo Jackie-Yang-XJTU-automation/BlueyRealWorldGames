@@ -5,6 +5,7 @@ import { CommandPanel } from '../components/CommandPanel'
 import { FaultPopup } from '../components/FaultPopup'
 import { Leaderboard } from '../components/Leaderboard'
 import { LottieCelebration } from '../components/LottieCelebration'
+import { CountdownOverlay } from '../components/CountdownOverlay'
 import type { GameFault } from '../types/game'
 
 const PRESET_NAMES = ['爸爸', '妈妈', '宝宝', '爷爷', '奶奶']
@@ -22,6 +23,7 @@ export function DaddyRobotPage() {
   const game = useDaddyRobotGame()
   const [showTasks, setShowTasks] = useState(true)
   const [showLandConfirm, setShowLandConfirm] = useState(false)
+  const [showCountdown, setShowCountdown] = useState(false)
   const [showScoreHelp, setShowScoreHelp] = useState(false)
   const [hasPlayedBefore] = useState(() => localStorage.getItem(STORAGE_KEY_PLAYED) === 'true')
   const [encourageIndex, setEncourageIndex] = useState(0)
@@ -111,7 +113,7 @@ export function DaddyRobotPage() {
                 💡 给爸爸机器人发指令，完成所有任务获取星星！
               </p>
             )}
-            <button onClick={() => { markPlayed(); game.handleStart() }} className="btn-btv btn-game-action animate-pulse-glow-btv">
+            <button onClick={() => { markPlayed(); setShowCountdown(true) }} className="btn-btv btn-game-action animate-pulse-glow-btv">
               🤖 启动爸爸机器人！
             </button>
           </div>
@@ -268,6 +270,10 @@ export function DaddyRobotPage() {
           fault={game.currentEvent as GameFault}
           onFixed={game.handleFaultFixed}
         />
+      )}
+
+      {showCountdown && (
+        <CountdownOverlay emoji="🤖" onComplete={() => { setShowCountdown(false); game.handleStart() }} />
       )}
     </div>
   )

@@ -4,6 +4,7 @@ import { GameTimer } from '../components/GameTimer'
 import { RandomEventPopup } from '../components/RandomEventPopup'
 import { Leaderboard } from '../components/Leaderboard'
 import { LottieCelebration } from '../components/LottieCelebration'
+import { CountdownOverlay } from '../components/CountdownOverlay'
 
 const PRESET_NAMES = ['爸爸', '妈妈', '宝宝', '爷爷', '奶奶']
 const STORAGE_KEY_PLAYED = 'shadowlands_played'
@@ -20,6 +21,7 @@ export function ShadowLandsPage() {
   const game = useShadowLandsGame()
   const [showTasks, setShowTasks] = useState(true)
   const [showLandConfirm, setShowLandConfirm] = useState(false)
+  const [showCountdown, setShowCountdown] = useState(false)
   const [showScoreHelp, setShowScoreHelp] = useState(false)
   const [hasPlayedBefore] = useState(() => localStorage.getItem(STORAGE_KEY_PLAYED) === 'true')
   const [encourageIndex, setEncourageIndex] = useState(0)
@@ -114,7 +116,7 @@ export function ShadowLandsPage() {
                 💡 只能走在影子里！踩到阳光就要被鳄鱼抓走啦～
               </p>
             )}
-            <button onClick={() => { markPlayed(); game.handleStart() }} className="btn-btv btn-game-action animate-pulse-glow-btv">
+            <button onClick={() => { markPlayed(); setShowCountdown(true) }} className="btn-btv btn-game-action animate-pulse-glow-btv">
               ☀️ 进入影子陆地！
             </button>
           </div>
@@ -268,6 +270,10 @@ export function ShadowLandsPage() {
       {/* 随机事件 */}
       {game.currentEvent && game.state === 'running' && (
         <RandomEventPopup event={game.currentEvent} onLand={game.handleLand} />
+      )}
+
+      {showCountdown && (
+        <CountdownOverlay emoji="☀️" onComplete={() => { setShowCountdown(false); game.handleStart() }} />
       )}
     </div>
   )
