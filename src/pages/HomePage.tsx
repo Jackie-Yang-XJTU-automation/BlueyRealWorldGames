@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { games, getRandomGame } from '../data/games'
 import { GameCard } from '../components/GameCard'
@@ -49,39 +49,81 @@ export function HomePage() {
     setFilters(newFilters)
   }, [])
 
+  // Escape 键关闭弹窗
+  useEffect(() => {
+    if (!randomGame) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setRandomGame(null)
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [randomGame])
+
   return (
     <div>
-      {/* 标题 */}
-      <div className="text-center mb-4">
-        <img src={blueyFamily} alt="Bluey Family" className="w-28 sm:w-36 h-auto mx-auto mb-2 drop-shadow-lg" />
-        <h2 className="page-title-btv mb-1">今天玩什么？</h2>
-        <p className="text-[#5a5a87]/50 font-bold text-sm">
+      {/* 英雄区 */}
+      <div className="text-center mb-5 relative">
+        {/* 浮动装饰 emoji */}
+        <span className="absolute top-0 left-[8%] text-3xl animate-decor-float select-none pointer-events-none" style={{ animationDelay: '0s' }}>🎈</span>
+        <span className="absolute top-6 left-[18%] text-2xl animate-decor-float select-none pointer-events-none" style={{ animationDelay: '0.6s' }}>⭐</span>
+        <span className="absolute top-2 right-[12%] text-3xl animate-decor-float select-none pointer-events-none" style={{ animationDelay: '1.2s' }}>🎵</span>
+        <span className="absolute top-8 right-[22%] text-2xl animate-decor-float select-none pointer-events-none" style={{ animationDelay: '1.8s' }}>🌳</span>
+        <span className="absolute top-4 left-[45%] text-xl animate-decor-float select-none pointer-events-none" style={{ animationDelay: '2.4s' }}>💫</span>
+
+        <img
+          src={blueyFamily}
+          alt="Bluey 全家福"
+          className="w-36 sm:w-44 h-auto mx-auto mb-2 drop-shadow-[0_8px_20px_rgba(44,67,100,0.18)] animate-jelly"
+        />
+        <h2 className="page-title-btv mb-1 text-3xl sm:text-4xl">
+          今天玩什么？
+        </h2>
+        <p className="text-[#5a5a87]/45 font-bold text-sm tracking-wide">
           For Real Life · 和宝宝一起，玩真的！
         </p>
       </div>
 
       {/* 筛选栏 */}
-      <div className="mb-4">
+      <div className="mb-5">
         <FilterBar filters={filters} onFilterChange={handleFilterChange} onRandomPick={handleRandomPick} />
       </div>
 
       {/* 随机选中弹窗 */}
       {randomGame && (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
-          <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-btv-yellow">
-            <div className="text-7xl mb-3">{randomGame.emoji}</div>
-            <h3 className="text-xl font-extrabold text-btv-orange mb-2">🎲 命运选择了...</h3>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="随机选中游戏"
+          className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm px-4"
+          onClick={(e) => { if (e.target === e.currentTarget) setRandomGame(null) }}
+        >
+          <div className="bg-white rounded-[32px] p-8 max-w-sm w-full shadow-2xl text-center border-4 border-btv-yellow animate-jelly">
+            {/* 庆祝星星 */}
+            <div className="absolute -top-3 -left-3 text-2xl animate-decor-float" style={{ animationDelay: '0s' }}>✨</div>
+            <div className="absolute -top-2 -right-3 text-xl animate-decor-float" style={{ animationDelay: '0.3s' }}>🌟</div>
+            <div className="absolute -bottom-1 -left-2 text-2xl animate-decor-float" style={{ animationDelay: '0.6s' }}>💫</div>
+
+            <div className="text-8xl mb-3 drop-shadow-lg">{randomGame.emoji}</div>
+            <h3 className="text-lg font-extrabold text-btv-orange mb-1">🎲 命运选择了...</h3>
             <p className="text-3xl font-extrabold text-btv-dark mb-4">{randomGame.name}！</p>
-            <div className="flex items-center justify-center gap-2 text-sm text-[#5a5a87]/50 font-bold mb-5">
+            <div className="flex items-center justify-center gap-2 text-sm text-[#5a5a87]/45 font-bold mb-6">
               <span>{randomGame.difficulty === 1 ? '⭐' : randomGame.difficulty === 2 ? '⭐⭐' : '⭐⭐⭐'}</span>
-              <span className="text-[#5a5a87]/25">·</span>
+              <span className="text-[#5a5a87]/20">·</span>
               <span>{randomGame.minPlayers}-{randomGame.maxPlayers}人</span>
             </div>
             <div className="flex gap-3">
-              <button onClick={() => setRandomGame(null)} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">
+              <button
+                type="button"
+                onClick={() => setRandomGame(null)}
+                className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/55 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] hover:text-[#5a5a87]/80 transition-all active:scale-95"
+              >
                 再选一次
               </button>
-              <button onClick={() => { setRandomGame(null); navigate(`/game/${randomGame.id}`) }} className="btn-btv flex-1">
+              <button
+                type="button"
+                onClick={() => { setRandomGame(null); navigate(`/game/${randomGame.id}`) }}
+                className="btn-btv flex-1"
+              >
                 就玩这个！
               </button>
             </div>
@@ -89,16 +131,19 @@ export function HomePage() {
         </div>
       )}
 
-      {/* 收藏区 - 紧凑标签条 */}
+      {/* 收藏区 */}
       {favoriteGames.length > 0 && (
-        <div className="mb-5">
-          <div className="flex items-center justify-between mb-2.5">
+        <section aria-label="我的最爱" className="mb-6">
+          <div className="flex items-center justify-between mb-3">
             <button
+              type="button"
               onClick={() => setFavoritesExpanded(!favoritesExpanded)}
-              className="flex items-center gap-1.5 font-extrabold text-red-400"
+              className="flex items-center gap-2 font-extrabold text-red-400 hover:text-red-500 transition-colors"
             >
-              <span>{favoritesExpanded ? '▼' : '▶'}</span>
-              <span className="text-sm">❤️ 我的最爱 ({favoriteGames.length})</span>
+              <span className={`text-xs transition-transform duration-300 ${favoritesExpanded ? 'rotate-0' : '-rotate-90'}`}>
+                ▼
+              </span>
+              <span className="text-sm">❤️ 我的最爱 · {favoriteGames.length}</span>
             </button>
           </div>
           {favoritesExpanded && (
@@ -107,16 +152,18 @@ export function HomePage() {
                 <div
                   key={game.id}
                   onClick={() => navigate(`/game/${game.id}`)}
-                  className="shrink-0 flex items-center gap-1.5 bg-red-50 border border-red-200 rounded-full pl-2.5 pr-1.5 py-1.5 cursor-pointer active:scale-95 transition-transform"
+                  className="shrink-0 flex items-center gap-2 bg-red-50 border-2 border-red-200 rounded-full pl-3 pr-2 py-2 cursor-pointer hover:bg-red-100 hover:border-red-300 hover:shadow-[0_4px_12px_rgba(220,100,100,0.12)] active:scale-95 transition-all duration-300"
                 >
-                  <span className="text-xs">{game.emoji}</span>
-                  <span className="text-xs font-extrabold text-red-400">{game.name}</span>
+                  <span className="text-sm">{game.emoji}</span>
+                  <span className="text-[13px] font-extrabold text-red-400">{game.name}</span>
                   <button
+                    type="button"
                     onClick={e => {
                       e.stopPropagation()
                       handleToggleFavorite(game.id)
                     }}
-                    className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center text-[10px] hover:bg-red-200 transition-colors"
+                    className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center text-[11px] hover:bg-red-200 transition-colors"
+                    aria-label={`从收藏中移除${game.name}`}
                   >
                     ✕
                   </button>
@@ -124,36 +171,37 @@ export function HomePage() {
               ))}
             </div>
           )}
-        </div>
+        </section>
       )}
 
       {/* 全部游戏 */}
-      <div>
-        <h3 className="text-sm font-extrabold text-[#5a5a87]/50 uppercase tracking-wider mb-3">
+      <section aria-label="全部游戏">
+        <h3 className="text-sm font-extrabold text-[#5a5a87]/40 uppercase tracking-wider mb-3">
           全部游戏 · {filteredGames.length}
         </h3>
         {filteredGames.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-6xl mb-3">🔍</p>
-            <p className="text-xl font-extrabold text-[#5a5a87]/50">没有符合筛选的游戏</p>
-            <p className="text-sm text-[#5a5a87]/35 mt-1 font-bold">试试换个类型或场地看看？</p>
+          <div className="text-center py-20">
+            <p className="text-7xl mb-4">🔍</p>
+            <p className="text-xl font-extrabold text-[#5a5a87]/45">没有符合的游戏</p>
+            <p className="text-sm text-[#5a5a87]/30 mt-1.5 font-bold">试试换个类型或场地看看？</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3">
-            {filteredGames.map(game => (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {filteredGames.map((game, i) => (
               <GameCard
                 key={game.id}
                 game={game}
                 isFavorite={isFavorite(game.id)}
                 onToggleFavorite={handleToggleFavorite}
                 onClick={() => navigate(`/game/${game.id}`)}
+                index={i}
               />
             ))}
           </div>
         )}
-      </div>
+      </section>
 
-      {/* 二维码 - 底部 */}
+      {/* 二维码 */}
       <div className="mt-8">
         <QRCode />
       </div>

@@ -522,6 +522,56 @@ button:disabled {
   animation: jelly 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
+/* 卡片入场 — 从下方淡入+弹性回弹 */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-card-enter {
+  animation: card-enter 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+/* 爱心弹跳 — 收藏时的 overshoot */
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.45); }
+  55% { transform: scale(0.75); }
+  75% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+.animate-heart-pop {
+  animation: heart-pop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+/* 随机按钮呼吸光晕 */
+@keyframes random-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 14px rgba(44, 67, 100, 0.35);
+  }
+  50% {
+    box-shadow: 0 4px 22px rgba(44, 67, 100, 0.5), 0 0 0 6px rgba(140, 186, 230, 0.18);
+  }
+}
+.animate-random-pulse {
+  animation: random-pulse 2.8s ease-in-out infinite;
+}
+
+/* 浮动装饰 emoji — 慢速上下摇摆 */
+@keyframes decor-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-8px) rotate(5deg); }
+  75% { transform: translateY(-4px) rotate(-5deg); }
+}
+.animate-decor-float {
+  animation: decor-float 3.5s ease-in-out infinite;
+}
+
 /* ========== Reduced Motion ========== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

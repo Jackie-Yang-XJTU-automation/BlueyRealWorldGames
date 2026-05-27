@@ -12,6 +12,10 @@ export function Layout() {
     <div className="min-h-screen bg-btv-sky relative" onClick={() => setShowTools(false)}>
       <Clouds />
 
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[500] focus:px-5 focus:py-3 focus:bg-white focus:rounded-full focus:shadow-lg focus:font-extrabold focus:text-btv-dark focus:no-underline">
+        跳到主要内容
+      </a>
+
       <header className="sticky top-0 z-[200] bg-white/85 backdrop-blur-md border-b-2 border-[#BBDEFB]">
         <div className="max-w-5xl mx-auto px-3 py-2 flex items-center justify-between">
           <Link to="/" className="flex items-center no-underline shrink-0">
@@ -66,7 +70,7 @@ export function Layout() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 py-8 relative">
+      <main id="main-content" className="max-w-5xl mx-auto px-4 py-8 relative">
         <Outlet />
       </main>
 
