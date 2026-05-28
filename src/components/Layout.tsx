@@ -18,7 +18,7 @@ export function Layout() {
 
       <header className="sticky top-0 z-[200] bg-white/85 backdrop-blur-md border-b-2 border-[#BBDEFB]">
         <div className="max-w-5xl mx-auto px-3 py-2 flex items-center justify-between">
-          <Link to="/" className="flex items-center no-underline shrink-0">
+          <Link to="/" className="flex h-11 items-center no-underline shrink-0">
             <img
               src={blueyLogo}
               alt="Bluey"
@@ -31,7 +31,8 @@ export function Layout() {
             <div className="relative" onClick={e => e.stopPropagation()}>
               <button
                 onClick={() => setShowTools(!showTools)}
-                className="w-10 h-10 rounded-full bg-btv-light-sky text-lg flex items-center justify-center hover:bg-btv-blue hover:text-white transition-all duration-200 shadow-sm"
+                aria-label="打开工具箱"
+                className="w-11 h-11 rounded-full bg-btv-light-sky text-lg flex items-center justify-center hover:bg-btv-blue hover:text-white transition-all duration-200 shadow-sm"
                 title="工具箱"
               >
                 🧰
@@ -41,14 +42,14 @@ export function Layout() {
                   <Link
                     to="/tools/timer"
                     onClick={() => setShowTools(false)}
-                    className="flex items-center gap-2 px-4 py-2.5 font-extrabold text-btv-dark hover:bg-[#E3F2FD] transition-colors"
+                    className="flex min-h-11 items-center gap-2 px-4 py-2.5 font-extrabold text-btv-dark hover:bg-[#E3F2FD] transition-colors"
                   >
                     <span className="text-lg">⏱</span> 计时器
                   </Link>
                   <Link
                     to="/tools/dice"
                     onClick={() => setShowTools(false)}
-                    className="flex items-center gap-2 px-4 py-2.5 font-extrabold text-btv-dark hover:bg-[#E3F2FD] transition-colors"
+                    className="flex min-h-11 items-center gap-2 px-4 py-2.5 font-extrabold text-btv-dark hover:bg-[#E3F2FD] transition-colors"
                   >
                     <span className="text-lg">🎲</span> 骰子
                   </Link>
@@ -60,7 +61,7 @@ export function Layout() {
             {!isHome && (
               <Link
                 to="/"
-                className="shrink-0 bg-[#abe0fa] text-[#5a5a87] font-extrabold px-4.5 py-2 rounded-full border-2 border-white/60
+                className="min-h-11 shrink-0 bg-[#abe0fa] text-[#5a5a87] font-extrabold px-4.5 py-2 rounded-full border-2 border-white/60
                            hover:bg-[#9edefd] hover:scale-105 active:scale-95 transition-all duration-200 text-xs shadow-sm flex items-center gap-1"
               >
                 <span>← 返回首页</span>

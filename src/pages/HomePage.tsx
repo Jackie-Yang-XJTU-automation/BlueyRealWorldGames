@@ -97,7 +97,7 @@ export function HomePage() {
           className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm px-4"
           onClick={(e) => { if (e.target === e.currentTarget) setRandomGame(null) }}
         >
-          <div className="bg-white rounded-[32px] p-8 max-w-sm w-full shadow-2xl text-center border-4 border-btv-yellow animate-jelly">
+          <div className="relative overflow-visible bg-white rounded-[32px] p-8 max-w-sm w-full shadow-2xl text-center border-4 border-btv-yellow animate-jelly">
             {/* 庆祝星星 */}
             <div className="absolute -top-3 -left-3 text-2xl animate-decor-float" style={{ animationDelay: '0s' }}>✨</div>
             <div className="absolute -top-2 -right-3 text-xl animate-decor-float" style={{ animationDelay: '0.3s' }}>🌟</div>
@@ -162,7 +162,7 @@ export function HomePage() {
                       e.stopPropagation()
                       handleToggleFavorite(game.id)
                     }}
-                    className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center text-[11px] hover:bg-red-200 transition-colors"
+                    className="w-[44px] h-[44px] min-w-[44px] min-h-[44px] bg-red-100 rounded-full flex items-center justify-center text-sm hover:bg-red-200 transition-colors"
                     aria-label={`从收藏中移除${game.name}`}
                   >
                     ✕

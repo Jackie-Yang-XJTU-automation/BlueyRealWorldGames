@@ -38,7 +38,7 @@ export function FilterBar({ onFilterChange, onRandomPick, filters }: FilterBarPr
       </div>
 
       {/* 第二行：场地 + 体力 + 随机 */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <button
           type="button"
           onClick={() => onFilterChange({ ...filters, location: filters.location === 'all' ? 'indoor' : filters.location === 'indoor' ? 'outdoor' : 'all' })}
@@ -68,12 +68,10 @@ export function FilterBar({ onFilterChange, onRandomPick, filters }: FilterBarPr
           {filters.energy === 1 ? '🪶 轻度' : filters.energy === 2 ? '⚡ 中等' : filters.energy === 3 ? '🔥 高能' : '🪶⚡🔥 体力'}
         </button>
 
-        <div className="flex-1" />
-
         <button
           type="button"
           onClick={onRandomPick}
-          className="shrink-0 btn-btv !py-2.5 !px-4 !text-sm !min-h-0 !font-extrabold animate-random-pulse"
+          className="shrink-0 btn-btv !py-2.5 !px-4 !text-sm !min-h-11 !font-extrabold animate-random-pulse"
         >
           🎲 随机
         </button>
