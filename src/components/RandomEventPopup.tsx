@@ -4,9 +4,20 @@ import type { RandomEvent } from '../types/game'
 interface RandomEventPopupProps {
   event: RandomEvent
   onLand: () => void
+  endButtonLabel?: string
+  confirmQuestion?: string
+  cancelLabel?: string
+  confirmLabel?: string
 }
 
-export function RandomEventPopup({ event, onLand }: RandomEventPopupProps) {
+export function RandomEventPopup({
+  event,
+  onLand,
+  endButtonLabel = '💥 落地了！',
+  confirmQuestion = '确定气球真的落地了吗？',
+  cancelLabel = '还没！',
+  confirmLabel = '是，落地了！',
+}: RandomEventPopupProps) {
   const [remaining, setRemaining] = useState(event.duration)
   const [showConfirm, setShowConfirm] = useState(false)
 
@@ -47,18 +58,18 @@ export function RandomEventPopup({ event, onLand }: RandomEventPopupProps) {
           </div>
         </div>
         {!showConfirm ? (
-          <button onClick={() => setShowConfirm(true)} className="btn-btv btn-btv-red w-full text-lg">
-            💥 落地了！
+          <button type="button" onClick={() => setShowConfirm(true)} className="btn-btv btn-btv-red w-full text-lg">
+            {endButtonLabel}
           </button>
         ) : (
           <div>
-            <p className="text-sm font-extrabold text-[#5a5a87]/50 mb-3">确定气球真的落地了吗？</p>
+            <p className="text-sm font-extrabold text-[#5a5a87]/50 mb-3">{confirmQuestion}</p>
             <div className="flex gap-3">
-              <button onClick={() => setShowConfirm(false)} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">
-                还没！
+              <button type="button" onClick={() => setShowConfirm(false)} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">
+                {cancelLabel}
               </button>
-              <button onClick={onLand} className="btn-btv btn-btv-red flex-1">
-                是，落地了！
+              <button type="button" onClick={onLand} className="btn-btv btn-btv-red flex-1">
+                {confirmLabel}
               </button>
             </div>
           </div>

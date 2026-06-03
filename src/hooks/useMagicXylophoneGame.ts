@@ -200,7 +200,7 @@ export function useMagicXylophoneGame() {
   }, [state, resume, startEvents])
 
   const handleEnd = useCallback(() => {
-    if (state !== 'running') return
+    if (state !== 'running' && state !== 'paused') return
     stop()
     stopEvents()
     setShowResult(true)
@@ -220,8 +220,9 @@ export function useMagicXylophoneGame() {
     setWizardIndex(0)
     setPosePrompt(POSE_PROMPTS[0])
     setLatestAction('找一个小物品当木琴，准备做第一个 Ding！')
+    stopEvents()
     reset()
-  }, [reset])
+  }, [reset, stopEvents])
 
   const handleSaveScore = useCallback(() => {
     const name = playerName.trim() || '神秘魔法师'

@@ -118,6 +118,8 @@ export function useDaddyRobotGame() {
   const handleStart = useCallback(() => {
     setShowResult(false)
     setShowVictory(false)
+    setCurrentRank(undefined)
+    setTasks(initialTasks)
     setEventStars(0)
     setTaskStars(0)
     setFixedFaults(0)
@@ -139,7 +141,7 @@ export function useDaddyRobotGame() {
   }, [state, resume, startEvents])
 
   const handleLand = useCallback(() => {
-    if (state !== 'running') return
+    if (state !== 'running' && state !== 'paused') return
     stop()
     stopEvents()
     setShowResult(true)
@@ -172,8 +174,9 @@ export function useDaddyRobotGame() {
     setEventStars(0)
     setFixedFaults(0)
     setCommandCounts({ forward: 0, turn: 0, jump: 0, fetch: 0, dance: 0, custom: 0 })
+    stopEvents()
     reset()
-  }, [reset])
+  }, [reset, stopEvents])
 
   const confirmTask = useCallback((taskId: string, index: number) => {
     if (index !== firstUncompletedIndex || animatingTaskId) return
@@ -217,6 +220,6 @@ export function useDaddyRobotGame() {
     playerName, setPlayerName,
     leaderboard, currentRank,
     handleStart, handlePause, handleResume, handleLand, handleSaveScore, handleReset,
-    confirmTask, isLocked,
+    confirmTask, canConfirmTask: checkTaskCondition, isLocked,
   }
 }

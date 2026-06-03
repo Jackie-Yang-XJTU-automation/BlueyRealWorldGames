@@ -80,6 +80,8 @@ export function ShadowLandsPage() {
           onToggleHelp={() => setShowScoreHelp(!showScoreHelp)}
           showPause={game.state === 'running'}
           onPause={game.handlePause}
+          showEnd={game.state === 'running' && !game.currentEvent}
+          onEnd={() => setShowLandConfirm(true)}
         />
 
         {/* 飞行星星 */}
@@ -257,8 +259,10 @@ export function ShadowLandsPage() {
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); triggerHaptic('success'); game.confirmTask(task.id, i) }}
-                        className="btn-task-confirm shrink-0 rounded-full bg-[#4CAF50] text-white font-extrabold text-lg flex items-center justify-center hover:scale-110 active:scale-90 transition-transform shadow-[0_2px_8px_rgba(76,175,80,0.4)]"
-                      >✓</button>
+                        className="shrink-0 rounded-full bg-[#4CAF50] text-white font-extrabold text-sm flex items-center justify-center transition-transform min-w-[58px] h-11 px-3 hover:scale-105 active:scale-95 shadow-[0_2px_8px_rgba(76,175,80,0.4)]"
+                      >
+                        完成
+                      </button>
                     )}
                     {isAnimating && <span className="shrink-0 text-lg">✅</span>}
                   </div>
@@ -312,7 +316,13 @@ export function ShadowLandsPage() {
       {game.showVictory && <VictoryModal game={game} />}
 
       {game.currentEvent && game.state === 'running' && (
-        <RandomEventPopup event={game.currentEvent} onLand={game.handleLand} />
+        <RandomEventPopup
+          event={game.currentEvent}
+          onLand={game.handleLand}
+          endButtonLabel="🐊 踩到阳光了！"
+          confirmQuestion="确定真的踩到阳光了吗？"
+          confirmLabel="是，踩到了！"
+        />
       )}
 
       {showCountdown && (

@@ -80,6 +80,8 @@ export function DaddyRobotPage() {
           onToggleHelp={() => setShowScoreHelp(!showScoreHelp)}
           showPause={game.state === 'running'}
           onPause={game.handlePause}
+          showEnd={game.state === 'running' && !game.currentEvent}
+          onEnd={() => setShowLandConfirm(true)}
         />
 
         {/* 飞行星星 */}
@@ -233,6 +235,7 @@ export function DaddyRobotPage() {
                 const locked = game.isLocked(i)
                 const isCurrent = i === game.firstUncompletedIndex
                 const isAnimating = game.animatingTaskId === task.id
+                const ready = game.canConfirmTask(task.id)
 
                 if (task.completed && !isAnimating) return null
 
@@ -267,8 +270,15 @@ export function DaddyRobotPage() {
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); triggerHaptic('success'); game.confirmTask(task.id, i) }}
-                        className="btn-task-confirm shrink-0 rounded-full bg-[#AB47BC] text-white font-extrabold text-lg flex items-center justify-center hover:scale-110 active:scale-90 transition-transform shadow-[0_2px_8px_rgba(171,71,188,0.4)]"
-                      >✓</button>
+                        disabled={!ready}
+                        className={`shrink-0 rounded-full font-extrabold text-sm flex items-center justify-center transition-transform min-w-[58px] h-11 px-3 ${
+                          ready
+                            ? 'bg-[#AB47BC] text-white hover:scale-105 active:scale-95 shadow-[0_2px_8px_rgba(171,71,188,0.4)]'
+                            : 'bg-[#F0F4FF] text-[#5a5a87]/30 cursor-not-allowed'
+                        }`}
+                      >
+                        {ready ? '完成' : '未好'}
+                      </button>
                     )}
                     {isAnimating && <span className="shrink-0 text-lg">✅</span>}
                   </div>

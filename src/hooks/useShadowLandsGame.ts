@@ -74,6 +74,8 @@ export function useShadowLandsGame() {
   const handleStart = useCallback(() => {
     setShowResult(false)
     setShowVictory(false)
+    setCurrentRank(undefined)
+    setTasks(initialTasks)
     setEventStars(0)
     setTaskStars(0)
     start()
@@ -93,7 +95,7 @@ export function useShadowLandsGame() {
   }, [state, resume, startEvents])
 
   const handleLand = useCallback(() => {
-    if (state !== 'running') return
+    if (state !== 'running' && state !== 'paused') return
     stop()
     stopEvents()
     setShowResult(true)
@@ -122,8 +124,9 @@ export function useShadowLandsGame() {
     setTasks(initialTasks)
     setTaskStars(0)
     setEventStars(0)
+    stopEvents()
     reset()
-  }, [reset])
+  }, [reset, stopEvents])
 
   const confirmTask = useCallback((taskId: string, index: number) => {
     if (index !== firstUncompletedIndex || animatingTaskId) return

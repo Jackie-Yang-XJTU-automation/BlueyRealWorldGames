@@ -84,6 +84,8 @@ export function KeepyUppyPage() {
           onToggleHelp={() => setShowScoreHelp(!showScoreHelp)}
           showPause={game.state === 'running'}
           onPause={game.handlePause}
+          showEnd={game.state === 'running' && !game.currentEvent}
+          onEnd={() => setShowLandConfirm(true)}
         />
 
         {/* 飞行星星 */}
@@ -251,8 +253,10 @@ export function KeepyUppyPage() {
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); triggerHaptic('success'); game.confirmTask(task.id, i) }}
-                        className="btn-task-confirm shrink-0 rounded-full bg-btv-green text-white font-extrabold text-lg flex items-center justify-center hover:scale-110 active:scale-90 transition-transform shadow-[0_2px_8px_rgba(144,199,122,0.4)]"
-                      >✓</button>
+                        className="shrink-0 rounded-full bg-btv-green text-white font-extrabold text-sm flex items-center justify-center transition-transform min-w-[58px] h-11 px-3 hover:scale-105 active:scale-95 shadow-[0_2px_8px_rgba(144,199,122,0.4)]"
+                      >
+                        完成
+                      </button>
                     )}
                     {isAnimating && <span className="shrink-0 text-lg">✅</span>}
                   </div>

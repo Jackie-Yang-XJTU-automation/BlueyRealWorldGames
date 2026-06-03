@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import type { TimerState } from '../types/game'
 
 export function useTimer() {
@@ -50,6 +50,10 @@ export function useTimer() {
       return `${minutes}:${seconds.toString().padStart(2, '0')}.${centiseconds.toString().padStart(2, '0')}`
     }
     return `${seconds}.${centiseconds.toString().padStart(2, '0')}`
+  }, [])
+
+  useEffect(() => {
+    return () => cancelAnimationFrame(rafRef.current)
   }, [])
 
   return { state, elapsedMs, start, pause, resume, stop, reset, formatTime }

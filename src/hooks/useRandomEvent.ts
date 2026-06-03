@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import type { RandomEvent } from '../types/game'
 import { keepyUppyEvents } from '../data/keepyUppyEvents'
 
@@ -82,6 +82,13 @@ export function useRandomEvent(options?: UseRandomEventOptions) {
       timeoutRef.current = null
     }
     setCurrentEvent(null)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (scheduleRef.current) clearTimeout(scheduleRef.current)
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
   }, [])
 
   return { currentEvent, startEvents, stopEvents, clearEvent }
