@@ -19,6 +19,35 @@ start-claude.bat
 
 # Local UI audit artifacts
 ui-audit-live/
+ui-audit-home/
+
+# Root-level screenshots and logs (temp artifacts)
+/*.png
+/*.txt
+
+# Agent/tool configs
+.agents/
+.playwright-mcp/
+.superpowers/
+AGENTS.md
+skills-lock.json
+
+# Proxy / dev scripts
+proxy.py
+proxy-prompt.md
+
+# Temp / scratch directories
+UsersfeifeAppDataLocalTempimpeccable-repo/
+docs/superpowers/
+scripts/
+
+# Scraped Bluey website assets (cached reference)
+src/assets/How to Play_ Keepy Uppy - Bluey Official Website.html
+src/assets/How to Play_ Keepy Uppy - Bluey Official Website_files/
+src/assets/Play Bluey Games _ Online Games, How to Play and More! _ - Bluey Official Website.html
+src/assets/Play Bluey Games _ Online Games, How to Play and More! _ - Bluey Official Website_files/
+src/assets/Celebrating Stars.json
+src/assets/MOBILE-HOME.jpg
 
 # Editor directories and files
 .vscode/*

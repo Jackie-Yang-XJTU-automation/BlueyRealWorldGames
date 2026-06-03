@@ -22,9 +22,12 @@ Bluey 主题的亲子互动游戏助手。面向 3-8 岁儿童，PWA 可安装�
 src/
   types/game.ts              # 所有 TS 类型
   data/                      # 游戏静态数据
-    games.ts                 #   9 个游戏
+    games.ts                 #   10 个游戏
     keepyUppyEvents.ts       #   15 个随机事件
     keepyUppyTasks.ts        #   5 个任务关卡
+    daddyRobotTasks.ts       #   5 个机器人任务
+    daddyRobotEvents.ts      #   机器人故障事件
+    clawTasks.ts             #   13 个抓娃娃机任务
   utils/storage.ts           # localStorage 封装
   hooks/
     useTimer.ts              # 通用 RAF 计时器
@@ -32,6 +35,9 @@ src/
     useFavorites.ts          # 收藏管理
     useLeaderboard.ts        # 排行榜管理
     useKeepyUppyGame.ts      # 顶气球游戏逻辑
+    useDaddyRobotGame.ts     # 爸爸机器人游戏逻辑
+    useShadowLandsGame.ts    # 影子陆地游戏逻辑
+    useClawGame.ts           # 抓娃娃机游戏逻辑
   components/
     Layout.tsx               # 全局布局 + 导航
     Clouds.tsx               # 蓝天白云草地背景
@@ -40,27 +46,33 @@ src/
     FilterBar.tsx             # 筛选栏
     Leaderboard.tsx           # 排行榜
     RandomEventPopup.tsx      # 随机事件弹窗
+    ClawResultPopup.tsx       # 抓娃娃结果弹窗
     QRCode.tsx                # 首页二维码
   pages/
     HomePage.tsx              # 首页（游戏库 + 筛选 + 随机 + 收藏 + 二维码）
-    GameDetailPage.tsx        # 游戏详情（其他8个游戏的规则/材料/贴士）
-    KeepyUppyPage.tsx         # 顶气球游戏（唯一可玩的游戏）
+    GameDetailPage.tsx        # 游戏详情（PLAYABLE 集中注册可玩游戏）
+    KeepyUppyPage.tsx         # 顶气球游戏
+    DaddyRobotPage.tsx        # 爸爸机器人游戏
+    ShadowLandsPage.tsx       # 影子陆地游戏
+    ClawGamePage.tsx          # 抓娃娃机游戏
+    TimerPage.tsx             # 通用计时器
+    DicePage.tsx              # 虚拟骰子
   App.tsx                     # 路由配置
   main.tsx                    # 入口
   index.css                   # 全局样式 + Bluey.tv 设计系统
 ```
 
 ## 当前进度
-- ✅ P0 MVP：首页 + 3 款可玩游戏（顶气球、影子陆地、爸爸机器人）
+- ✅ P0 MVP：首页 + 4 款可玩游戏（顶气球、影子陆地、爸爸机器人、抓娃娃机）
 - ✅ PWA：可安装、离线可用
 - ✅ 移动端触摸适配
 - ✅ GitHub Pages 自动部署
 - ✅ 通用计时器（TimerPage）
 - ✅ 虚拟骰子（DicePage）
-- ✅ P1：第二个可玩游戏（已超额，实际完成 3 款）
+- ✅ P1：第二个可玩游戏（已超额，实际完成 4 款）
 - ⬜ 音效系统（ZzFX <1KB 程序生成）
 - ⬜ T8 今日游戏推荐
-- ⬜ 其余 6 款游戏可玩版本
+- ⬜ 其余 5 款游戏可玩版本
 
 ## 编码规范
 - 组件文件和目录使用 PascalCase 命名
@@ -70,6 +82,7 @@ src/
 - Props 使用 interface 定义类型
 - 样式优先使用 Tailwind，全局样式放在 index.css
 - 新游戏逻辑提取为独立 hook，页面只负责渲染
+- 新增可玩游戏时，在 `GameDetailPage.tsx` 的 `PLAYABLE` 对象中加一条记录（route + label），只需改一处
 
 ### 可玩游戏必需模式（P1 防误触）
 所有可玩游戏页面必须实现以下两个交互保护：

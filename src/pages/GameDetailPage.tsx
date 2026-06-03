@@ -57,19 +57,17 @@ export function GameDetailPage() {
   const heroGradient = heroGradients[game.type] ?? heroGradients.quiet
   const heroAccent = heroAccents[game.type] ?? heroAccents.quiet
 
-  const isPlayable = game.id === 'keepy-uppy' || game.id === 'shadowlands' || game.id === 'daddy-robot'
-
-  const playRoutes: Record<string, string> = {
-    'keepy-uppy': '/game/keepy-uppy/play',
-    'shadowlands': '/game/shadowlands/play',
-    'daddy-robot': '/game/daddy-robot/play',
+  const PLAYABLE: Record<string, { route: string; label: string }> = {
+    'magic-xylophone': { route: '/game/magic-xylophone/play', label: '🎵 开始做 Ding！' },
+    'keepy-uppy': { route: '/game/keepy-uppy/play', label: '🎈 开始顶气球！' },
+    'shadowlands': { route: '/game/shadowlands/play', label: '☀️ 进入影子陆地！' },
+    'daddy-robot': { route: '/game/daddy-robot/play', label: '🤖 启动机器人！' },
+    'claw-machine': { route: '/game/claw-machine/play', label: '🕹️ 打开娃娃机！' },
   }
 
-  const playLabels: Record<string, string> = {
-    'keepy-uppy': '🎈 开始顶气球！',
-    'shadowlands': '☀️ 进入影子陆地！',
-    'daddy-robot': '🤖 启动机器人！',
-  }
+  const isPlayable = game.id in PLAYABLE
+  const playRoute = PLAYABLE[game.id]?.route
+  const playLabel = PLAYABLE[game.id]?.label
 
   return (
     <div className="max-w-lg mx-auto -mx-4 sm:mx-auto">
@@ -204,10 +202,10 @@ export function GameDetailPage() {
           {isPlayable ? (
             <button
               type="button"
-              onClick={() => navigate(playRoutes[game.id])}
+              onClick={() => navigate(playRoute)}
               className="btn-btv w-full text-2xl animate-random-pulse"
             >
-              {playLabels[game.id]}
+              {playLabel}
             </button>
           ) : (
             <div className="text-center py-8 bg-gradient-to-b from-[#E3F2FD] to-[#F0F4FF] rounded-[28px] border-2 border-dashed border-btv-blue/15">
