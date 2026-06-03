@@ -5,6 +5,7 @@ import { RandomEventPopup } from '../components/RandomEventPopup'
 import { Leaderboard } from '../components/Leaderboard'
 import { LottieCelebration } from '../components/LottieCelebration'
 import { CountdownOverlay } from '../components/CountdownOverlay'
+import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
 import { triggerHaptic } from '../utils/haptic'
 
 const BALLOON_COLORS = ['#D96B62', '#F58634', '#FCD882', '#4CAF50', '#1C98ED', '#AB47BC', '#EC407A']
@@ -66,47 +67,24 @@ export function KeepyUppyPage() {
       {/* 天空竞技场背景 */}
       <div className="relative bg-gradient-to-b from-[#B3E5FC] via-[#CEEDFA] to-[#E8F6FC] -mt-8 rounded-b-[40px] shadow-[inset_0_-8px_30px_rgba(135,206,235,0.15)] overflow-hidden">
 
-        {/* 顶部 HUD：星星 + 计时器 */}
-        <div className="relative z-10 pt-4 pb-3 px-4">
-          <div className="flex items-center justify-between">
-            {/* 返回首页 */}
-            <button
-              type="button"
-              onClick={() => window.history.back()}
-              className="flex items-center gap-1 text-[11px] font-extrabold text-[#5a5a87]/40 hover:text-[#5a5a87]/60 transition-colors bg-white/60 rounded-full px-3 py-1.5"
-            >
-              ← 返回
-            </button>
-
-            {/* 积分 */}
-            <div className="flex items-center gap-1.5 bg-white/85 backdrop-blur-sm rounded-full pl-3 pr-1.5 py-1.5 shadow-[0_2px_12px_rgba(44,67,100,0.06)] border border-[#F9D06B]/30 relative">
-              <span className="text-lg">⭐</span>
-              <span className={`text-xl font-extrabold text-[#DCA018] timer-text transition-all duration-300 ${game.scoreBump ? 'animate-score-bump' : ''}`}>
-                {game.totalStars}
-              </span>
-              <button
-                type="button"
-                onClick={() => setShowScoreHelp(!showScoreHelp)}
-                className="w-7 h-7 rounded-full bg-[#F0F4FF] text-[#5a5a87]/40 text-[11px] font-extrabold flex items-center justify-center hover:bg-[#E3ECFD] transition-colors"
-              >?</button>
-              {showScoreHelp && (
-                <div className="absolute top-full mt-2 right-0 z-[100] bg-white rounded-2xl px-4 py-3 shadow-lg border-2 border-[#E3F2FD] text-left whitespace-nowrap animate-jelly">
-                  <p className="text-[11px] font-bold text-[#5a5a87]/50 mb-1">星星怎么来的？</p>
-                  <p className="text-xs font-extrabold text-[#5a5a87]/65">⏱ 坚持越久分越高（每秒 +10⭐）</p>
-                  <p className="text-xs font-extrabold text-[#5a5a87]/65">🎯 完成挑战任务加分</p>
-                  <p className="text-xs font-extrabold text-[#5a5a87]/65">⚡ 应对突发状况加分</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* 得分细目 */}
-          <div className="flex justify-center gap-3 mt-1.5 text-[10px] font-bold text-[#5a5a87]/30 whitespace-nowrap">
-            <span>⏱{game.timeStars}</span><span className="text-[#5a5a87]/15">+</span>
-            <span>🎯{game.taskStars}</span><span className="text-[#5a5a87]/15">+</span>
-            <span>⚡{game.eventStars}</span>
-          </div>
-        </div>
+        <GameTopHud
+          scoreItems={[{ emoji: '⭐', value: game.totalStars, color: '#DCA018', bump: game.scoreBump, label: '星星总数' }]}
+          breakdownItems={[
+            { emoji: '⏱', value: game.timeStars },
+            { emoji: '🎯', value: game.taskStars },
+            { emoji: '⚡', value: game.eventStars },
+          ]}
+          helpTitle="星星怎么来的？"
+          helpItems={[
+            '⏱ 坚持越久分越高（每秒 +10⭐）',
+            '🎯 完成挑战任务加分',
+            '⚡ 应对突发状况加分',
+          ]}
+          showHelp={showScoreHelp}
+          onToggleHelp={() => setShowScoreHelp(!showScoreHelp)}
+          showPause={game.state === 'running'}
+          onPause={game.handlePause}
+        />
 
         {/* 飞行星星 */}
         {game.flyingStars.map(star => (
@@ -191,24 +169,11 @@ export function KeepyUppyPage() {
           )}
           {game.state === 'running' && (
             <div className="flex gap-3">
-              <button type="button" onClick={game.handlePause} className="btn-btv-secondary !text-lg !min-h-0 !py-3 !px-5">
-                ⏸ 暂停
-              </button>
               {!game.currentEvent && (
                 <button type="button" onClick={() => setShowLandConfirm(true)} className="btn-btv btn-btv-red btn-game-action">
                   💥 落地了！
                 </button>
               )}
-            </div>
-          )}
-          {game.state === 'paused' && (
-            <div className="flex gap-3">
-              <button type="button" onClick={game.handleResume} className="btn-btv btn-game-action animate-random-pulse">
-                ▶ 继续玩
-              </button>
-              <button type="button" onClick={game.handleReset} className="btn-btv btn-btv-blue text-lg">
-                🔄 重来
-              </button>
             </div>
           )}
           {game.state === 'finished' && (
@@ -313,22 +278,28 @@ export function KeepyUppyPage() {
       </div>
 
       {/* 落地确认弹窗 */}
+      {game.state === 'paused' && !showLandConfirm && (
+        <GamePauseDialog
+          emoji="🎈"
+          message="气球先休息，准备好了再继续顶～"
+          onResume={game.handleResume}
+          onRestart={game.handleReset}
+          onEnd={() => setShowLandConfirm(true)}
+          endLabel="💥 结束这一局"
+        />
+      )}
+
       {showLandConfirm && (
-        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/40 backdrop-blur-sm animate-event-pop-in px-4">
-          <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-btv-red animate-jelly">
-            <div className="text-7xl mb-3">🎈</div>
-            <h2 className="text-2xl font-extrabold text-btv-dark mb-1">确定气球落地了？</h2>
-            <p className="text-[#5a5a87]/50 font-bold text-sm mb-5">还没落地的话，继续玩！</p>
-            <div className="flex gap-3">
-              <button type="button" onClick={() => setShowLandConfirm(false)} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">
-                还没！继续玩
-              </button>
-              <button type="button" onClick={() => { setShowLandConfirm(false); game.handleLand() }} className="btn-btv btn-btv-red flex-1">
-                是，落地了！
-              </button>
-            </div>
-          </div>
-        </div>
+        <GameConfirmDialog
+          id="keepy-end"
+          emoji="🎈"
+          title="确定气球落地了？"
+          message={`已经坚持了 ${game.formatTime(game.elapsedMs)}，还没落地的话可以继续玩。`}
+          cancelLabel={game.state === 'paused' ? '还没！返回暂停' : '还没！继续玩'}
+          confirmLabel="是，落地了！"
+          onCancel={() => setShowLandConfirm(false)}
+          onConfirm={() => { setShowLandConfirm(false); game.handleLand() }}
+        />
       )}
 
       {/* 落地弹窗 */}

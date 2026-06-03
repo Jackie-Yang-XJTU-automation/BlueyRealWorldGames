@@ -4,6 +4,7 @@ import { ClawResultPopup } from '../components/ClawResultPopup'
 import { Leaderboard } from '../components/Leaderboard'
 import { CountdownOverlay } from '../components/CountdownOverlay'
 import { GameTimer } from '../components/GameTimer'
+import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
 import { triggerHaptic } from '../utils/haptic'
 
 const PHASE_PHRASES = [
@@ -161,65 +162,29 @@ export function ClawGamePage() {
         {/* === GAME ACTIVE === */}
         {game.state !== 'idle' && (
           <>
-            {/* HUD */}
-            <div className="relative z-10 pt-4 pb-3 px-4">
-              <div className="flex items-center justify-between">
-                <button type="button" onClick={() => window.history.back()} aria-label="返回上一页"
-                  className="flex h-11 w-11 shrink-0 items-center justify-center text-lg font-extrabold text-[#5a5a87]/55 hover:text-[#5a5a87]/75 transition-colors bg-white/65 rounded-full">
-                  ←
-                </button>
-
-                <div className="flex items-center gap-1.5 bg-white/85 backdrop-blur-sm rounded-full pl-3 pr-1.5 py-1.5 shadow-[0_2px_12px_rgba(44,67,100,0.06)] border border-[#FCD882]/35 relative">
-                  <span className="text-base">🪙</span>
-                  <span className={`text-xl font-extrabold text-[#F39C62] timer-text transition-all duration-300 ${coinBump ? 'animate-score-bump' : ''}`}>
-                    {game.coins}
-                  </span>
-                  <span className="text-[#5a5a87]/15 mx-0.5">·</span>
-                  <span className="text-base">🎁</span>
-                  <span className={`text-xl font-extrabold text-[#90C79A] timer-text transition-all duration-300 ${prizeBump ? 'animate-score-bump' : ''}`}>
-                    {game.prizesRemaining}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setShowScoreHelp(!showScoreHelp)}
-                    className="w-11 h-11 rounded-full bg-[#F0F4FF] text-[#5a5a87]/45 text-[12px] font-extrabold flex items-center justify-center hover:bg-[#E3ECFD] transition-colors"
-                    aria-label="查看分数说明"
-                  >
-                    ?
-                  </button>
-                  {showScoreHelp && (
-                    <div className="absolute top-full mt-2 right-0 z-[100] bg-white rounded-2xl px-4 py-3 shadow-lg border-2 border-[#E3F2FD] text-left whitespace-nowrap animate-jelly">
-                      <p className="text-[11px] font-bold text-[#5a5a87]/50 mb-1">怎么玩？</p>
-                      <p className="text-xs font-extrabold text-[#5a5a87]/65">💰 完成任务挣硬币</p>
-                      <p className="text-xs font-extrabold text-[#5a5a87]/65">🪙 投币指挥爪子抓奖品</p>
-                      <p className="text-xs font-extrabold text-[#5a5a87]/65">🎉 抓住越多排名越高！</p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-1">
-                  {isRunning && !isPaused && !isFinished && (
-                    <button type="button" onClick={game.handlePause} aria-label="暂停"
-                      className="flex h-11 w-11 shrink-0 items-center justify-center bg-white/80 rounded-full text-lg font-extrabold text-[#5a5a87] active:scale-95 transition-transform">
-                      ⏸
-                    </button>
-                  )}
-                  {!isPaused && !isFinished && (
-                    <button type="button" onClick={() => setShowLandConfirm(true)} aria-label="结束"
-                      className="flex h-11 w-11 shrink-0 items-center justify-center bg-[#D96B62]/10 rounded-full text-lg font-extrabold text-[#D96B62] active:scale-95 transition-transform">
-                      🛑
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Score breakdown row */}
-              <div className="flex justify-center gap-3 mt-1.5 text-[10px] font-bold text-[#5a5a87]/35 whitespace-nowrap">
-                <span>🎉{game.caught}</span><span className="text-[#5a5a87]/15">·</span>
-                <span>😬{game.dropped}</span><span className="text-[#5a5a87]/15">·</span>
-                <span>⚡{game.faults}</span>
-              </div>
-            </div>
+            <GameTopHud
+              scoreItems={[
+                { emoji: '🪙', value: game.coins, color: '#F39C62', bump: coinBump, label: '硬币' },
+                { emoji: '🎁', value: game.prizesRemaining, color: '#90C79A', bump: prizeBump, label: '剩余奖品' },
+              ]}
+              breakdownItems={[
+                { emoji: '🎉', value: game.caught },
+                { emoji: '😬', value: game.dropped },
+                { emoji: '⚡', value: game.faults },
+              ]}
+              helpTitle="怎么玩？"
+              helpItems={[
+                '💰 完成任务挣硬币',
+                '🪙 投币指挥爪子抓奖品',
+                '🎉 抓住越多排名越高！',
+              ]}
+              showHelp={showScoreHelp}
+              onToggleHelp={() => setShowScoreHelp(!showScoreHelp)}
+              showPause={isRunning && !isPaused && !isFinished}
+              onPause={game.handlePause}
+              showEnd={!isPaused && !isFinished}
+              onEnd={() => setShowLandConfirm(true)}
+            />
 
             {/* Central game area */}
             <div className="relative flex flex-col items-center px-4 pb-4">
@@ -411,45 +376,27 @@ export function ClawGamePage() {
         <ClawResultPopup result={game.clawResult} onContinue={game.handleContinue} />
       )}
 
-      {/* === PAUSE OVERLAY === */}
       {isPaused && !showLandConfirm && (
-        <div role="dialog" aria-modal="true" aria-labelledby="claw-pause-title" className="fixed inset-0 z-[400] flex items-center justify-center bg-white/70 backdrop-blur-sm px-6">
-          <div className="bg-white rounded-[32px] p-8 max-w-[280px] w-full shadow-xl text-center border-4 border-[#BBDEFB] animate-jelly">
-            <div className="text-5xl mb-4">⏸</div>
-            <h2 id="claw-pause-title" className="text-xl font-extrabold text-btv-dark mb-6">已暂停</h2>
-            <button type="button" onClick={game.handleResume}
-              className="w-full min-h-12 bg-btv-dark text-white rounded-full text-base font-extrabold mb-3 active:scale-95 transition-transform animate-random-pulse">
-              ▶ 继续玩
-            </button>
-            <button type="button" onClick={game.handleReset}
-              className="w-full min-h-12 bg-[#5a5a87]/10 text-[#5a5a87] rounded-full text-base font-extrabold mb-3 active:scale-95 transition-transform">
-              🔄 重来
-            </button>
-            <button type="button" onClick={() => setShowLandConfirm(true)}
-              className="w-full min-h-11 bg-transparent text-[#D96B62] rounded-full text-sm font-extrabold active:scale-95 transition-transform">
-              🛑 结束
-            </button>
-          </div>
-        </div>
+        <GamePauseDialog
+          emoji="🕹️"
+          message="爪子先休息，奖品不会跑掉～"
+          onResume={game.handleResume}
+          onRestart={game.handleReset}
+          onEnd={() => setShowLandConfirm(true)}
+        />
       )}
 
-      {/* === LAND CONFIRM === */}
       {showLandConfirm && (
-        <div role="dialog" aria-modal="true" aria-labelledby="claw-end-title" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/20 backdrop-blur-sm px-6">
-          <div className="bg-white rounded-[32px] p-8 max-w-sm w-full shadow-2xl text-center border-4 border-[#FCD882] animate-jelly">
-            <div className="text-5xl mb-3">🕹️</div>
-            <h2 id="claw-end-title" className="text-xl font-extrabold text-btv-dark mb-2">确定要结束吗？</h2>
-            <p className="text-sm text-[#5a5a87] mb-6">已经抓了 {game.caught} 个奖品，确定现在结束？</p>
-            <button type="button" onClick={handlePauseEndCancel}
-              className="w-full min-h-12 bg-btv-dark text-white rounded-full text-base font-extrabold mb-2 active:scale-95 transition-transform">
-              {isPaused ? '还没！返回暂停' : '还没！继续玩'}
-            </button>
-            <button type="button" onClick={handleEndConfirm}
-              className="w-full min-h-12 bg-transparent text-[#D96B62] rounded-full text-sm font-extrabold active:scale-95 transition-transform">
-              是，结束！🛑
-            </button>
-          </div>
-        </div>
+        <GameConfirmDialog
+          id="claw-end"
+          emoji="🕹️"
+          title="确定要结束吗？"
+          message={`已经抓了 ${game.caught} 个奖品，确定现在结束？`}
+          cancelLabel={isPaused ? '还没！返回暂停' : '还没！继续玩'}
+          confirmLabel="是，结束！🛑"
+          onCancel={handlePauseEndCancel}
+          onConfirm={handleEndConfirm}
+        />
       )}
 
       {/* === LEADERBOARD === */}
