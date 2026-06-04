@@ -6,6 +6,7 @@ import { CountdownOverlay } from '../components/CountdownOverlay'
 import { GameTimer } from '../components/GameTimer'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
 import { triggerHaptic } from '../utils/haptic'
+import type { ClawTask } from '../data/clawTasks'
 
 const PHASE_PHRASES = [
   'Bluey 说：左一点...再左一点...',
@@ -144,7 +145,7 @@ export function ClawGamePage() {
             <div className="text-8xl mb-4 drop-shadow-[0_6px_16px_rgba(0,0,0,0.06)]">🕹️</div>
             <h1 className="text-[28px] font-black text-btv-dark mb-1">抓娃娃机</h1>
             <p className="text-sm text-btv-text-muted mb-2">The Claw · S1E19</p>
-            <p className="text-xs text-[#5a5a87]/40 mb-8">准备好 5 个小玩具 · 几枚硬币 · 一位当爪子的家长</p>
+            <p className="text-xs text-[#5a5a87]/40 mb-8">准备好 5 个小玩具 · 一位当爪子的家长 · 做任务换硬币</p>
 
             <button type="button"
               onClick={handleQuickStart}
@@ -174,9 +175,10 @@ export function ClawGamePage() {
               ]}
               helpTitle="怎么玩？"
               helpItems={[
-                '💰 完成任务挣硬币',
+                '💰 完成 5 级任务挣硬币',
+                '🪙 每个任务 +2 枚硬币',
                 '🪙 投币指挥爪子抓奖品',
-                '🎉 抓住越多排名越高！',
+                '🎉 抓住全部奖品就通关！',
               ]}
               showHelp={showScoreHelp}
               onToggleHelp={() => setShowScoreHelp(!showScoreHelp)}
@@ -195,8 +197,32 @@ export function ClawGamePage() {
                 {game.phase === 'task' && game.currentTask && (
                   <div key={taskKey} className="relative mx-auto w-full rounded-[32px] bg-white/75 border-4 border-white shadow-[0_12px_34px_rgba(44,67,100,0.12)] p-5 text-center animate-jelly">
                     <div className="text-5xl mb-2">{game.currentTask.emoji}</div>
+                    <div className="mb-2 flex flex-wrap justify-center gap-1.5">
+                      <span className="rounded-full bg-[#FFF9EE] px-2.5 py-1 text-[10px] font-extrabold text-[#F39C62]">
+                        {game.currentTask.stageLabel}
+                      </span>
+                      <span className="rounded-full bg-[#E3F2FD] px-2.5 py-1 text-[10px] font-extrabold text-[#5a5a87]/55">
+                        +2🪙
+                      </span>
+                    </div>
                     <h3 className="text-base font-extrabold text-btv-dark mb-1">{game.currentTask.title}</h3>
                     <p className="text-[13px] text-[#5a5a87]/55 leading-relaxed">{game.currentTask.description}</p>
+                    <p className="mt-2 text-[11px] font-extrabold text-[#5a5a87]/42">目标：{game.currentTask.stageGoal}</p>
+                    <p className="mt-1 text-[11px] font-bold text-[#D96B62]/65">安全：{game.currentTask.safetyNote}</p>
+                  </div>
+                )}
+
+                {game.phase === 'task' && !game.currentTask && game.taskLadder.length > 0 && (
+                  <div className="relative mx-auto w-full rounded-[32px] bg-white/75 border-4 border-white shadow-[0_12px_34px_rgba(44,67,100,0.12)] p-5 text-center animate-jelly">
+                    <div className="text-5xl mb-2">{game.needsBonusCoin ? '🪙' : '🏁'}</div>
+                    <h3 className="text-base font-extrabold text-btv-dark mb-1">
+                      {game.needsBonusCoin ? '硬币补给任务' : '任务阶梯完成！'}
+                    </h3>
+                    <p className="text-[13px] text-[#5a5a87]/55 leading-relaxed">
+                      {game.needsBonusCoin
+                        ? '硬币用完了，和家长击掌一圈，大声说“爪子加油”，再得 1 枚硬币。'
+                        : '现在用剩下的硬币继续指挥爪子，抓完奖品就通关。'}
+                    </p>
                   </div>
                 )}
 
@@ -320,7 +346,7 @@ export function ClawGamePage() {
               )}
 
               {/* Phase action buttons */}
-              {game.phase === 'task' && game.currentTask && isRunning && !isPaused && (
+              {game.phase === 'task' && isRunning && !isPaused && (
                 <div className="grid grid-cols-2 gap-2.5 w-full max-w-sm mb-4">
                   <button type="button" onClick={game.handleInsertCoin} disabled={game.coins <= 0}
                     className={`min-h-[56px] rounded-2xl text-base font-extrabold active:scale-95 transition-all shadow-[0_3px_0_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 ${
@@ -331,15 +357,24 @@ export function ClawGamePage() {
                     style={{ minHeight: 56 }}>
                     🪙 投币抓娃娃
                   </button>
-                  <button type="button" onClick={game.handleTaskComplete}
-                    className="min-h-[56px] rounded-2xl bg-[#90C79A] text-white text-base font-extrabold active:scale-95 transition-all shadow-[0_3px_0_rgba(0,0,0,0.15)] flex items-center justify-center gap-2"
-                    style={{ minHeight: 56 }}>
-                    ✅ 完成 +1🪙
-                  </button>
-                  <button type="button" onClick={game.handleTaskSkip}
-                    className="col-span-2 min-h-11 rounded-full border-2 border-[#E3F2FD] bg-transparent text-[#5C728D] text-sm font-extrabold active:scale-95 transition-transform">
-                    🔄 换一个任务
-                  </button>
+                  {(game.currentTask || game.needsBonusCoin) && (
+                    <button type="button" onClick={game.handleTaskComplete}
+                      className="min-h-[56px] rounded-2xl bg-[#90C79A] text-white text-base font-extrabold active:scale-95 transition-all shadow-[0_3px_0_rgba(0,0,0,0.15)] flex items-center justify-center gap-2"
+                      style={{ minHeight: 56 }}>
+                      {game.currentTask ? '✅ 完成 +2🪙' : '✋ 加油 +1🪙'}
+                    </button>
+                  )}
+                  {game.currentTask && (
+                    <button type="button" onClick={game.handleTaskSkip}
+                      className="col-span-2 min-h-11 rounded-full border-2 border-[#E3F2FD] bg-transparent text-[#5C728D] text-sm font-extrabold active:scale-95 transition-transform">
+                      🔄 换同一关任务
+                    </button>
+                  )}
+                  {!game.currentTask && !game.needsBonusCoin && (
+                    <p className="col-span-2 rounded-2xl bg-white/70 px-4 py-3 text-center text-[12px] font-extrabold text-[#5a5a87]/45">
+                      任务都完成啦，用硬币继续抓奖品。
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -359,6 +394,9 @@ export function ClawGamePage() {
         caught={game.caught}
         totalPrizes={game.totalPrizes}
         coins={game.coins}
+        tasks={game.taskLadder}
+        completedTasks={game.completedTasks}
+        needsBonusCoin={game.needsBonusCoin}
         currentTaskTitle={game.currentTask?.title}
         show={showProgressBoard}
         onToggle={() => setShowProgressBoard(!showProgressBoard)}
@@ -422,6 +460,9 @@ function ClawProgressBoard({
   caught,
   totalPrizes,
   coins,
+  tasks,
+  completedTasks,
+  needsBonusCoin,
   currentTaskTitle,
   show,
   onToggle,
@@ -429,11 +470,16 @@ function ClawProgressBoard({
   caught: number
   totalPrizes: number
   coins: number
+  tasks: ClawTask[]
+  completedTasks: number
+  needsBonusCoin: boolean
   currentTaskTitle?: string
   show: boolean
   onToggle: () => void
 }) {
-  const progress = totalPrizes > 0 ? Math.round((caught / totalPrizes) * 100) : 0
+  const prizeProgress = totalPrizes > 0 ? Math.round((caught / totalPrizes) * 100) : 0
+  const taskProgress = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0
+  const currentTaskIndex = tasks.findIndex(task => !task.completed)
 
   return (
     <div className="px-4 sm:px-0 mt-5 mb-6">
@@ -444,9 +490,9 @@ function ClawProgressBoard({
           className="flex min-h-14 items-center justify-between w-full px-5 py-3.5 bg-gradient-to-r from-[#FFF9EE] via-[#F3E5F5] to-[#E3F2FD] border-b-2 border-[#F9D06B]/20"
         >
           <h3 className="text-sm font-extrabold text-btv-dark flex items-center gap-2">
-            🕹️ 抓娃娃任务
+            🕹️ 抓娃娃进度
             <span className="text-[11px] font-bold text-[#5a5a87]/35 bg-white/70 rounded-full px-2 py-0.5">
-              {caught}/{totalPrizes}
+              任务 {completedTasks}/{tasks.length || 5}
             </span>
           </h3>
           <span className={`text-[#5a5a87]/35 font-bold transition-transform duration-300 ${show ? 'rotate-180' : ''}`}>▼</span>
@@ -458,10 +504,10 @@ function ClawProgressBoard({
               <div className="flex-1 h-2 bg-[#E3F2FD] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-[#F39C62] via-[#FCD882] to-[#90C79A] rounded-full transition-all duration-700 ease-out"
-                  style={{ width: `${progress}%` }}
+                  style={{ width: `${prizeProgress}%` }}
                 />
               </div>
-              <span className="text-[10px] font-extrabold text-[#5a5a87]/25">{progress}%</span>
+              <span className="text-[10px] font-extrabold text-[#5a5a87]/25">奖品 {prizeProgress}%</span>
             </div>
 
             <div className="grid grid-cols-3 gap-2">
@@ -482,10 +528,48 @@ function ClawProgressBoard({
               </div>
             </div>
 
+            {tasks.length > 0 && (
+              <div className="rounded-2xl bg-[#FFF9EE]/70 border border-[#FCD882]/35 px-3 py-3">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <p className="text-[11px] font-extrabold text-[#5a5a87]/35 uppercase tracking-widest">五级任务阶梯</p>
+                  <span className="text-[10px] font-extrabold text-[#F39C62]">{taskProgress}%</span>
+                </div>
+                <div className="space-y-1.5">
+                  {tasks.map((task, index) => {
+                    const isCurrent = index === currentTaskIndex
+                    return (
+                      <div
+                        key={task.id}
+                        className={`flex items-center gap-2 rounded-xl border px-2.5 py-2 ${
+                          task.completed
+                            ? 'border-[#90C79A]/35 bg-[#E8F5E9]/70'
+                            : isCurrent
+                              ? 'border-[#FCD882] bg-white shadow-[0_1px_8px_rgba(252,216,130,0.24)]'
+                              : 'border-[#E3F2FD] bg-white/55 opacity-60'
+                        }`}
+                      >
+                        <span className="text-base">{task.completed ? '✅' : task.emoji}</span>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-[12px] font-extrabold text-btv-dark">{task.title}</p>
+                          <p className="text-[10px] font-bold text-[#5a5a87]/35">{task.stageLabel}</p>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
             <div className="rounded-2xl bg-[#F0F4FF]/55 border border-[#E3F2FD] px-4 py-3">
               <p className="text-[11px] font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-1">当前节奏</p>
               <p className="text-sm font-extrabold text-btv-dark">
-                {currentTaskTitle ? `先完成「${currentTaskTitle}」，再投币抓娃娃。` : '准备奖品和硬币，开始后做任务挣硬币。'}
+                {tasks.length === 0
+                  ? '准备奖品和家长爪子，开始后做任务挣硬币。'
+                  : currentTaskTitle
+                    ? `先完成「${currentTaskTitle}」，挣 2 枚硬币再抓。`
+                    : needsBonusCoin
+                      ? '硬币用完了，做一个击掌加油任务补币。'
+                      : '任务完成后，用剩下的硬币继续抓奖品。'}
               </p>
             </div>
           </div>

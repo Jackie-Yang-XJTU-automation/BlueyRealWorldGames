@@ -6,11 +6,11 @@ import { Leaderboard } from '../components/Leaderboard'
 import { LottieCelebration } from '../components/LottieCelebration'
 import { CountdownOverlay } from '../components/CountdownOverlay'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
+import { TaskLadderPanel } from '../components/TaskLadderPanel'
 import { triggerHaptic } from '../utils/haptic'
 
 const PRESET_NAMES = ['爸爸', '妈妈', '宝宝', '爷爷', '奶奶']
 const STORAGE_KEY_PLAYED = 'shadowlands_played'
-const TASK_SCORES = [100, 200, 300, 500, 800]
 const SHADOW_PHRASES = [
   'Bluey 说：影子是安全的陆地！',
   'Bingo 踩着影子跳得好远！',
@@ -190,94 +190,23 @@ export function ShadowLandsPage() {
         </div>
       </div>
 
-      {/* 任务公告板 */}
-      <div className="px-4 sm:px-0 mt-5 mb-6">
-        <div className="bg-white rounded-[28px] border-2 border-[#E8F5E9] shadow-[0_4px_20px_rgba(76,175,80,0.05)] overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setShowTasks(!showTasks)}
-            className="flex items-center justify-between w-full px-5 py-3.5 bg-gradient-to-r from-[#E8F5E9] to-[#FFF8E1] border-b-2 border-[#A5D6A7]/15 cursor-pointer"
-          >
-            <h3 className="text-sm font-extrabold text-btv-dark flex items-center gap-2">
-              🌳 影子任务
-              <span className="text-[11px] font-bold text-[#5a5a87]/35 bg-white/60 rounded-full px-2 py-0.5">
-                {game.completedTasks}/{game.tasks.length}
-              </span>
-            </h3>
-            <span className={`text-[#5a5a87]/25 font-bold transition-transform duration-300 ${showTasks ? 'rotate-180' : ''}`}>▼</span>
-          </button>
-
-          {showTasks && (
-            <div className="p-4 space-y-2.5">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="flex-1 h-2 bg-[#E8F5E9] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-[#4CAF50] to-[#81C784] rounded-full transition-all duration-700 ease-out"
-                    style={{ width: `${(game.completedTasks / game.tasks.length) * 100}%` }}
-                  />
-                </div>
-                <span className="text-[10px] font-extrabold text-[#5a5a87]/25">
-                  {Math.round((game.completedTasks / game.tasks.length) * 100)}%
-                </span>
-              </div>
-
-              {game.tasks.map((task, i) => {
-                const locked = game.isLocked(i)
-                const isCurrent = i === game.firstUncompletedIndex
-                const isAnimating = game.animatingTaskId === task.id
-
-                if (task.completed && !isAnimating) return null
-
-                return (
-                  <div key={task.id}
-                    className={`w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 border-2 overflow-hidden transition-all duration-500 ${
-                      isAnimating ? 'animate-task-slide-out bg-[#E8F5E9] border-[#A5D6A7]'
-                      : locked ? 'bg-[#E8F5E9]/20 border-[#5a5a87]/6 opacity-35'
-                      : isCurrent ? 'bg-[#E8F5E9]/40 border-[#81C784] shadow-[0_2px_12px_rgba(76,175,80,0.12)]'
-                      : 'bg-[#E8F5E9]/20 border-[#5a5a87]/6'
-                    }`}
-                  >
-                    <span className="text-lg shrink-0">
-                      {locked ? '🔒' : ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣'][i]}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className={`font-extrabold truncate text-[13px] ${locked ? 'text-[#5a5a87]/20' : 'text-btv-dark'}`}>
-                          {task.title}
-                        </p>
-                        {!locked && (
-                          <span className="text-[11px] font-extrabold text-[#DCA018] shrink-0 ml-2 bg-[#FFF9EE] rounded-full px-2 py-0.5">
-                            +{TASK_SCORES[i]}⭐
-                          </span>
-                        )}
-                      </div>
-                      <p className={`text-xs font-medium mt-0.5 ${locked ? 'text-[#5a5a87]/20' : 'text-[#5a5a87]/40'}`}>
-                        {task.description}
-                      </p>
-                    </div>
-                    {isCurrent && game.state === 'running' && !isAnimating && (
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); triggerHaptic('success'); game.confirmTask(task.id, i) }}
-                        className="shrink-0 rounded-full bg-[#4CAF50] text-white font-extrabold text-sm flex items-center justify-center transition-transform min-w-[58px] h-11 px-3 hover:scale-105 active:scale-95 shadow-[0_2px_8px_rgba(76,175,80,0.4)]"
-                      >
-                        完成
-                      </button>
-                    )}
-                    {isAnimating && <span className="shrink-0 text-lg">✅</span>}
-                  </div>
-                )
-              })}
-
-              {game.completedTasks === game.tasks.length && (
-                <div className="text-center py-3 bg-[#E8F5E9]/50 rounded-2xl">
-                  <p className="text-sm font-extrabold text-btv-green">🎉 全部挑战完成！太厉害了！</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
+      <TaskLadderPanel
+        title="🌳 影子任务"
+        tasks={game.tasks}
+        completedTasks={game.completedTasks}
+        show={showTasks}
+        onToggle={() => setShowTasks(!showTasks)}
+        state={game.state}
+        firstUncompletedIndex={game.firstUncompletedIndex}
+        animatingTaskId={game.animatingTaskId}
+        isLocked={game.isLocked}
+        onConfirm={(taskId, index) => { triggerHaptic('success'); game.confirmTask(taskId, index) }}
+        completionMessage="🎉 全部挑战完成！太厉害了！"
+        accentColor="#81C784"
+        accentSoft="#E8F5E9"
+        accentTint="#E8F5E9"
+        confirmColor="#4CAF50"
+      />
 
       {/* 排行榜 */}
       <div className="px-4 sm:px-0 mb-6">
@@ -336,8 +265,8 @@ export function ShadowLandsPage() {
 
 function ResultModal({ game }: { game: ReturnType<typeof useShadowLandsGame> }) {
   return (
-    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#4CAF50]/20 backdrop-blur-sm animate-event-pop-in px-4">
-      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center animate-jelly">
+    <div role="dialog" aria-modal="true" aria-label="影子陆地结算" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#4CAF50]/20 backdrop-blur-sm animate-event-pop-in px-4">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
           {game.totalStars > 5000 ? '安全着陆！' : game.totalStars > 2000 ? '好险！' : '继续加油！'}
@@ -383,8 +312,8 @@ function ResultModal({ game }: { game: ReturnType<typeof useShadowLandsGame> }) 
 
 function VictoryModal({ game }: { game: ReturnType<typeof useShadowLandsGame> }) {
   return (
-    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#4CAF50]/20 backdrop-blur-sm animate-event-pop-in px-4">
-      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-[#A5D6A7] animate-jelly">
+    <div role="dialog" aria-modal="true" aria-label="影子陆地通关" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#4CAF50]/20 backdrop-blur-sm animate-event-pop-in px-4">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-[#A5D6A7] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
         <p className="text-xl font-extrabold text-btv-dark mb-1">影子冠军！</p>

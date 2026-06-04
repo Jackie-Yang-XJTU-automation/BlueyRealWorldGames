@@ -5,10 +5,10 @@ import { Leaderboard } from '../components/Leaderboard'
 import { LottieCelebration } from '../components/LottieCelebration'
 import { CountdownOverlay } from '../components/CountdownOverlay'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
+import { TaskLadderPanel } from '../components/TaskLadderPanel'
 import { triggerHaptic } from '../utils/haptic'
 import type { RandomEvent } from '../types/game'
 
-const TASK_SCORES = [100, 200, 300, 500, 800]
 const PRESET_NAMES = ['爸爸', '妈妈', '宝宝', 'Bluey', 'Bingo']
 const STORAGE_KEY_PLAYED = 'magicxylophone_played'
 const MAGIC_PHRASES = [
@@ -298,98 +298,24 @@ function TaskBoard({
   onToggle: () => void
 }) {
   return (
-    <div className="px-4 sm:px-0 mt-5 mb-6">
-      <div className="bg-white rounded-[28px] border-2 border-[#E3F2FD] shadow-[0_4px_20px_rgba(28,152,237,0.06)] overflow-hidden">
-        <button
-          type="button"
-          onClick={onToggle}
-          className="flex min-h-14 items-center justify-between w-full px-5 py-3.5 bg-gradient-to-r from-[#FFF9EE] via-[#F3E5F5] to-[#E3F2FD] border-b-2 border-[#F9D06B]/20 cursor-pointer"
-        >
-          <h3 className="text-sm font-extrabold text-btv-dark flex items-center gap-2">
-            🎵 魔法任务
-            <span className="text-[11px] font-bold text-[#5a5a87]/35 bg-white/70 rounded-full px-2 py-0.5">
-              {game.completedTasks}/{game.tasks.length}
-            </span>
-          </h3>
-          <span className={`text-[#5a5a87]/35 font-bold transition-transform duration-300 ${showTasks ? 'rotate-180' : ''}`}>▼</span>
-        </button>
-
-        {showTasks && (
-          <div className="p-4 space-y-2.5">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="flex-1 h-2 bg-[#E3F2FD] rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-[#AB47BC] via-[#F58634] to-[#FCD882] rounded-full transition-all duration-700 ease-out"
-                  style={{ width: `${(game.completedTasks / game.tasks.length) * 100}%` }}
-                />
-              </div>
-              <span className="text-[10px] font-extrabold text-[#5a5a87]/25">
-                {Math.round((game.completedTasks / game.tasks.length) * 100)}%
-              </span>
-            </div>
-
-            {game.tasks.map((task, i) => {
-              const locked = game.isLocked(i)
-              const isCurrent = i === game.firstUncompletedIndex
-              const isAnimating = game.animatingTaskId === task.id
-              const ready = game.canConfirmTask(task.id)
-
-              if (task.completed && !isAnimating) return null
-
-              return (
-                <div
-                  key={task.id}
-                  className={`w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 border-2 overflow-hidden transition-all duration-500 ${
-                    isAnimating ? 'animate-task-slide-out bg-[#E8F5E9] border-[#A5D6A7]'
-                    : locked ? 'bg-[#F0F4FF]/35 border-[#5a5a87]/6 opacity-40'
-                    : isCurrent ? 'bg-[#FFF9EE] border-[#F9D06B] shadow-[0_2px_12px_rgba(249,208,107,0.18)]'
-                    : 'bg-[#F0F4FF]/35 border-[#5a5a87]/6'
-                  }`}
-                >
-                  <span className="text-lg shrink-0">{locked ? '🔒' : ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣'][i]}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className={`font-extrabold text-[13px] ${locked ? 'text-[#5a5a87]/20' : 'text-btv-dark'}`}>
-                        {task.title}
-                      </p>
-                      {!locked && (
-                        <span className="text-[11px] font-extrabold text-[#DCA018] shrink-0 bg-[#FFF9EE] rounded-full px-2 py-0.5">
-                          +{TASK_SCORES[i]}⭐
-                        </span>
-                      )}
-                    </div>
-                    <p className={`text-xs font-medium mt-0.5 ${locked ? 'text-[#5a5a87]/20' : 'text-[#5a5a87]/45'}`}>
-                      {task.description}
-                    </p>
-                  </div>
-                  {isCurrent && game.state === 'running' && !isAnimating && (
-                    <button
-                      type="button"
-                      onClick={(e) => { e.stopPropagation(); triggerHaptic('success'); game.confirmTask(task.id, i) }}
-                      disabled={!ready}
-                      className={`shrink-0 rounded-full font-extrabold text-sm flex items-center justify-center transition-transform min-w-[58px] h-11 px-3 ${
-                        ready
-                          ? 'bg-btv-green text-white hover:scale-105 active:scale-95 shadow-[0_2px_8px_rgba(144,199,122,0.4)]'
-                          : 'bg-[#F0F4FF] text-[#5a5a87]/30 cursor-not-allowed'
-                      }`}
-                    >
-                      {ready ? '完成' : '未好'}
-                    </button>
-                  )}
-                  {isAnimating && <span className="shrink-0 text-lg">✅</span>}
-                </div>
-              )
-            })}
-
-            {game.completedTasks === game.tasks.length && (
-              <div className="text-center py-3 bg-[#E8F5E9]/50 rounded-2xl">
-                <p className="text-sm font-extrabold text-btv-green">🎉 全部魔法任务完成！</p>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
+    <TaskLadderPanel
+      title="🎵 魔法任务"
+      tasks={game.tasks}
+      completedTasks={game.completedTasks}
+      show={showTasks}
+      onToggle={onToggle}
+      state={game.state}
+      firstUncompletedIndex={game.firstUncompletedIndex}
+      animatingTaskId={game.animatingTaskId}
+      isLocked={game.isLocked}
+      onConfirm={(taskId, index) => { triggerHaptic('success'); game.confirmTask(taskId, index) }}
+      canConfirmTask={game.canConfirmTask}
+      completionMessage="🎉 全部魔法任务完成！"
+      accentColor="#F9D06B"
+      accentSoft="#FFF9EE"
+      accentTint="#E3F2FD"
+      confirmColor="#90C79A"
+    />
   )
 }
 
@@ -413,7 +339,7 @@ function MagicEventPopup({ event, onEnd }: { event: RandomEvent; onEnd: () => vo
 
   return (
     <div role="dialog" aria-modal="true" aria-label="魔法突发状况" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/25 backdrop-blur-sm animate-event-pop-in px-4 pointer-events-auto">
-      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-btv-orange animate-jelly">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-btv-orange bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="text-7xl mb-3">{event.emoji}</div>
         <h2 className="text-xl font-extrabold text-btv-orange mb-2">⚡ 魔法突发状况！</h2>
         <h3 className="text-xl font-extrabold text-btv-dark mb-2">{event.title}</h3>
@@ -451,8 +377,8 @@ function MagicEventPopup({ event, onEnd }: { event: RandomEvent; onEnd: () => vo
 
 function ResultModal({ game }: { game: ReturnType<typeof useMagicXylophoneGame> }) {
   return (
-    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/25 backdrop-blur-sm animate-event-pop-in px-4">
-      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center animate-jelly">
+    <div role="dialog" aria-modal="true" aria-label="魔法木琴结算" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/25 backdrop-blur-sm animate-event-pop-in px-4">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
           {game.totalStars > 5000 ? '魔法大师！' : game.totalStars > 2000 ? 'Ding 得漂亮！' : '魔法开始起作用了！'}
@@ -474,8 +400,8 @@ function ResultModal({ game }: { game: ReturnType<typeof useMagicXylophoneGame> 
 
 function VictoryModal({ game }: { game: ReturnType<typeof useMagicXylophoneGame> }) {
   return (
-    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/25 backdrop-blur-sm animate-event-pop-in px-4">
-      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-[#F9D06B] animate-jelly">
+    <div role="dialog" aria-modal="true" aria-label="魔法木琴通关" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/25 backdrop-blur-sm animate-event-pop-in px-4">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-[#F9D06B] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
         <p className="text-xl font-extrabold text-btv-dark mb-1">全魔法通关！</p>

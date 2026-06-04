@@ -139,6 +139,8 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
   }, [fault.interactionType])
 
   const progressPct = (progress / fault.totalRequired) * 100
+  const titleId = `fault-${fault.id}-title`
+  const descId = `fault-${fault.id}-desc`
 
   const renderInteraction = () => {
     switch (fault.interactionType) {
@@ -216,8 +218,8 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
-      <div className={`bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 transition-colors duration-300 animate-jelly ${
+    <div role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId} className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4">
+      <div className={`max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 bg-white p-7 text-center shadow-2xl transition-colors duration-300 animate-jelly ${
         isFixed ? 'border-btv-green' : 'border-[#AB47BC]'
       }`}>
         <div className="text-7xl mb-3">
@@ -226,8 +228,8 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
         <h2 className="text-xl font-extrabold text-[#AB47BC] mb-2">
           {isFixed ? '修复成功！' : '🤖 机器人故障！'}
         </h2>
-        <h3 className="text-xl font-extrabold text-btv-dark mb-2">{fault.title}</h3>
-        <p className="text-base text-[#5a5a87]/60 mb-5 leading-relaxed font-medium">
+        <h3 id={titleId} className="text-xl font-extrabold text-btv-dark mb-2">{fault.title}</h3>
+        <p id={descId} className="text-base text-[#5a5a87]/60 mb-5 leading-relaxed font-medium">
           {fault.description}
         </p>
 

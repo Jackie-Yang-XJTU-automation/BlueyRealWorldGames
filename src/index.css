@@ -441,7 +441,7 @@ button:disabled {
 }
 
 @keyframes task-slide-out {
-  0% { max-height: 80px; opacity: 1; transform: translateX(0); }
+  0% { max-height: 220px; opacity: 1; transform: translateX(0); }
   100% { max-height: 0; opacity: 0; transform: translateX(-100%); }
 }
 

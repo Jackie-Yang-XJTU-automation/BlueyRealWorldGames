@@ -38,13 +38,15 @@ const RESULT_CONFIG = {
 
 export function ClawResultPopup({ result, onContinue }: ClawResultPopupProps) {
   const config = RESULT_CONFIG[result]
+  const titleId = `claw-result-${result}-title`
+  const descId = `claw-result-${result}-desc`
 
   return (
-    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/20 backdrop-blur-sm px-6" role="dialog" aria-modal="true">
-      <div className={`${config.bg} border-4 ${config.border} rounded-[32px] p-8 max-w-sm w-full shadow-2xl text-center animate-jelly`}>
+    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/20 backdrop-blur-sm px-6" role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId}>
+      <div className={`${config.bg} border-4 ${config.border} max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] p-8 text-center shadow-2xl animate-jelly`}>
         <div className="text-7xl mb-3">{config.emoji}</div>
-        <h2 className="text-[22px] font-extrabold text-btv-dark mb-2">{config.title}</h2>
-        <p className="text-sm text-[#5a5a87] mb-6 whitespace-pre-line leading-relaxed">
+        <h2 id={titleId} className="text-[22px] font-extrabold text-btv-dark mb-2">{config.title}</h2>
+        <p id={descId} className="text-sm text-[#5a5a87] mb-6 whitespace-pre-line leading-relaxed">
           {config.description}
         </p>
         <button

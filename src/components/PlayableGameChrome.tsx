@@ -40,7 +40,7 @@ export function GameTopHud({
 }: GameTopHudProps) {
   return (
     <div className="relative z-10 pt-4 pb-3 px-4">
-      <div className="grid grid-cols-[88px_minmax(0,1fr)_88px] items-center gap-2">
+      <div className="grid grid-cols-[52px_minmax(0,1fr)_88px] items-center gap-2">
         <button
           type="button"
           onClick={onBack ?? (() => window.history.back())}
@@ -50,13 +50,13 @@ export function GameTopHud({
           ←
         </button>
 
-        <div className="relative mx-auto flex min-h-11 max-w-full items-center gap-1.5 rounded-full border border-[#F9D06B]/35 bg-white/85 py-1.5 pl-3 pr-1.5 shadow-[0_2px_12px_rgba(44,67,100,0.06)] backdrop-blur-sm">
+        <div className="relative mx-auto flex min-h-11 max-w-full min-w-0 items-center gap-1 rounded-full border border-[#F9D06B]/35 bg-white/85 py-1.5 pl-3 pr-1.5 shadow-[0_2px_12px_rgba(44,67,100,0.06)] backdrop-blur-sm">
           {scoreItems.map((item, index) => (
-            <div key={`${item.emoji}-${index}`} className="flex items-center gap-1" aria-label={item.label}>
+            <div key={`${item.emoji}-${index}`} className="flex min-w-0 items-center gap-0.5" aria-label={item.label}>
               {index > 0 && <span className="mx-0.5 text-[#5a5a87]/15">·</span>}
-              <span className="text-base leading-none">{item.emoji}</span>
+              <span className="text-sm leading-none sm:text-base">{item.emoji}</span>
               <span
-                className={`timer-text text-xl font-extrabold transition-all duration-300 ${item.bump ? 'animate-score-bump' : ''}`}
+                className={`timer-text text-lg font-extrabold transition-all duration-300 sm:text-xl ${item.bump ? 'animate-score-bump' : ''}`}
                 style={{ color: item.color ?? '#DCA018' }}
               >
                 {item.value}
@@ -144,7 +144,7 @@ export function GamePauseDialog({
 }: GamePauseDialogProps) {
   return (
     <div role="dialog" aria-modal="true" aria-labelledby="game-pause-title" aria-describedby="game-pause-desc" className="fixed inset-0 z-[400] flex items-center justify-center bg-white/70 px-6 backdrop-blur-sm">
-      <div className="w-full max-w-[280px] rounded-[32px] border-4 border-[#BBDEFB] bg-white p-8 text-center shadow-xl animate-jelly">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-[280px] overflow-y-auto rounded-[32px] border-4 border-[#BBDEFB] bg-white p-8 text-center shadow-xl animate-jelly">
         <div className="mb-4 text-5xl">{emoji}</div>
         <h2 id="game-pause-title" className="mb-1 text-xl font-extrabold text-btv-dark">{title}</h2>
         <p id="game-pause-desc" className="mb-6 text-sm font-bold text-[#5a5a87]/45">{message}</p>
@@ -202,7 +202,7 @@ export function GameConfirmDialog({
 
   return (
     <div role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId} className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/20 px-6 backdrop-blur-sm animate-event-pop-in">
-      <div className="w-full max-w-sm rounded-[32px] border-4 border-btv-red bg-white p-8 text-center shadow-2xl animate-jelly">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-btv-red bg-white p-8 text-center shadow-2xl animate-jelly">
         <div className="mb-3 text-5xl">{emoji}</div>
         <h2 id={titleId} className="mb-2 text-xl font-extrabold text-btv-dark">{title}</h2>
         <p id={descId} className="mb-6 text-sm font-bold text-[#5a5a87]/55">{message}</p>

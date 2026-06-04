@@ -20,6 +20,8 @@ export function RandomEventPopup({
 }: RandomEventPopupProps) {
   const [remaining, setRemaining] = useState(event.duration)
   const [showConfirm, setShowConfirm] = useState(false)
+  const titleId = `random-event-${event.id}-title`
+  const descId = `random-event-${event.id}-desc`
 
   useEffect(() => {
     setRemaining(event.duration)
@@ -36,14 +38,14 @@ export function RandomEventPopup({
   }, [event])
 
   return (
-    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4 pointer-events-auto">
-      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-btv-orange animate-jelly">
+    <div role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId} className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm animate-event-pop-in px-4 pointer-events-auto">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-btv-orange bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="text-7xl mb-3">{event.emoji}</div>
         <h2 className="text-xl font-extrabold text-btv-orange mb-2">
           ⚡ 突发状况！
         </h2>
-        <h3 className="text-xl font-extrabold text-btv-dark mb-2">{event.title}</h3>
-        <p className="text-base text-[#5a5a87]/60 mb-5 leading-relaxed font-medium">
+        <h3 id={titleId} className="text-xl font-extrabold text-btv-dark mb-2">{event.title}</h3>
+        <p id={descId} className="text-base text-[#5a5a87]/60 mb-5 leading-relaxed font-medium">
           {event.description}
         </p>
         <div className="bg-[#FFF3E0] rounded-2xl px-4 py-3 mb-5">

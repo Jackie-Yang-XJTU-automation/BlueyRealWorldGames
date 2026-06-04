@@ -41,6 +41,10 @@ export interface TaskCard {
   title: string
   description: string
   completed: boolean
+  emoji?: string
+  stageLabel?: string
+  stageGoal?: string
+  safetyNote?: string
 }
 
 export type TimerState = 'idle' | 'running' | 'paused' | 'finished'

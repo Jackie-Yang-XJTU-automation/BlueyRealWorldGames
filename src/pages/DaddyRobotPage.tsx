@@ -7,12 +7,12 @@ import { Leaderboard } from '../components/Leaderboard'
 import { LottieCelebration } from '../components/LottieCelebration'
 import { CountdownOverlay } from '../components/CountdownOverlay'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
+import { TaskLadderPanel } from '../components/TaskLadderPanel'
 import { triggerHaptic } from '../utils/haptic'
 import type { GameFault } from '../types/game'
 
 const PRESET_NAMES = ['爸爸', '妈妈', '宝宝', '爷爷', '奶奶']
 const STORAGE_KEY_PLAYED = 'daddyrobot_played'
-const TASK_SCORES = [100, 200, 300, 500, 800]
 const ROBOT_PHRASES = [
   'Bandit 机器人正在等待指令！',
   '按下按钮告诉机器人做什么～',
@@ -200,100 +200,24 @@ export function DaddyRobotPage() {
         </div>
       </div>
 
-      {/* 任务公告板 */}
-      <div className="px-4 sm:px-0 mt-5 mb-6">
-        <div className="bg-white rounded-[28px] border-2 border-[#F3E5F5] shadow-[0_4px_20px_rgba(171,71,188,0.05)] overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setShowTasks(!showTasks)}
-            className="flex items-center justify-between w-full px-5 py-3.5 bg-gradient-to-r from-[#F3E5F5] to-[#EDE7F6] border-b-2 border-[#CE93D8]/15 cursor-pointer"
-          >
-            <h3 className="text-sm font-extrabold text-btv-dark flex items-center gap-2">
-              🤖 机器人任务
-              <span className="text-[11px] font-bold text-[#5a5a87]/35 bg-white/60 rounded-full px-2 py-0.5">
-                {game.completedTasks}/{game.tasks.length}
-              </span>
-            </h3>
-            <span className={`text-[#5a5a87]/25 font-bold transition-transform duration-300 ${showTasks ? 'rotate-180' : ''}`}>▼</span>
-          </button>
-
-          {showTasks && (
-            <div className="p-4 space-y-2.5">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="flex-1 h-2 bg-[#F3E5F5] rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-[#AB47BC] to-[#CE93D8] rounded-full transition-all duration-700 ease-out"
-                    style={{ width: `${(game.completedTasks / game.tasks.length) * 100}%` }}
-                  />
-                </div>
-                <span className="text-[10px] font-extrabold text-[#5a5a87]/25">
-                  {Math.round((game.completedTasks / game.tasks.length) * 100)}%
-                </span>
-              </div>
-
-              {game.tasks.map((task, i) => {
-                const locked = game.isLocked(i)
-                const isCurrent = i === game.firstUncompletedIndex
-                const isAnimating = game.animatingTaskId === task.id
-                const ready = game.canConfirmTask(task.id)
-
-                if (task.completed && !isAnimating) return null
-
-                return (
-                  <div key={task.id}
-                    className={`w-full text-left px-4 py-3 rounded-2xl flex items-center gap-3 border-2 overflow-hidden transition-all duration-500 ${
-                      isAnimating ? 'animate-task-slide-out bg-[#E8F5E9] border-[#A5D6A7]'
-                      : locked ? 'bg-[#F3E5F5]/20 border-[#5a5a87]/6 opacity-35'
-                      : isCurrent ? 'bg-[#F3E5F5]/40 border-[#CE93D8] shadow-[0_2px_12px_rgba(171,71,188,0.12)]'
-                      : 'bg-[#F3E5F5]/20 border-[#5a5a87]/6'
-                    }`}
-                  >
-                    <span className="text-lg shrink-0">
-                      {locked ? '🔒' : ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣'][i]}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className={`font-extrabold truncate text-[13px] ${locked ? 'text-[#5a5a87]/20' : 'text-btv-dark'}`}>
-                          {task.title}
-                        </p>
-                        {!locked && (
-                          <span className="text-[11px] font-extrabold text-[#DCA018] shrink-0 ml-2 bg-[#FFF9EE] rounded-full px-2 py-0.5">
-                            +{TASK_SCORES[i]}⭐
-                          </span>
-                        )}
-                      </div>
-                      <p className={`text-xs font-medium mt-0.5 ${locked ? 'text-[#5a5a87]/20' : 'text-[#5a5a87]/40'}`}>
-                        {task.description}
-                      </p>
-                    </div>
-                    {isCurrent && game.state === 'running' && !isAnimating && (
-                      <button
-                        type="button"
-                        onClick={(e) => { e.stopPropagation(); triggerHaptic('success'); game.confirmTask(task.id, i) }}
-                        disabled={!ready}
-                        className={`shrink-0 rounded-full font-extrabold text-sm flex items-center justify-center transition-transform min-w-[58px] h-11 px-3 ${
-                          ready
-                            ? 'bg-[#AB47BC] text-white hover:scale-105 active:scale-95 shadow-[0_2px_8px_rgba(171,71,188,0.4)]'
-                            : 'bg-[#F0F4FF] text-[#5a5a87]/30 cursor-not-allowed'
-                        }`}
-                      >
-                        {ready ? '完成' : '未好'}
-                      </button>
-                    )}
-                    {isAnimating && <span className="shrink-0 text-lg">✅</span>}
-                  </div>
-                )
-              })}
-
-              {game.completedTasks === game.tasks.length && (
-                <div className="text-center py-3 bg-[#E8F5E9]/50 rounded-2xl">
-                  <p className="text-sm font-extrabold text-btv-green">🎉 全部挑战完成！太厉害了！</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
+      <TaskLadderPanel
+        title="🤖 机器人任务"
+        tasks={game.tasks}
+        completedTasks={game.completedTasks}
+        show={showTasks}
+        onToggle={() => setShowTasks(!showTasks)}
+        state={game.state}
+        firstUncompletedIndex={game.firstUncompletedIndex}
+        animatingTaskId={game.animatingTaskId}
+        isLocked={game.isLocked}
+        onConfirm={(taskId, index) => { triggerHaptic('success'); game.confirmTask(taskId, index) }}
+        canConfirmTask={game.canConfirmTask}
+        completionMessage="🎉 全部挑战完成！太厉害了！"
+        accentColor="#CE93D8"
+        accentSoft="#F3E5F5"
+        accentTint="#F3E5F5"
+        confirmColor="#AB47BC"
+      />
 
       {/* 排行榜 */}
       <div className="px-4 sm:px-0 mb-6">
@@ -346,8 +270,8 @@ export function DaddyRobotPage() {
 
 function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
   return (
-    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/20 backdrop-blur-sm animate-event-pop-in px-4">
-      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center animate-jelly">
+    <div role="dialog" aria-modal="true" aria-label="爸爸机器人结算" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/20 backdrop-blur-sm animate-event-pop-in px-4">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
           {game.totalStars > 5000 ? '机器人大师！' : game.totalStars > 2000 ? '干得好，指挥官！' : '继续操控！'}
@@ -393,8 +317,8 @@ function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
 
 function VictoryModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
   return (
-    <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/20 backdrop-blur-sm animate-event-pop-in px-4">
-      <div className="bg-white rounded-[32px] p-7 max-w-sm w-full shadow-2xl text-center border-4 border-[#AB47BC] animate-jelly">
+    <div role="dialog" aria-modal="true" aria-label="爸爸机器人通关" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/20 backdrop-blur-sm animate-event-pop-in px-4">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-[#AB47BC] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
         <p className="text-xl font-extrabold text-btv-dark mb-1">全指令通关！</p>
