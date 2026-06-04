@@ -27,6 +27,10 @@ src/
     keepyUppyTasks.ts        #   5 个任务关卡
     daddyRobotTasks.ts       #   5 个机器人任务
     daddyRobotEvents.ts      #   机器人故障事件
+    magicXylophoneTasks.ts   #   魔法木琴阶梯任务
+    magicXylophoneEvents.ts  #   魔法木琴随机事件
+    shadowLandsTasks.ts      #   影子陆地阶梯任务
+    shadowLandsEvents.ts     #   影子陆地随机事件
     clawTasks.ts             #   13 个抓娃娃机任务
   utils/storage.ts           # localStorage 封装
   hooks/
@@ -37,6 +41,7 @@ src/
     useKeepyUppyGame.ts      # 顶气球游戏逻辑
     useDaddyRobotGame.ts     # 爸爸机器人游戏逻辑
     useShadowLandsGame.ts    # 影子陆地游戏逻辑
+    useMagicXylophoneGame.ts # 魔法木琴游戏逻辑
     useClawGame.ts           # 抓娃娃机游戏逻辑
   components/
     Layout.tsx               # 全局布局 + 导航
@@ -52,6 +57,7 @@ src/
     HomePage.tsx              # 首页（游戏库 + 筛选 + 随机 + 收藏 + 二维码）
     GameDetailPage.tsx        # 游戏详情（PLAYABLE 集中注册可玩游戏）
     KeepyUppyPage.tsx         # 顶气球游戏
+    MagicXylophonePage.tsx    # 魔法木琴游戏
     DaddyRobotPage.tsx        # 爸爸机器人游戏
     ShadowLandsPage.tsx       # 影子陆地游戏
     ClawGamePage.tsx          # 抓娃娃机游戏
@@ -63,13 +69,14 @@ src/
 ```
 
 ## 当前进度
-- ✅ P0 MVP：首页 + 4 款可玩游戏（顶气球、影子陆地、爸爸机器人、抓娃娃机）
+- ✅ P0 MVP：首页 + 5 款可玩游戏（魔法木琴、顶气球、影子陆地、爸爸机器人、抓娃娃机）
 - ✅ PWA：可安装、离线可用
 - ✅ 移动端触摸适配
 - ✅ GitHub Pages 自动部署
 - ✅ 通用计时器（TimerPage）
 - ✅ 虚拟骰子（DicePage）
-- ✅ P1：第二个可玩游戏（已超额，实际完成 4 款）
+- ✅ PWA 图标规范化（192/512/maskable/apple-touch）
+- ✅ P1：第二个可玩游戏（已超额，实际完成 5 款）
 - ⬜ 音效系统（ZzFX <1KB 程序生成）
 - ⬜ T8 今日游戏推荐
 - ⬜ 其余 5 款游戏可玩版本
@@ -84,14 +91,25 @@ src/
 - 新游戏逻辑提取为独立 hook，页面只负责渲染
 - 新增可玩游戏时，在 `GameDetailPage.tsx` 的 `PLAYABLE` 对象中加一条记录（route + label），只需改一处
 
-### 可玩游戏必需模式（P1 防误触）
-所有可玩游戏页面必须实现以下两个交互保护：
-1. **暂停**：running 状态显示暂停按钮 → 暂停时冻结计时器+停止事件 → 显示「继续玩」+「重来」
-2. **结束确认**：点击结束按钮弹出确认弹窗（"确定要结束吗？"）→「还没！继续玩」/「是，结束！」→ 确认后才执行 handleLand
-实现方式：useTimer 已有 pause/resume，game hook 添加 handlePause/handleResume，页面添加 showLandConfirm 状态控制确认弹窗
+### 文档职责
+- `REQUIREMENTS.md`：产品需求、路线图、完成状态。
+- `docs/game-design-patterns.md`：所有可玩游戏的唯一玩法设计规范。
+- `docs/superpowers/data/`：剧情摘要参考资料，新增或重做游戏前优先阅读。
+- `docs/superpowers/scripts/`：更长剧情/脚本资料，仅在摘要不够时查阅。
+- `docs/superpowers/specs/bluey-s1-game-analysis_codex.md`：保留的 S1 可玩性分析参考，用来辅助挑选后续深度集成候选。
+- 不再把新的产品规范写进 `docs/superpowers/specs/` 或 `docs/superpowers/plans/`。
 
-### 可玩游戏必需模式（Delight）
-3. **倒计时动画**：点「开始」后显示 `<CountdownOverlay emoji="🎈" onComplete={...} />` 而非直接启动，3→2→1→emoji 依次弹出，2.3 秒后自动开始。组件位于 `src/components/CountdownOverlay.tsx`，传入游戏对应 emoji 即可复用。
+### 可玩游戏必需模式
+所有深度可玩游戏都是现实亲子游戏主持器，不是屏幕小游戏。App 负责发任务、制造随机事件、记录节奏；孩子和家长在现实空间里完成动作、角色扮演和协作。
+
+1. **剧情依据**：任务和随机事件必须参考对应 `docs/superpowers/data/SxEy-*.md`，必要时查 `docs/superpowers/scripts/SxEy-*.md`。
+2. **阶梯任务卡**：每个游戏默认 5 级任务阶梯：入戏热身 → 掌握规则 → 协作升级 → 剧情冲突 → 高潮挑战。任务通过 `CommandPanel` 或等价任务卡组件展示。
+3. **随机事件**：运行中事件调度统一走 `useRandomEvent` 或同等 hook。事件需覆盖剧情事件、规则变化、亲子互动，不在页面里散落 setTimeout。
+4. **现实合理性**：每个任务必须适合 3-8 岁儿童在家庭/户外真实场景中完成，避免奔跑碰撞、攀爬家具、抢夺物品和羞辱式惩罚。
+5. **Bluey 味道**：优先保留剧集里的家庭协作、规则冲突、家长夸张表演和孩子主导想象，而不是生硬套用通用动作。
+6. **开始倒计时**：点「开始玩」后先显示 `<CountdownOverlay emoji="..." onComplete={...} />`，再进入 running 状态。
+7. **暂停/继续**：running 状态显示暂停按钮；暂停时冻结计时器、停止随机事件；显示「继续玩」和「重来」。
+8. **结束确认**：点击结束按钮先弹出确认弹窗，再执行结束逻辑，避免孩子误触。
 
 ## 会话规则
 - 使用中文回复

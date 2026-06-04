@@ -10,6 +10,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      includeManifestIcons: false,
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,woff2}'],
         // SPA 路由离线回退 -- 上次漏的关键配置
@@ -54,7 +55,10 @@ export default defineConfig({
         lang: 'zh-CN',
         categories: ['kids', 'games', 'family'],
         icons: [
-          { src: 'pwa-192x192.jpg', sizes: '192x192', type: 'image/jpeg' },
+          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: 'maskable-icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
     }),

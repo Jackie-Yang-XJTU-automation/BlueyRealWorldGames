@@ -38,7 +38,10 @@ proxy-prompt.md
 
 # Temp / scratch directories
 UsersfeifeAppDataLocalTempimpeccable-repo/
-docs/superpowers/
+docs/superpowers/*
+!docs/superpowers/specs/
+docs/superpowers/specs/*
+!docs/superpowers/specs/bluey-s1-game-analysis_codex.md
 scripts/
 
 # Scraped Bluey website assets (cached reference)

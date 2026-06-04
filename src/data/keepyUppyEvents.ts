@@ -3,106 +3,106 @@ import type { RandomEvent } from '../types/game'
 export const keepyUppyEvents: RandomEvent[] = [
   {
     id: 'kitchen-drift',
-    title: '气球飘进厨房了！',
-    description: '离"炉灶"越来越近——快在气球碰到危险之前救它！大人必须挡在孩子和某个方向之间。',
+    title: '气球飘到安全线外！',
+    description: '大人当安全队长，轻轻把大家带回空旷区域，再继续顶气球。',
     duration: 12,
-    emoji: '🍳'
+    emoji: '🛟'
   },
   {
     id: 'pat-watching',
-    title: 'Lucky 的爸爸在窗外看你们！',
-    description: '表演点厉害的！接下来必须用头或膝盖顶气球，用手算犯规！',
+    title: 'Lucky 的爸爸在看表演！',
+    description: '下一次碰气球前，先做一个夸张表情。表演越好笑越厉害！',
     duration: 10,
     emoji: '👀'
   },
   {
     id: 'big-girl-bark',
     title: 'Bluey 发动了「大女孩汪汪叫」！',
-    description: '所有人都被吓了一跳！每个人原地转一圈，然后继续顶气球！',
+    description: '所有人原地汪一声，再轻轻碰一次气球，不能冲出去追。',
     duration: 8,
     emoji: '🐕'
   },
   {
     id: 'elbow-only',
-    title: '只能用手肘！',
-    description: '手肘模式启动！手掌碰到了不算哦，必须用手肘顶！',
+    title: '小鸡翅膀模式！',
+    description: '手臂夹在身体旁边，像小鸡一样用手背或手臂轻轻碰气球。',
     duration: 12,
-    emoji: '💪'
+    emoji: '🐥'
   },
   {
     id: 'last-touch',
-    title: '最后一碰挑战！',
-    description: '接下来谁最后碰到气球，谁就是这轮的冠军！小心别当最后一个！',
+    title: '名字接力挑战！',
+    description: '碰到气球的人要喊下一位玩家的名字，让气球去找他。',
     duration: 15,
-    emoji: '🏆'
+    emoji: '📣'
   },
   {
     id: 'balloon-wants-sofa',
-    title: '气球想去沙发上！',
-    description: '气球说它想飞到沙发那边去～大家一起把气球往沙发的方向顶！',
+    title: '气球想去沙发岛！',
+    description: '选一个软软的安全岛，大家合作把气球慢慢送过去。',
     duration: 10,
     emoji: '🛋️'
   },
   {
     id: 'one-hand',
-    title: '妈妈单手拿锅铲加入！',
-    description: '像 Chilli 妈妈一样！所有人只能用一只手顶气球，另一只手背在身后！',
+    title: 'Chilli 妈妈单手模式！',
+    description: '只用一只手轻轻顶，另一只手放在肚子上，动作要慢。',
     duration: 12,
-    emoji: '🍳'
+    emoji: '🧡'
   },
   {
     id: 'gentle-touch',
     title: '气球说它累了',
-    description: '接下来 5 秒动作要很轻很轻～像在摸小猫咪一样温柔地碰气球！',
+    description: '接下来只能温柔碰，像托住一片羽毛一样，不能用力拍。',
     duration: 8,
-    emoji: '😴'
+    emoji: '🪶'
   },
   {
     id: 'cactus-alert',
     title: '仙人掌警报！',
-    description: '地上有仙人掌（假装）！不能踩到地面上的"仙人掌区域"，小心避开！',
+    description: '指定一个小小禁区，大家绕开它，脚步慢慢走。',
     duration: 10,
     emoji: '🌵'
   },
   {
     id: 'freeze',
-    title: '所有人不许动！',
-    description: '突然定住 3 秒！保持当前姿势，3...2...1...好了继续！',
+    title: 'Freeze！',
+    description: '所有人冻住 3 秒，大人数完 3、2、1，再继续顶。',
     duration: 6,
     emoji: '🧊'
   },
   {
     id: 'balloon-friend',
     title: '气球有名字啦！',
-    description: '这个气球现在叫"小草莓"！边顶边喊它的名字——"小草莓别掉！"',
+    description: '给气球起个名字，碰到它时要喊一句：「别掉呀！」',
     duration: 12,
     emoji: '🍓'
   },
   {
     id: 'reverse',
-    title: '反向模式！',
-    description: '规则反转！现在要把气球保持在膝盖以下的高度，越高越危险！',
+    title: '低低飞模式！',
+    description: '气球飞太高就请大人帮忙接住，大家试着让它在腰以下慢慢飘。',
     duration: 12,
     emoji: '🔄'
   },
   {
     id: 'slow-motion',
     title: '慢动作模式！',
-    description: '所有人进入慢动作！像在水里走路一样，动作放慢 5 倍～',
+    description: '所有人像在水里走路，慢慢伸手、慢慢转身、慢慢顶。',
     duration: 10,
-    emoji: '🦥'
+    emoji: '🐢'
   },
   {
     id: 'combo-fever',
     title: '连击狂热！',
-    description: '大声数出每一击："1！2！3！..." 看看能连续数到几！中间不能断！',
+    description: '大家一起大声数：「1、2、3……」数到断掉就笑一笑重新开始。',
     duration: 15,
     emoji: '🔥'
   },
   {
     id: 'bingo-laugh',
     title: 'Bingo 笑场了！',
-    description: 'Bingo 笑得停不下来！所有人都要边笑边顶，憋住笑不算哦！',
+    description: '每次碰到气球都要笑一声，笑得越夸张越像 Bingo！',
     duration: 8,
     emoji: '😂'
   }
