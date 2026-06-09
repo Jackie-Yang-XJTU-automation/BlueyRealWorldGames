@@ -457,6 +457,20 @@ body {
   color: #d96b62;
 }
 
+@media (hover: none) and (pointer: coarse) {
+  .episode-sticker-card.is-touch-focused {
+    border-color: #abe0fa;
+    box-shadow:
+      0 9px 0 rgba(174, 224, 250, 0.68),
+      0 16px 30px rgba(44, 67, 100, 0.16);
+    transform: translateY(-3px);
+  }
+
+  .episode-sticker-card.is-touch-focused .episode-card-cover > .relative {
+    transform: scale(1.04) rotate(-2deg);
+  }
+}
+
 .no-scrollbar {
   scrollbar-width: none;
 }
@@ -723,5 +737,10 @@ button:disabled {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .episode-sticker-card.is-touch-focused,
+  .episode-sticker-card.is-touch-focused .episode-card-cover > .relative {
+    transform: none !important;
   }
 }

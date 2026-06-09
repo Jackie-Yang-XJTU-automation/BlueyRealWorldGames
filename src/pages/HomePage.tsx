@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { games, getRandomGame } from '../data/games'
 import { getPlayableGame, isPlayableGame } from '../data/playableGames'
@@ -22,6 +22,8 @@ export function HomePage() {
   const [favorites, setFavorites] = useState<string[]>(getFavorites)
   const [randomGame, setRandomGame] = useState<Game | null>(null)
   const [favoritesExpanded, setFavoritesExpanded] = useState(true)
+  const [focusedGameId, setFocusedGameId] = useState<string | null>(null)
+  const cardRefs = useRef(new Map<string, HTMLDivElement>())
   const spotlightGame = useMemo(() => {
     const playableGames = games.filter(game => isPlayableGame(game.id))
     return playableGames[new Date().getDate() % playableGames.length]
@@ -60,6 +62,11 @@ export function HomePage() {
     setFilters(newFilters)
   }, [])
 
+  const setCardRef = useCallback((id: string, node: HTMLDivElement | null) => {
+    if (node) cardRefs.current.set(id, node)
+    else cardRefs.current.delete(id)
+  }, [])
+
   // Escape 键关闭弹窗
   useEffect(() => {
     if (!randomGame) return
@@ -69,6 +76,56 @@ export function HomePage() {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [randomGame])
+
+  useEffect(() => {
+    const touchQuery = window.matchMedia('(hover: none) and (pointer: coarse)')
+    let frame = 0
+
+    const updateFocusedCard = () => {
+      frame = 0
+      if (!touchQuery.matches || filteredGames.length === 0) {
+        setFocusedGameId(null)
+        return
+      }
+
+      const focusY = window.innerHeight * 0.58
+      let nextId: string | null = null
+      let bestDistance = Number.POSITIVE_INFINITY
+
+      filteredGames.forEach(game => {
+        const node = cardRefs.current.get(game.id)
+        if (!node) return
+        const rect = node.getBoundingClientRect()
+        if (rect.bottom < 120 || rect.top > window.innerHeight - 24) return
+
+        const center = rect.top + rect.height / 2
+        const distance = Math.abs(center - focusY)
+        if (distance < bestDistance) {
+          bestDistance = distance
+          nextId = game.id
+        }
+      })
+
+      setFocusedGameId(nextId)
+    }
+
+    const requestUpdate = () => {
+      if (frame) return
+      frame = window.requestAnimationFrame(updateFocusedCard)
+    }
+
+    requestUpdate()
+    window.addEventListener('scroll', requestUpdate, { passive: true })
+    window.addEventListener('resize', requestUpdate)
+    touchQuery.addEventListener('change', requestUpdate)
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', requestUpdate)
+      window.removeEventListener('resize', requestUpdate)
+      touchQuery.removeEventListener('change', requestUpdate)
+    }
+  }, [filteredGames])
 
   return (
     <div>
@@ -195,14 +252,16 @@ export function HomePage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {filteredGames.map((game, i) => (
-              <GameCard
-                key={game.id}
-                game={game}
-                isFavorite={isFavorite(game.id)}
-                onToggleFavorite={handleToggleFavorite}
-                onClick={() => navigate(`/game/${game.id}`)}
-                index={i}
-              />
+              <div key={game.id} ref={node => setCardRef(game.id, node)}>
+                <GameCard
+                  game={game}
+                  isFavorite={isFavorite(game.id)}
+                  onToggleFavorite={handleToggleFavorite}
+                  onClick={() => navigate(`/game/${game.id}`)}
+                  index={i}
+                  isTouchFocused={focusedGameId === game.id}
+                />
+              </div>
             ))}
           </div>
         )}

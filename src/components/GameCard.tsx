@@ -9,6 +9,8 @@ interface GameCardProps {
   onClick: () => void
   /** 0-based index for staggered entrance */
   index?: number
+  /** Touch-first focus used by mobile scroll position */
+  isTouchFocused?: boolean
 }
 
 interface TypeStyle {
@@ -61,7 +63,14 @@ function difficultyStars(difficulty: Game['difficulty']) {
   return '★'.repeat(difficulty) + '☆'.repeat(3 - difficulty)
 }
 
-export function GameCard({ game, isFavorite, onToggleFavorite, onClick, index = 0 }: GameCardProps) {
+export function GameCard({
+  game,
+  isFavorite,
+  onToggleFavorite,
+  onClick,
+  index = 0,
+  isTouchFocused = false,
+}: GameCardProps) {
   const style = typeStyles[game.type] ?? typeStyles.quiet
   const label = typeLabels[game.type] ?? typeLabels.quiet
   const [heartBounce, setHeartBounce] = useState(false)
@@ -76,7 +85,7 @@ export function GameCard({ game, isFavorite, onToggleFavorite, onClick, index = 
 
   return (
     <div
-      className={`episode-sticker-card relative rounded-[28px] bg-[#FDFBF7] border-2 border-white shadow-[0_8px_0_rgba(174,224,250,0.45),0_12px_24px_rgba(44,67,100,0.10)] cursor-pointer group overflow-visible active:scale-[0.97] hover:-translate-y-1.5 hover:rotate-[-0.5deg] hover:border-[#ABE0FA] transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] animate-card-enter ${style.glow}`}
+      className={`episode-sticker-card ${isTouchFocused ? 'is-touch-focused' : ''} relative rounded-[28px] bg-[#FDFBF7] border-2 border-white shadow-[0_8px_0_rgba(174,224,250,0.45),0_12px_24px_rgba(44,67,100,0.10)] cursor-pointer group overflow-visible active:scale-[0.97] hover:-translate-y-1.5 hover:rotate-[-0.5deg] hover:border-[#ABE0FA] transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] animate-card-enter ${style.glow}`}
       style={{ animationDelay: `${index * 60}ms` }}
     >
       <button

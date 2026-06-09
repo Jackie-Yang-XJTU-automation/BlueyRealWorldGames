@@ -151,6 +151,10 @@ Always design with Bluey cartoon + official website aesthetic:
 - `user-select: none` 禁止文字选中
 - `overscroll-behavior: none` 防橡皮筋效果
 - iOS 安全区 `env(safe-area-inset-*)`
+- 移动端触屏是主体验，桌面只是辅助预览；户外亲子游戏默认由家长单手拿手机主持。
+- `hover` 只能作为桌面增强，不能承载核心趣味、状态变化或可点击暗示。
+- 重要动效必须有触屏等价：按下反馈、滚动聚焦、卡片入场、收藏/任务/事件即时反馈。
+- UI 验收要检查手机滚动和点按手感，不只检查桌面 hover 或静态截图。
 
 **设计原则**
 - 儿童友好：大字号、大按钮、鲜艳但不刺眼的色彩
@@ -168,7 +172,7 @@ Always design with Bluey cartoon + official website aesthetic:
 | 状态 | 处理方式 |
 |------|---------|
 | Default | 基础样式 |
-| Hover | 弹性缩放+阴影提升（Bluey 特有：`cubic-bezier(0.175,0.885,0.32,1.275)`） |
+| Hover | 仅作为桌面增强；手机必须提供按下反馈或滚动聚焦等触屏等价 |
 | Focus | `:focus-visible` 显示 2px 紫灰轮廓，鼠标点击不显示 |
 | Active | `scale(0.95)` 按压反馈 |
 | Disabled | `opacity: 0.5`，`pointer-events: none` |
@@ -185,6 +189,8 @@ button:focus-visible { outline: 2px solid #5a5a87; outline-offset: 2px; }
 ### 动效规范（Bluey 覆盖 Impeccable 原生规则）
 - **弹性缓动允许**：`cubic-bezier(0.175,0.885,0.32,1.275)` 用于卡片 hover/emoji 旋转，这是 Bluey 卡通感的核心，**不走 Impeccable 的"禁止弹性"规则**
 - 过渡时长：150-300ms 用于微交互，300-500ms 用于卡片/弹窗
+- **触屏现场优先**：如果一个动效只在桌面 hover 可见，它不能算核心体验完成。手机上应通过滚动到视口中心、按下、收藏、任务盖章或弹窗状态变化看见反馈。
+- **滚动聚焦克制**：移动端列表可以突出视口中心卡片，但一次只突出一张，使用轻微阴影/边框/图标放大，不制造布局跳动。
 - **必须**支持 `prefers-reduced-motion`：
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -234,6 +240,8 @@ button:focus-visible { outline: 2px solid #5a5a87; outline-offset: 2px; }
 ### 设计审计检查表（实现新功能后自查）
 - [ ] 8 个交互状态都覆盖了吗？
 - [ ] 触控区域 ≥ 44px？
+- [ ] 核心动效在手机触屏上可见，而不是只依赖桌面 hover？
+- [ ] 手机滚动时是否稳定、可读、不跳动？
 - [ ] 动画尊重 `prefers-reduced-motion`？
 - [ ] 文案一致（术语、语气、句式）？
 - [ ] 空状态有引导？
