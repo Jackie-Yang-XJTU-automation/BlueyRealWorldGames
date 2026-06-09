@@ -83,11 +83,11 @@ export function HomePage() {
       />
 
       {/* 筛选栏 */}
-      <div className="mb-5 rounded-[28px] border-2 border-white/80 bg-white/74 p-3.5 shadow-[0_8px_24px_rgba(44,67,100,0.08)]">
+      <div className="mb-5 rounded-[28px] border-2 border-white/90 bg-[#FDFBF7]/86 p-3.5 shadow-[0_6px_0_rgba(174,224,250,0.42),0_10px_24px_rgba(44,67,100,0.08)]">
         <div className="mb-2 flex items-center justify-between gap-2">
-          <h2 className="text-[12px] font-black uppercase tracking-widest text-[#5a5a87]/42">选一张游戏贴纸</h2>
-          <span className="rounded-full bg-[#E3F2FD] px-2.5 py-1 text-[10px] font-black text-[#5a5a87]/48">
-            {filteredGames.length} 张
+          <h2 className="btv-display text-[13px] uppercase text-[#5a5a87]/72">游戏剧集库</h2>
+          <span className="btv-display rounded-full bg-[#ABE0FA] px-2.5 py-1 text-[10px] text-[#5a5a87] shadow-[0_2px_0_rgba(90,90,135,0.12)]">
+            {filteredGames.length} 集
           </span>
         </div>
         <FilterBar filters={filters} onFilterChange={handleFilterChange} onRandomPick={handleRandomPick} />
@@ -143,12 +143,12 @@ export function HomePage() {
             <button
               type="button"
               onClick={() => setFavoritesExpanded(!favoritesExpanded)}
-              className="flex items-center gap-2 font-extrabold text-red-400 hover:text-red-500 transition-colors"
+              className="flex items-center gap-2 rounded-full bg-white/72 py-1 pr-3 font-extrabold text-[#5a5a87] shadow-[0_3px_0_rgba(174,224,250,0.44)] transition-transform active:scale-95"
             >
-              <span className={`text-xs transition-transform duration-300 ${favoritesExpanded ? 'rotate-0' : '-rotate-90'}`}>
+              <span className={`ml-1 flex h-9 w-9 items-center justify-center rounded-full bg-[#FCD882] btv-display text-xs text-[#5a5a87] transition-transform duration-300 ${favoritesExpanded ? 'rotate-0' : '-rotate-90'}`}>
                 ▼
               </span>
-              <span className="text-sm">❤️ 我的最爱 · {favoriteGames.length}</span>
+              <span className="btv-display text-sm">♥ 我的收藏夹 · {favoriteGames.length}</span>
             </button>
           </div>
           {favoritesExpanded && (
@@ -156,18 +156,18 @@ export function HomePage() {
               {favoriteGames.map(game => (
                 <div
                   key={game.id}
-                  onClick={() => navigate(`/game/${game.id}`)}
-                  className="shrink-0 flex items-center gap-2 bg-red-50 border-2 border-red-200 rounded-full pl-3 pr-2 py-2 cursor-pointer hover:bg-red-100 hover:border-red-300 hover:shadow-[0_4px_12px_rgba(220,100,100,0.12)] active:scale-95 transition-all duration-300"
+                  onClick={() => handleOpenGame(game)}
+                  className="shrink-0 flex items-center gap-2 rounded-full border-2 border-white bg-[#FDFBF7] py-2 pl-2.5 pr-2 cursor-pointer shadow-[0_4px_0_rgba(174,224,250,0.50),0_8px_15px_rgba(44,67,100,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-white active:scale-95"
                 >
-                  <span className="text-sm">{game.emoji}</span>
-                  <span className="text-[13px] font-extrabold text-red-400">{game.name}</span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ABE0FA] text-base shadow-[0_2px_0_rgba(90,90,135,0.12)]">{game.emoji}</span>
+                  <span className="btv-display text-[13px] text-[#5a5a87]">{game.name}</span>
                   <button
                     type="button"
                     onClick={e => {
                       e.stopPropagation()
                       handleToggleFavorite(game.id)
                     }}
-                    className="w-[44px] h-[44px] min-w-[44px] min-h-[44px] bg-red-100 rounded-full flex items-center justify-center text-sm hover:bg-red-200 transition-colors"
+                    className="flex h-[44px] min-h-[44px] w-[44px] min-w-[44px] items-center justify-center rounded-full bg-[#FCE9E4] btv-display text-sm text-[#D96B62] transition-colors hover:bg-[#FFD8CF]"
                     aria-label={`从收藏中移除${game.name}`}
                   >
                     ✕
@@ -181,10 +181,10 @@ export function HomePage() {
 
       {/* 全部游戏 */}
       <section aria-label="全部游戏">
-        <h3 className="mb-3 flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider text-[#5a5a87]/40">
+        <h3 className="btv-display mb-3 flex items-center gap-2 text-sm uppercase text-[#5a5a87]/60">
           <span className="h-[2px] w-7 rounded-full bg-[#5a5a87]/12" />
-          游戏贴纸墙
-          <span className="rounded-full bg-white/72 px-2 py-0.5 text-[10px]">{filteredGames.length}</span>
+          全部剧集游戏
+          <span className="rounded-full bg-white/80 px-2 py-0.5 text-[10px] shadow-[0_2px_0_rgba(174,224,250,0.45)]">{filteredGames.length}</span>
         </h3>
         {filteredGames.length === 0 ? (
           <div className="text-center py-20">

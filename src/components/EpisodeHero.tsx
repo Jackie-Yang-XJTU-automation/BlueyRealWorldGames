@@ -43,12 +43,12 @@ export function EpisodeHero({
 
       <div className="relative grid gap-4 sm:grid-cols-[1fr_180px] sm:items-end">
         <div>
-          <div className="mb-3 inline-flex rotate-[-2deg] items-center gap-2 rounded-full bg-[#FFF9EE] px-3 py-1.5 text-[11px] font-black uppercase tracking-widest text-[#F39C62] shadow-[0_3px_0_rgba(243,156,98,0.18)]">
+          <div className="btv-display mb-3 inline-flex rotate-[-2deg] items-center gap-2 rounded-full bg-[#FFF9EE] px-3 py-1.5 text-[11px] uppercase text-[#F39C62] shadow-[0_3px_0_rgba(243,156,98,0.18)]">
             <span>🎬 今日开演</span>
             <span className="rounded-full bg-white px-2 py-0.5 text-[#5a5a87]/55">S1E{game.episode}</span>
           </div>
 
-          <h1 className="mb-2 text-[2.15rem] font-black leading-[1.02] tracking-tight text-btv-dark sm:text-[3.25rem]">
+          <h1 className="btv-title-pop mb-2 text-[2.15rem] leading-[1.02] sm:text-[3.25rem]">
             今天开演哪一集？
           </h1>
           <p className="mb-4 max-w-sm text-sm font-extrabold leading-relaxed text-[#5a5a87]/58">
@@ -57,7 +57,7 @@ export function EpisodeHero({
 
           <div className="rounded-[26px] border-2 border-[#E3F2FD] bg-white/88 p-3.5 shadow-[0_8px_22px_rgba(44,67,100,0.08)]">
             <div className="mb-2 flex items-center justify-between gap-2">
-              <span className="rounded-full bg-[#E3F2FD] px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-[#5a5a87]/55">
+              <span className="btv-display rounded-full bg-[#E3F2FD] px-2.5 py-1 text-[10px] uppercase text-[#5a5a87]/62">
                 今日推荐
               </span>
               <span className="text-[11px] font-extrabold text-[#5a5a87]/38">
@@ -73,7 +73,7 @@ export function EpisodeHero({
                 {game.emoji}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-lg font-black leading-tight text-btv-dark">{game.name}</span>
+                <span className="btv-display block text-lg leading-tight text-[#5a5a87]">{game.name}</span>
                 <span className="mt-1 flex flex-wrap gap-1.5 text-[11px] font-extrabold text-[#5a5a87]/52">
                   <span>{type.emoji} {type.text}</span>
                   <span>{location.emoji} {location.text}</span>

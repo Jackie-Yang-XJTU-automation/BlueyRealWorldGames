@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+:root {
+  --font-btv-display: hello, "Baloo 2", "Nunito", "Arial Rounded MT Bold", "Microsoft YaHei", system-ui, sans-serif;
+  --font-btv-body: "Nunito", "Microsoft YaHei", "PingFang SC", system-ui, -apple-system, sans-serif;
+}
+
 @theme {
   /* Bluey.tv 风格配色 - 完美融入布鲁伊官方温暖拙朴家族色 */
   --color-btv-cream: #F9F6EE;        /* 奇莉妈妈的奶油色 */
@@ -35,13 +40,27 @@ html {
 }
 
 body {
-  font-family: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-btv-body);
   -webkit-font-smoothing: antialiased;
   /* 最小点击区域保证 */
   min-height: 100vh;
   min-height: -webkit-fill-available;
   /* 防止橡皮筋效果导致误触 */
   overscroll-behavior: none;
+}
+
+.btv-display {
+  font-family: var(--font-btv-display);
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.btv-title-pop {
+  font-family: var(--font-btv-display);
+  font-weight: 900;
+  letter-spacing: 0;
+  color: #5a5a87;
+  text-shadow: 3px 4px 0 rgba(174, 224, 250, 0.72);
 }
 
 /* iOS 全屏适配 */
@@ -297,9 +316,9 @@ body {
 .page-title-btv {
   font-size: 2.25rem;
   font-weight: 900;
-  color: #2C4364; /* 班底特深蓝 */
-  letter-spacing: -0.01em;
-  text-shadow: 3px 3px 0 rgba(44, 67, 100, 0.12); /* 班底特深蓝卡通软立体字重阴影 */
+  color: #5a5a87; /* Bluey 官网紫灰主文字 */
+  letter-spacing: 0;
+  text-shadow: 3px 4px 0 rgba(174, 224, 250, 0.72); /* 官网式浅蓝厚软阴影 */
 }
 
 /* Hero 区装饰 — 悬浮角色 emoji */
@@ -347,6 +366,95 @@ body {
   pointer-events: none;
   border-radius: 22px;
   border: 1px dashed rgba(44, 67, 100, 0.08);
+}
+
+.episode-card-cover {
+  isolation: isolate;
+}
+.episode-card-cover::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: -18px;
+  top: 20px;
+  width: 62px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    36px -12px 0 8px rgba(255, 255, 255, 0.82),
+    104px 2px 0 2px rgba(255, 255, 255, 0.62),
+    220px -7px 0 5px rgba(255, 255, 255, 0.74);
+}
+.episode-card-cover::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 9px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+
+.btv-episode-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 3px solid #ffffff;
+  background: #fcd882;
+  color: #5a5a87;
+  font-family: var(--font-btv-display);
+  font-size: 0.68rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+  box-shadow: 0 4px 0 rgba(90, 90, 135, 0.16);
+  transform: rotate(-3deg);
+}
+
+.btv-mini-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-btv-display);
+  font-size: 0.62rem;
+  line-height: 1;
+}
+
+.btv-favorite-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 3px solid #ffffff;
+  background: #abe0fa;
+  color: #5a5a87;
+  font-family: var(--font-btv-display);
+  font-size: 1.55rem;
+  line-height: 1;
+  box-shadow: 0 5px 0 rgba(90, 90, 135, 0.14), 0 9px 16px rgba(44, 67, 100, 0.12);
+  transition: transform 0.24s ease, background-color 0.24s ease, color 0.24s ease;
+}
+.btv-favorite-button:hover {
+  transform: scale(1.08) rotate(3deg);
+}
+.btv-favorite-button:active {
+  transform: scale(0.92);
+}
+.btv-favorite-button.is-favorite {
+  background: #fcd882;
+  color: #d96b62;
 }
 
 .no-scrollbar {
