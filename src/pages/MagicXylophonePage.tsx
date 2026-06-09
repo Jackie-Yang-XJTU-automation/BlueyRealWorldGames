@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { useMagicXylophoneGame, type MagicActionId } from '../hooks/useMagicXylophoneGame'
 import { GameTimer } from '../components/GameTimer'
-import { Leaderboard } from '../components/Leaderboard'
+import { GameLeaderboardPanel } from '../components/GameLeaderboardPanel'
 import { LottieCelebration } from '../components/LottieCelebration'
 import { CountdownOverlay } from '../components/CountdownOverlay'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
@@ -28,8 +28,8 @@ const MAGIC_ACTIONS: Array<{
   hint: string
   color: string
 }> = [
-  { id: 'freeze', emoji: '🧊', label: 'Freeze', hint: '冻住', color: '#1C98ED' },
-  { id: 'unfreeze', emoji: '✨', label: 'Unfreeze', hint: '解冻', color: '#4CAF50' },
+  { id: 'freeze', emoji: '🧊', label: '冻住', hint: '敲一下', color: '#1C98ED' },
+  { id: 'unfreeze', emoji: '✨', label: '解冻', hint: '再敲一下', color: '#4CAF50' },
   { id: 'pose', emoji: '🗿', label: '摆姿势', hint: '安全好笑', color: '#F58634' },
   { id: 'switch', emoji: '🔁', label: '换魔法师', hint: '轮流', color: '#AB47BC' },
   { id: 'rescue', emoji: '🧡', label: 'Bingo 救援', hint: '偷偷救人', color: '#EC407A' },
@@ -243,12 +243,12 @@ export function MagicXylophonePage() {
 
       <TaskBoard game={game} showTasks={showTasks} onToggle={() => setShowTasks(!showTasks)} />
 
-      <div className="px-4 sm:px-0 mb-6">
-        <div className="bg-white rounded-[28px] border-2 border-[#E3F2FD] shadow-[0_4px_20px_rgba(28,152,237,0.06)] p-5">
-          <h3 className="text-sm font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-3">🏆 魔法排行榜</h3>
-          <Leaderboard entries={game.leaderboard} currentRank={game.currentRank} />
-        </div>
-      </div>
+      <GameLeaderboardPanel
+        title="🏆 魔法排行榜"
+        entries={game.leaderboard}
+        currentRank={game.currentRank}
+        accentTint="#E3F2FD"
+      />
 
       {game.state === 'paused' && !showEndConfirm && (
         <GamePauseDialog

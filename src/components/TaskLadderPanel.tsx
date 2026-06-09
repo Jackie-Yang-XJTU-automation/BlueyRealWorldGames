@@ -49,23 +49,25 @@ export function TaskLadderPanel({
   showRewards = true,
 }: TaskLadderPanelProps) {
   const progress = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0
+  const currentTask = tasks[firstUncompletedIndex]
+  const currentReady = currentTask && canConfirmTask ? canConfirmTask(currentTask.id) : true
 
   return (
     <div className="px-4 sm:px-0 mt-5 mb-6">
-      <div className="bg-white rounded-[28px] border-2 shadow-[0_4px_20px_rgba(28,152,237,0.06)] overflow-hidden" style={{ borderColor: `${accentTint}` }}>
+      <div className="overflow-hidden rounded-[30px] border-2 bg-white shadow-[0_8px_26px_rgba(44,67,100,0.08)]" style={{ borderColor: `${accentTint}` }}>
         <button
           type="button"
           onClick={onToggle}
           aria-expanded={show}
-          className="flex min-h-14 items-center justify-between w-full px-5 py-3.5 border-b-2 cursor-pointer"
+          className="flex min-h-14 w-full cursor-pointer items-center justify-between border-b-2 px-5 py-3.5"
           style={{
-            background: `linear-gradient(90deg, ${accentSoft}, #FFFFFF 54%, ${accentTint})`,
+            background: `linear-gradient(90deg, ${accentSoft}, #FFFFFF 48%, ${accentTint})`,
             borderColor: `${accentColor}33`,
           }}
         >
-          <h3 className="text-sm font-extrabold text-btv-dark flex items-center gap-2">
-            {title}
-            <span className="text-[11px] font-bold text-[#5a5a87]/35 bg-white/70 rounded-full px-2 py-0.5">
+          <h3 className="flex items-center gap-2 text-sm font-black text-btv-dark">
+            <span className="rounded-full bg-white/70 px-2 py-1 shadow-sm">{title}</span>
+            <span className="rounded-full bg-white/80 px-2 py-0.5 text-[11px] font-extrabold text-[#5a5a87]/45">
               {completedTasks}/{tasks.length}
             </span>
           </h3>
@@ -73,9 +75,9 @@ export function TaskLadderPanel({
         </button>
 
         {show && (
-          <div className="p-4 space-y-2.5">
-            <div className="flex items-center gap-2 mb-1">
-              <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: accentTint }}>
+          <div className="space-y-3.5 p-4">
+            <div className="mb-1 flex items-center gap-2">
+              <div className="h-2 flex-1 overflow-hidden rounded-full" style={{ backgroundColor: accentTint }}>
                 <div
                   className="h-full rounded-full transition-all duration-700 ease-out"
                   style={{
@@ -87,82 +89,138 @@ export function TaskLadderPanel({
               <span className="text-[10px] font-extrabold text-[#5a5a87]/25">{progress}%</span>
             </div>
 
-            {tasks.map((task, index) => {
+            {currentTask && !currentTask.completed && (
+              <div
+                className="relative overflow-hidden rounded-[26px] border-2 bg-white p-4 shadow-[0_8px_22px_rgba(44,67,100,0.08)]"
+                style={{ borderColor: accentColor, background: `linear-gradient(180deg, #FFFFFF, ${accentSoft})` }}
+              >
+                <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full opacity-35" style={{ backgroundColor: accentColor }} />
+                <div className="relative">
+                  <div className="mb-2 flex flex-wrap items-center gap-1.5">
+                    <span className="rounded-full bg-btv-dark px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white">
+                      🎬 当前导演卡
+                    </span>
+                    {currentTask.stageLabel && (
+                      <span className="rounded-full bg-white/82 px-2.5 py-1 text-[10px] font-extrabold text-[#5a5a87]/55">
+                        {currentTask.stageLabel}
+                      </span>
+                    )}
+                    {showRewards && (
+                      <span className="rounded-full bg-[#FFF9EE] px-2.5 py-1 text-[10px] font-extrabold text-[#DCA018]">
+                        +{taskScores[firstUncompletedIndex] ?? taskScores[taskScores.length - 1]}⭐
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex gap-3">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-3xl shadow-[0_3px_0_rgba(44,67,100,0.10)]">
+                      {currentTask.emoji ?? STEP_EMOJIS[firstUncompletedIndex]}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-base font-black leading-snug text-btv-dark">{currentTask.title}</p>
+                      <p className="mt-1 text-[13px] font-bold leading-relaxed text-[#5a5a87]/62">{currentTask.description}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 grid gap-2">
+                    {currentTask.stageGoal && (
+                      <p className="rounded-2xl bg-white/70 px-3 py-2 text-[12px] font-extrabold leading-snug text-[#5a5a87]/58">
+                        🎯 {currentTask.stageGoal}
+                      </p>
+                    )}
+                    {currentTask.safetyNote && (
+                      <p className="rounded-2xl bg-[#FFF3E0] px-3 py-2 text-[12px] font-extrabold leading-snug text-[#D96B62]/75">
+                        🛟 {currentTask.safetyNote}
+                      </p>
+                    )}
+                  </div>
+
+                  {state === 'running' && (
+                    <button
+                      type="button"
+                      onClick={() => onConfirm(currentTask.id, firstUncompletedIndex)}
+                      disabled={!currentReady}
+                      className="btn-task-confirm mt-3 w-full rounded-full px-4 py-3 text-sm font-black text-white transition-transform active:scale-95 disabled:cursor-not-allowed"
+                      style={{
+                        backgroundColor: currentReady ? confirmColor : '#F0F4FF',
+                        color: currentReady ? '#FFFFFF' : 'rgba(90,90,135,0.42)',
+                        boxShadow: currentReady ? `0 4px 12px ${confirmColor}66` : 'none',
+                      }}
+                    >
+                      {currentReady ? `✅ ${completeLabel}，盖章！` : blockedLabel}
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="rounded-[24px] border border-[#E3F2FD] bg-[#FDFBF7] p-2.5">
+              <div className="mb-2 flex items-center justify-between px-1">
+                <p className="text-[11px] font-black uppercase tracking-widest text-[#5a5a87]/35">五级印章进度</p>
+                <p className="text-[11px] font-extrabold text-[#5a5a87]/35">入戏 → 高潮</p>
+              </div>
+
+              <div className="space-y-2">
+                {tasks.map((task, index) => {
               const locked = isLocked(index)
               const isCurrent = index === firstUncompletedIndex
               const isAnimating = animatingTaskId === task.id
-              const ready = canConfirmTask ? canConfirmTask(task.id) : true
-
-              if (task.completed && !isAnimating) return null
 
               return (
                 <div
                   key={task.id}
-                  className={`w-full text-left px-4 py-3 rounded-2xl flex items-start gap-3 border-2 overflow-hidden transition-all duration-500 ${
+                      className={`relative flex w-full items-start gap-3 overflow-hidden rounded-2xl border-2 px-3 py-3 text-left transition-all duration-500 ${
                     isAnimating ? 'animate-task-slide-out bg-[#E8F5E9] border-[#A5D6A7]'
-                    : locked ? 'opacity-40'
-                    : isCurrent ? 'shadow-[0_2px_12px_rgba(44,67,100,0.08)]'
+                        : task.completed ? 'border-[#90C79A]/35 bg-[#E8F5E9]/70'
+                        : locked ? 'border-[#E3F2FD] bg-white/70'
+                        : isCurrent ? 'shadow-[0_2px_12px_rgba(44,67,100,0.08)]'
                     : ''
                   }`}
                   style={{
-                    backgroundColor: locked ? `${accentTint}44` : isCurrent ? accentSoft : `${accentTint}55`,
-                    borderColor: locked ? 'rgba(90,90,135,0.08)' : isCurrent ? accentColor : 'rgba(90,90,135,0.08)',
+                        backgroundColor: task.completed ? undefined : locked ? '#FFFFFF' : isCurrent ? accentSoft : `${accentTint}55`,
+                        borderColor: task.completed ? undefined : locked ? 'rgba(187,222,251,0.9)' : isCurrent ? accentColor : 'rgba(90,90,135,0.08)',
                   }}
                 >
-                  <span className="mt-0.5 text-lg shrink-0">{locked ? '🔒' : task.emoji ?? STEP_EMOJIS[index]}</span>
+                      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
+                        {task.completed ? '✅' : locked ? '🔒' : task.emoji ?? STEP_EMOJIS[index]}
+                      </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-1.5">
                       {task.stageLabel && (
-                        <span className="rounded-full bg-white/70 px-2 py-0.5 text-[10px] font-extrabold text-[#5a5a87]/42">
+                            <span className="rounded-full bg-white/76 px-2 py-0.5 text-[10px] font-extrabold text-[#5a5a87]/50">
                           {task.stageLabel}
                         </span>
                       )}
-                      {showRewards && !locked && (
+                          {task.completed && (
+                            <span className="rotate-[-2deg] rounded-full border border-[#90C79A]/40 bg-white px-2 py-0.5 text-[10px] font-black text-[#4CAF50]">
+                              已盖章
+                            </span>
+                          )}
+                          {isCurrent && !task.completed && (
+                            <span className="rounded-full bg-btv-dark px-2 py-0.5 text-[10px] font-black text-white">
+                              正在上演
+                            </span>
+                          )}
+                          {showRewards && !locked && !task.completed && (
                         <span className="rounded-full bg-[#FFF9EE] px-2 py-0.5 text-[10px] font-extrabold text-[#DCA018]">
                           +{taskScores[index] ?? taskScores[taskScores.length - 1]}⭐
                         </span>
                       )}
                     </div>
-                    <p className={`mt-1 font-extrabold text-[13px] leading-snug ${locked ? 'text-[#5a5a87]/25' : 'text-btv-dark'}`}>
+                        <p className={`mt-1 text-[13px] font-black leading-snug ${locked ? 'text-[#5a5a87]/55' : 'text-btv-dark'}`}>
                       {task.title}
                     </p>
-                    <p className={`mt-0.5 text-xs font-medium leading-relaxed ${locked ? 'text-[#5a5a87]/25' : 'text-[#5a5a87]/55'}`}>
-                      {task.description}
+                        <p className={`mt-0.5 text-xs font-bold leading-relaxed ${locked ? 'text-[#5a5a87]/42' : 'text-[#5a5a87]/55'}`}>
+                          {locked ? '下一段剧情待解锁，先把当前任务玩完。' : task.description}
                     </p>
-                    {isCurrent && task.stageGoal && (
-                      <p className="mt-1.5 text-[11px] font-extrabold leading-snug text-[#5a5a87]/42">
-                        目标：{task.stageGoal}
-                      </p>
-                    )}
-                    {isCurrent && task.safetyNote && (
-                      <p className="mt-1 text-[11px] font-bold leading-snug text-[#D96B62]/65">
-                        安全：{task.safetyNote}
-                      </p>
-                    )}
                   </div>
 
-                  {isCurrent && state === 'running' && !isAnimating && (
-                    <button
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation()
-                        onConfirm(task.id, index)
-                      }}
-                      disabled={!ready}
-                      className="mt-1 shrink-0 rounded-full font-extrabold text-sm flex items-center justify-center transition-transform min-w-[58px] h-11 px-3 disabled:cursor-not-allowed"
-                      style={{
-                        backgroundColor: ready ? confirmColor : '#F0F4FF',
-                        color: ready ? '#FFFFFF' : 'rgba(90,90,135,0.34)',
-                        boxShadow: ready ? `0 2px 8px ${confirmColor}66` : 'none',
-                      }}
-                    >
-                      {ready ? completeLabel : blockedLabel}
-                    </button>
-                  )}
                   {isAnimating && <span className="mt-2 shrink-0 text-lg">✅</span>}
                 </div>
               )
-            })}
+                })}
+              </div>
+            </div>
 
             {completedTasks === tasks.length && tasks.length > 0 && (
               <div className="text-center py-3 rounded-2xl" style={{ backgroundColor: `${confirmColor}22` }}>

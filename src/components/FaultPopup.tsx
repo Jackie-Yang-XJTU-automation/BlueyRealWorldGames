@@ -222,6 +222,11 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
       <div className={`max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 bg-white p-7 text-center shadow-2xl transition-colors duration-300 animate-jelly ${
         isFixed ? 'border-btv-green' : 'border-[#AB47BC]'
       }`}>
+        <div className={`mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
+          isFixed ? 'bg-[#E8F5E9] text-[#4CAF50]' : 'bg-[#F3E5F5] text-[#AB47BC]'
+        }`}>
+          {isFixed ? '维修完成' : '🎬 剧情故障'}
+        </div>
         <div className="text-7xl mb-3">
           {isFixed ? '✅' : fault.emoji}
         </div>
@@ -238,6 +243,9 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
             <div className="mb-4">
               {renderInteraction()}
             </div>
+            <p className="mb-3 rounded-2xl bg-white/80 px-4 py-3 text-[12px] font-extrabold leading-snug text-[#D96B62]/70">
+              🛟 机器人只能慢慢走，不冲撞家具；修理动作要轻轻来。
+            </p>
             <div className="bg-[#FFF3E0] rounded-2xl px-4 py-3 mb-3">
               <p className="text-sm text-btv-orange font-extrabold">
                 {fault.interactionType === 'longpress'

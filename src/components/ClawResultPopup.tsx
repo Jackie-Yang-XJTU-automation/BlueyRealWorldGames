@@ -8,7 +8,7 @@ const RESULT_CONFIG = {
     emoji: '🎉',
     title: '抓住了！',
     description: '爪子紧紧抓住了奖品！\n全家人一起欢呼吧！',
-    actionLabel: '🏆 胜利仪式',
+    actionLabel: '🏆 回到奖品台',
     bg: 'bg-[#E8F5E9]',
     border: 'border-[#90C79A]',
     btnBg: 'bg-[#90C79A]',
@@ -18,7 +18,7 @@ const RESULT_CONFIG = {
     emoji: '😬',
     title: '滑掉了！',
     description: '爪子碰到了...但又松开了！\n没关系，再做任务挣硬币吧～',
-    actionLabel: '好的，继续！',
+    actionLabel: '继续挣硬币',
     bg: 'bg-[#FFF8E1]',
     border: 'border-[#FCD882]',
     btnBg: 'bg-[#FCD882]',
@@ -28,7 +28,7 @@ const RESULT_CONFIG = {
     emoji: '⚡',
     title: '机器故障！',
     description: '爪子机器卡住了！\n快挠痒家长 5 秒来修复！\n\n补偿：+1 🪙 硬币',
-    actionLabel: '修好了！继续',
+    actionLabel: '修好了，回到任务',
     bg: 'bg-[#FCE4EC]',
     border: 'border-[#D96B62]',
     btnBg: 'bg-[#D96B62]',
@@ -43,7 +43,10 @@ export function ClawResultPopup({ result, onContinue }: ClawResultPopupProps) {
 
   return (
     <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/20 backdrop-blur-sm px-6" role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId}>
-      <div className={`${config.bg} border-4 ${config.border} max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] p-8 text-center shadow-2xl animate-jelly`}>
+      <div className={`${config.bg} border-4 ${config.border} max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[34px] p-8 text-center shadow-2xl animate-jelly`}>
+        <div className="mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full bg-white/74 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#5a5a87]/55">
+          抓取结果
+        </div>
         <div className="text-7xl mb-3">{config.emoji}</div>
         <h2 id={titleId} className="text-[22px] font-extrabold text-btv-dark mb-2">{config.title}</h2>
         <p id={descId} className="text-sm text-[#5a5a87] mb-6 whitespace-pre-line leading-relaxed">

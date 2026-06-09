@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useClawGame } from '../hooks/useClawGame'
 import { ClawResultPopup } from '../components/ClawResultPopup'
 import { Leaderboard } from '../components/Leaderboard'
+import { GameLeaderboardPanel } from '../components/GameLeaderboardPanel'
 import { CountdownOverlay } from '../components/CountdownOverlay'
 import { GameTimer } from '../components/GameTimer'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
@@ -402,12 +403,12 @@ export function ClawGamePage() {
         onToggle={() => setShowProgressBoard(!showProgressBoard)}
       />
 
-      <div className="px-4 sm:px-0 mb-6">
-        <div className="bg-white rounded-[28px] border-2 border-[#E3F2FD] shadow-[0_4px_20px_rgba(28,152,237,0.06)] p-5">
-          <h3 className="text-sm font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-3">🏆 抓娃娃排行榜</h3>
-          <Leaderboard entries={game.leaderboard} currentRank={game.currentRank} />
-        </div>
-      </div>
+      <GameLeaderboardPanel
+        title="🏆 抓娃娃排行榜"
+        entries={game.leaderboard}
+        currentRank={game.currentRank}
+        accentTint="#E3F2FD"
+      />
 
       {/* === RESULT POPUP === */}
       {game.showResult && game.clawResult && (

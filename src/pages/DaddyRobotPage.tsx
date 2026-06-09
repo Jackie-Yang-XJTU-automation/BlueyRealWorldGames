@@ -3,7 +3,7 @@ import { useDaddyRobotGame } from '../hooks/useDaddyRobotGame'
 import { GameTimer } from '../components/GameTimer'
 import { CommandPanel } from '../components/CommandPanel'
 import { FaultPopup } from '../components/FaultPopup'
-import { Leaderboard } from '../components/Leaderboard'
+import { GameLeaderboardPanel } from '../components/GameLeaderboardPanel'
 import { LottieCelebration } from '../components/LottieCelebration'
 import { CountdownOverlay } from '../components/CountdownOverlay'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
@@ -219,13 +219,12 @@ export function DaddyRobotPage() {
         confirmColor="#AB47BC"
       />
 
-      {/* 排行榜 */}
-      <div className="px-4 sm:px-0 mb-6">
-        <div className="bg-white rounded-[28px] border-2 border-[#F3E5F5] shadow-[0_4px_20px_rgba(171,71,188,0.05)] p-5">
-          <h3 className="text-sm font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-3">🏆 星星排行榜</h3>
-          <Leaderboard entries={game.leaderboard} currentRank={game.currentRank} />
-        </div>
-      </div>
+      <GameLeaderboardPanel
+        title="🏆 星星排行榜"
+        entries={game.leaderboard}
+        currentRank={game.currentRank}
+        accentTint="#F3E5F5"
+      />
 
       {/* 停止确认弹窗 */}
       {game.state === 'paused' && !showLandConfirm && (

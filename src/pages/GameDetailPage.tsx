@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { getGameById } from '../data/games'
+import { getPlayableGame } from '../data/playableGames'
 
 const difficultyStars: Record<number, string> = { 1: '⭐', 2: '⭐⭐', 3: '⭐⭐⭐' }
 const energyLabels: Record<number, { emoji: string; text: string }> = {
@@ -57,17 +58,9 @@ export function GameDetailPage() {
   const heroGradient = heroGradients[game.type] ?? heroGradients.quiet
   const heroAccent = heroAccents[game.type] ?? heroAccents.quiet
 
-  const PLAYABLE: Record<string, { route: string; label: string }> = {
-    'magic-xylophone': { route: '/game/magic-xylophone/play', label: '🎵 开始做 Ding！' },
-    'keepy-uppy': { route: '/game/keepy-uppy/play', label: '🎈 开始顶气球！' },
-    'shadowlands': { route: '/game/shadowlands/play', label: '☀️ 进入影子陆地！' },
-    'daddy-robot': { route: '/game/daddy-robot/play', label: '🤖 启动机器人！' },
-    'claw-machine': { route: '/game/claw-machine/play', label: '🕹️ 打开娃娃机！' },
-  }
-
-  const isPlayable = game.id in PLAYABLE
-  const playRoute = PLAYABLE[game.id]?.route
-  const playLabel = PLAYABLE[game.id]?.label
+  const playable = getPlayableGame(game.id)
+  const isPlayable = !!playable
+  const playLabel = playable?.label
 
   return (
     <div className="max-w-lg mx-auto -mx-4 sm:mx-auto">
@@ -202,7 +195,7 @@ export function GameDetailPage() {
           {isPlayable ? (
             <button
               type="button"
-              onClick={() => navigate(playRoute)}
+              onClick={() => playable && navigate(playable.route)}
               className="btn-btv w-full text-2xl animate-random-pulse"
             >
               {playLabel}

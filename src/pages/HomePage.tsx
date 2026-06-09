@@ -1,6 +1,8 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { games, getRandomGame } from '../data/games'
+import { getPlayableGame, isPlayableGame } from '../data/playableGames'
+import { EpisodeHero } from '../components/EpisodeHero'
 import { GameCard } from '../components/GameCard'
 import { FilterBar } from '../components/FilterBar'
 import { QRCode } from '../components/QRCode'
@@ -20,6 +22,10 @@ export function HomePage() {
   const [favorites, setFavorites] = useState<string[]>(getFavorites)
   const [randomGame, setRandomGame] = useState<Game | null>(null)
   const [favoritesExpanded, setFavoritesExpanded] = useState(true)
+  const spotlightGame = useMemo(() => {
+    const playableGames = games.filter(game => isPlayableGame(game.id))
+    return playableGames[new Date().getDate() % playableGames.length]
+  }, [])
 
   const filteredGames = useMemo(() => {
     return games.filter(g => {
@@ -45,6 +51,11 @@ export function HomePage() {
     setRandomGame(game)
   }, [])
 
+  const handleOpenGame = useCallback((game: Game) => {
+    const playable = getPlayableGame(game.id)
+    navigate(playable?.route ?? `/game/${game.id}`)
+  }, [navigate])
+
   const handleFilterChange = useCallback((newFilters: FilterOptions) => {
     setFilters(newFilters)
   }, [])
@@ -61,30 +72,24 @@ export function HomePage() {
 
   return (
     <div>
-      {/* 英雄区 */}
-      <div className="text-center mb-5 relative">
-        {/* 浮动装饰 emoji */}
-        <span className="absolute top-0 left-[8%] text-3xl animate-decor-float select-none pointer-events-none" style={{ animationDelay: '0s' }}>🎈</span>
-        <span className="absolute top-6 left-[18%] text-2xl animate-decor-float select-none pointer-events-none" style={{ animationDelay: '0.6s' }}>⭐</span>
-        <span className="absolute top-2 right-[12%] text-3xl animate-decor-float select-none pointer-events-none" style={{ animationDelay: '1.2s' }}>🎵</span>
-        <span className="absolute top-8 right-[22%] text-2xl animate-decor-float select-none pointer-events-none" style={{ animationDelay: '1.8s' }}>🌳</span>
-        <span className="absolute top-4 left-[45%] text-xl animate-decor-float select-none pointer-events-none" style={{ animationDelay: '2.4s' }}>💫</span>
-
-        <img
-          src={blueyFamily}
-          alt="Bluey 全家福"
-          className="w-36 sm:w-44 h-auto mx-auto mb-2 drop-shadow-[0_8px_20px_rgba(44,67,100,0.18)] animate-jelly"
-        />
-        <h2 className="page-title-btv mb-1 text-3xl sm:text-4xl">
-          今天玩什么？
-        </h2>
-        <p className="text-[#5a5a87]/45 font-bold text-sm tracking-wide">
-          For Real Life · 和宝宝一起，玩真的！
-        </p>
-      </div>
+      <EpisodeHero
+        game={spotlightGame}
+        gameCount={games.length}
+        playableCount={games.filter(game => isPlayableGame(game.id)).length}
+        familyImage={blueyFamily}
+        onRandomPick={handleRandomPick}
+        onOpenGame={handleOpenGame}
+        playLabel={getPlayableGame(spotlightGame.id)?.label}
+      />
 
       {/* 筛选栏 */}
-      <div className="mb-5">
+      <div className="mb-5 rounded-[28px] border-2 border-white/80 bg-white/74 p-3.5 shadow-[0_8px_24px_rgba(44,67,100,0.08)]">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <h2 className="text-[12px] font-black uppercase tracking-widest text-[#5a5a87]/42">选一张游戏贴纸</h2>
+          <span className="rounded-full bg-[#E3F2FD] px-2.5 py-1 text-[10px] font-black text-[#5a5a87]/48">
+            {filteredGames.length} 张
+          </span>
+        </div>
         <FilterBar filters={filters} onFilterChange={handleFilterChange} onRandomPick={handleRandomPick} />
       </div>
 
@@ -104,7 +109,7 @@ export function HomePage() {
             <div className="absolute -bottom-1 -left-2 text-2xl animate-decor-float" style={{ animationDelay: '0.6s' }}>💫</div>
 
             <div className="text-8xl mb-3 drop-shadow-lg">{randomGame.emoji}</div>
-            <h3 className="text-lg font-extrabold text-btv-orange mb-1">🎲 命运选择了...</h3>
+            <h3 className="text-lg font-extrabold text-btv-orange mb-1">🎲 今天抽中了...</h3>
             <p className="text-3xl font-extrabold text-btv-dark mb-4">{randomGame.name}！</p>
             <div className="flex items-center justify-center gap-2 text-sm text-[#5a5a87]/45 font-bold mb-6">
               <span>{randomGame.difficulty === 1 ? '⭐' : randomGame.difficulty === 2 ? '⭐⭐' : '⭐⭐⭐'}</span>
@@ -121,10 +126,10 @@ export function HomePage() {
               </button>
               <button
                 type="button"
-                onClick={() => { setRandomGame(null); navigate(`/game/${randomGame.id}`) }}
+                onClick={() => { setRandomGame(null); handleOpenGame(randomGame) }}
                 className="btn-btv flex-1"
               >
-                就玩这个！
+                {isPlayableGame(randomGame.id) ? '直接开演！' : '打开规则'}
               </button>
             </div>
           </div>
@@ -176,8 +181,10 @@ export function HomePage() {
 
       {/* 全部游戏 */}
       <section aria-label="全部游戏">
-        <h3 className="text-sm font-extrabold text-[#5a5a87]/40 uppercase tracking-wider mb-3">
-          全部游戏 · {filteredGames.length}
+        <h3 className="mb-3 flex items-center gap-2 text-sm font-extrabold uppercase tracking-wider text-[#5a5a87]/40">
+          <span className="h-[2px] w-7 rounded-full bg-[#5a5a87]/12" />
+          游戏贴纸墙
+          <span className="rounded-full bg-white/72 px-2 py-0.5 text-[10px]">{filteredGames.length}</span>
         </h3>
         {filteredGames.length === 0 ? (
           <div className="text-center py-20">

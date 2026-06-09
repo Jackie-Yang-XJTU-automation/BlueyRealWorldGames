@@ -319,6 +319,43 @@ body {
   letter-spacing: -0.02em;
 }
 
+/* 剧集游乐书视觉层：纸张、贴纸、轻微手作感 */
+.episode-hero {
+  isolation: isolate;
+}
+.episode-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.72) 0 8px, transparent 9px),
+    radial-gradient(circle at 88% 28%, rgba(255, 255, 255, 0.62) 0 10px, transparent 11px),
+    linear-gradient(135deg, rgba(44, 67, 100, 0.035) 0 1px, transparent 1px);
+  background-size: auto, auto, 18px 18px;
+  mix-blend-mode: soft-light;
+}
+
+.episode-sticker-card {
+  transform-origin: 50% 80%;
+}
+.episode-sticker-card::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+  border-radius: 22px;
+  border: 1px dashed rgba(44, 67, 100, 0.08);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* ====== 移动端响应式 ====== */
 
 @media (max-width: 480px) {

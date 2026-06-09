@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useKeepyUppyGame } from '../hooks/useKeepyUppyGame'
 import { GameTimer } from '../components/GameTimer'
 import { RandomEventPopup } from '../components/RandomEventPopup'
-import { Leaderboard } from '../components/Leaderboard'
+import { GameLeaderboardPanel } from '../components/GameLeaderboardPanel'
 import { LottieCelebration } from '../components/LottieCelebration'
 import { CountdownOverlay } from '../components/CountdownOverlay'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
@@ -204,13 +204,12 @@ export function KeepyUppyPage() {
         confirmColor="#90C79A"
       />
 
-      {/* 排行榜 */}
-      <div className="px-4 sm:px-0 mb-6">
-        <div className="bg-white rounded-[28px] border-2 border-[#E3F2FD] shadow-[0_4px_20px_rgba(28,152,237,0.06)] p-5">
-          <h3 className="text-sm font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-3">🏆 星星排行榜</h3>
-          <Leaderboard entries={game.leaderboard} currentRank={game.currentRank} />
-        </div>
-      </div>
+      <GameLeaderboardPanel
+        title="🏆 星星排行榜"
+        entries={game.leaderboard}
+        currentRank={game.currentRank}
+        accentTint="#E3F2FD"
+      />
 
       {/* 落地确认弹窗 */}
       {game.state === 'paused' && !showLandConfirm && (
