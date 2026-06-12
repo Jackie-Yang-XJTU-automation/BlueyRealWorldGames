@@ -8,6 +8,7 @@ import { GameTimer } from '../components/GameTimer'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
 import { triggerHaptic } from '../utils/haptic'
 import type { ClawTask } from '../data/clawTasks'
+import type { RandomEvent } from '../types/game'
 
 const PHASE_PHRASES = [
   'Bluey 说：左一点...再左一点...',
@@ -93,12 +94,15 @@ export function ClawGamePage() {
   }, [game.state, game.isPaused])
 
   const prevPhase = useRef(game.phase)
+  const prevEvent = useRef(game.currentEvent)
   useEffect(() => {
     if (game.phase === 'task' && prevPhase.current !== 'task') triggerHaptic('tap')
     if (game.clawResult && prevPhase.current === 'claw') triggerHaptic('event')
+    if (game.currentEvent && !prevEvent.current) triggerHaptic('event')
     if (game.phase === 'finished') triggerHaptic('finish')
     prevPhase.current = game.phase
-  }, [game.phase, game.clawResult])
+    prevEvent.current = game.currentEvent
+  }, [game.phase, game.clawResult, game.currentEvent])
 
   const isRunning = game.state === 'running'
   const isPaused = game.isPaused
@@ -185,7 +189,7 @@ export function ClawGamePage() {
               onToggleHelp={() => setShowScoreHelp(!showScoreHelp)}
               showPause={isRunning && !isPaused && !isFinished}
               onPause={game.handlePause}
-              showEnd={!isPaused && !isFinished}
+              showEnd={!isPaused && !isFinished && !game.currentEvent}
               onEnd={() => setShowLandConfirm(true)}
             />
 
@@ -335,7 +339,7 @@ export function ClawGamePage() {
               )}
 
               {/* Encourage phrase */}
-              {isRunning && !isPaused && game.phase !== 'finished' && (
+              {isRunning && !isPaused && game.phase !== 'finished' && !game.currentEvent && (
                 <p className="text-[13px] font-extrabold text-[#5a5a87]/50 text-center mt-2 mb-1">
                   {PHASE_PHRASES[phraseIndex]}
                 </p>
@@ -347,7 +351,7 @@ export function ClawGamePage() {
               )}
 
               {/* Phase action buttons */}
-              {game.phase === 'task' && isRunning && !isPaused && (
+              {game.phase === 'task' && isRunning && !isPaused && !game.currentEvent && (
                 <div className="grid grid-cols-2 gap-2.5 w-full max-w-sm mb-4">
                   <button type="button" onClick={game.handleInsertCoin} disabled={game.coins <= 0}
                     className={`min-h-[56px] rounded-2xl text-base font-extrabold active:scale-95 transition-all shadow-[0_3px_0_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 ${
@@ -415,6 +419,10 @@ export function ClawGamePage() {
         <ClawResultPopup result={game.clawResult} onContinue={game.handleContinue} />
       )}
 
+      {game.currentEvent && game.state === 'running' && (
+        <ClawEventPopup event={game.currentEvent} onDone={game.handleEventDone} />
+      )}
+
       {isPaused && !showLandConfirm && (
         <GamePauseDialog
           emoji="🕹️"
@@ -453,6 +461,54 @@ export function ClawGamePage() {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+function ClawEventPopup({ event, onDone }: { event: RandomEvent; onDone: () => void }) {
+  const [remaining, setRemaining] = useState(event.duration)
+  const titleId = `claw-event-${event.id}-title`
+  const descId = `claw-event-${event.id}-desc`
+
+  useEffect(() => {
+    setRemaining(event.duration)
+    const interval = setInterval(() => {
+      setRemaining(prev => {
+        if (prev <= 1) {
+          clearInterval(interval)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [event])
+
+  return (
+    <div role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId} className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/25 px-4 backdrop-blur-sm animate-event-pop-in">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[34px] border-4 border-[#F39C62] bg-[#FDFBF7] p-7 text-center shadow-2xl animate-jelly">
+        <div className="mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full bg-[#FFF9EE] px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#F39C62]">
+          🎬 爪子剧情事件
+        </div>
+        <div className="mb-3 text-7xl">{event.emoji}</div>
+        <h2 id={titleId} className="mb-2 text-xl font-extrabold text-btv-dark">{event.title}</h2>
+        <p id={descId} className="mb-5 text-base font-medium leading-relaxed text-[#5a5a87]/62">{event.description}</p>
+        <div className="mb-5 rounded-2xl bg-[#FFF3E0] px-4 py-3">
+          <p className="text-sm font-extrabold text-btv-orange">⏱ 剩余 {remaining} 秒自动回到奖品台</p>
+          <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-[#FFE0B2]">
+            <div
+              className="h-full rounded-full bg-btv-orange transition-all duration-1000 ease-linear"
+              style={{ width: `${(remaining / event.duration) * 100}%` }}
+            />
+          </div>
+        </div>
+        <p className="mb-5 rounded-2xl bg-white/80 px-4 py-3 text-[12px] font-extrabold leading-snug text-[#D96B62]/70">
+          🛟 爪子只抓奖品，不抓人；挠痒维修要轻轻来。
+        </p>
+        <button type="button" onClick={onDone} className="btn-btv w-full text-base">
+          ✅ 完成事件，继续抓
+        </button>
+      </div>
     </div>
   )
 }

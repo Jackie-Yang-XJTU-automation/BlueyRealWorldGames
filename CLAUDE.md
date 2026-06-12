@@ -32,6 +32,7 @@ src/
     shadowLandsTasks.ts      #   影子陆地阶梯任务
     shadowLandsEvents.ts     #   影子陆地随机事件
     clawTasks.ts             #   13 个抓娃娃机任务
+    clawEvents.ts            #   抓娃娃机剧情随机事件
   utils/storage.ts           # localStorage 封装
   hooks/
     useTimer.ts              # 通用 RAF 计时器
@@ -50,6 +51,8 @@ src/
     GameTimer.tsx             # 通用计时器展示
     FilterBar.tsx             # 筛选栏
     Leaderboard.tsx           # 排行榜
+    PlayableGameChrome.tsx   # 可玩游戏通用 HUD + 暂停/确认弹窗
+    TaskLadderPanel.tsx      # 五级任务阶梯面板
     RandomEventPopup.tsx      # 随机事件弹窗
     ClawResultPopup.tsx       # 抓娃娃结果弹窗
     QRCode.tsx                # 首页二维码
@@ -77,6 +80,7 @@ src/
 - ✅ 虚拟骰子（DicePage）
 - ✅ PWA 图标规范化（192/512/maskable/apple-touch）
 - ✅ P1：第二个可玩游戏（已超额，实际完成 5 款）
+- ✅ 5 款可玩游戏玩法一致性优化：抓娃娃机接入统一剧情随机事件；影子陆地/爸爸机器人事件更贴剧情；顶气球/影子陆地任务盖章增加节奏门槛
 - ⬜ 音效系统（ZzFX <1KB 程序生成）
 - ⬜ T8 今日游戏推荐
 - ⬜ 其余 5 款游戏可玩版本

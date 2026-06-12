@@ -43,7 +43,7 @@
 - 数据层：`src/data/*Tasks.ts` 和 `src/data/*Events.ts`
 - 逻辑层：`src/hooks/use*Game.ts`
 - 页面层：`src/pages/*Page.tsx`
-- 共用组件：`CountdownOverlay`、`CommandPanel`、`RandomEventPopup`、`GameTimer`、`Leaderboard`
+- 共用组件：`CountdownOverlay`、`CommandPanel`、`TaskLadderPanel`、`RandomEventPopup`、`FaultPopup`、`GameTimer`、`Leaderboard`
 
 ## 阶梯任务卡
 
@@ -97,9 +97,9 @@
 |------|----------|--------------|--------------|
 | 魔法木琴 | `S1E1-The_Magic_Xylophone.md` | 冻住/解冻 → 轮流 → 搞笑姿势 → Bingo 救援 → 全家合作 | 爸爸抢木琴、厕所休息、静音魔法、花园小矮人 |
 | 顶气球 | `S1E3-Keepy_Uppy.md` | 轻轻顶 → 控制力度 → 客厅旅行 → 全家接力 → 连续挑战 | 气球飘走、爸爸加难度、Lucky 爸爸看表演、慢动作 |
-| 爸爸机器人 | `S1E4-Daddy_Robot.md` | 发指令 → 多样指令 → 修故障 → 全指令 → 机器人最终任务 | 短路、低电量、语法错误、系统卡死、妈妈机器人 |
-| 影子陆地 | `S1E5-Shadowlands.md` | 找影子 → 规则练习 → 影子接力 → 鳄鱼河 → 云影冲刺 | 鳄鱼警报、云遮太阳、移动影子、不能走捷径 |
-| 抓娃娃机 | `S1E19-The_Claw.md` | 做任务挣币 → 投币 → 指挥爪子 → 奖品诱惑 → 故障修复 | 抓住、滑掉、爪子故障、挠痒修复 |
+| 爸爸机器人 | `S1E4-Daddy_Robot.md` | 发指令 → 多样指令 → 修故障 → 全指令 → 机器人最终任务 | 喷水短路、垃圾桶程序、Syntax Error、跳舞过载、妈妈机器人、蜡笔手术 |
+| 影子陆地 | `S1E5-Shadowlands.md` | 找影子 → 规则练习 → 影子接力 → 鳄鱼河 → 云影冲刺 | 云影桥、鳄鱼河、不能走捷径、Snickers 救援、棕榈岛、点心召唤 |
+| 抓娃娃机 | `S1E19-The_Claw.md` | 做任务挣币 → 投币 → 指挥爪子 → 奖品诱惑 → 故障修复 | 抓住/滑掉/故障结果 + 爸爸变难、妈妈奖励、Grey Dancer、无限冰淇淋、退款换币、挠痒修复 |
 | 医院 | `S1E2-Hospital.md` | 检查 → 诊断 → 护士协作 → 荒诞病情 → 治疗仪式 | 急诊、奇怪 X 光、药房缺货、玩具病人 |
 | 魔法雕像商店 | `S1E6-The_Weekend.md` | 摆姿势 → 店主转身 → 偷偷移动 → 顾客验货 → 抓包退款 | 魔法姿势、顾客回头、雕像打喷嚏、店主促销 |
 | 假装烧烤 | `S1E7-BBQ.md` | 收集食材 → 点单 → 烹饪 → 缺料/烤焦 → 全家上菜 | 缺盐、下雨、客人加单、沙拉比赛 |
@@ -114,7 +114,7 @@
 - `src/data/*Tasks.ts` 中任务卡是 5 级阶梯设计。
 - `src/data/*Events.ts` 中随机事件至少覆盖剧情事件、规则变化、亲子互动。
 - 页面使用开始倒计时、暂停/继续、结束确认。
-- 主线任务通过 `CommandPanel` 或等价任务卡组件展示。
+- 主线任务通过 `CommandPanel`、`TaskLadderPanel` 或等价任务卡组件展示；任务可加入轻量完成条件，防止刚开局连续误触盖章。
 - 随机事件通过 `useRandomEvent` 或同等 hook 调度。
 - 游戏结束条件、胜利条件或庆祝条件清晰。
 - 所有动作符合 3-8 岁儿童现实亲子游戏安全性。

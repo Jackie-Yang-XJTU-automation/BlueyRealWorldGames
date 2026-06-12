@@ -7,6 +7,13 @@ import { shadowLandsEvents } from '../data/shadowLandsEvents'
 import type { TaskCard, LeaderboardEntry, RandomEvent } from '../types/game'
 
 const TASK_SCORES = [100, 200, 300, 500, 800]
+const TASK_READY_SECONDS: Record<string, number> = {
+  warmup: 6,
+  'one-leg': 14,
+  'shadow-chain': 24,
+  'crocodile-river': 36,
+  'shadow-champion': 50
+}
 
 interface FlyingStar {
   id: number
@@ -70,6 +77,11 @@ export function useShadowLandsGame() {
 
   const firstUncompletedIndex = tasks.findIndex(t => !t.completed)
   const completedTasks = tasks.filter(t => t.completed).length
+  const elapsedSeconds = Math.floor(elapsedMs / 1000)
+
+  const canConfirmTask = useCallback((taskId: string) => {
+    return elapsedSeconds >= (TASK_READY_SECONDS[taskId] ?? 0)
+  }, [elapsedSeconds])
 
   const handleStart = useCallback(() => {
     setShowResult(false)
@@ -130,6 +142,7 @@ export function useShadowLandsGame() {
 
   const confirmTask = useCallback((taskId: string, index: number) => {
     if (index !== firstUncompletedIndex || animatingTaskId) return
+    if (!canConfirmTask(taskId)) return
     setAnimatingTaskId(taskId)
     const earned = TASK_SCORES[index]
 
@@ -151,7 +164,7 @@ export function useShadowLandsGame() {
         }, 600)
       }
     }, 500)
-  }, [firstUncompletedIndex, tasks, stop, stopEvents, animatingTaskId, spawnStars])
+  }, [firstUncompletedIndex, tasks, stop, stopEvents, animatingTaskId, spawnStars, canConfirmTask])
 
   const isLocked = useCallback((index: number): boolean => {
     return index > firstUncompletedIndex
@@ -167,6 +180,6 @@ export function useShadowLandsGame() {
     playerName, setPlayerName,
     leaderboard, currentRank,
     handleStart, handlePause, handleResume, handleLand, handleSaveScore, handleReset,
-    confirmTask, isLocked,
+    confirmTask, canConfirmTask, isLocked,
   }
 }

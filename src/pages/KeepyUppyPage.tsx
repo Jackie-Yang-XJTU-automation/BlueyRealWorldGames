@@ -197,6 +197,8 @@ export function KeepyUppyPage() {
         animatingTaskId={game.animatingTaskId}
         isLocked={game.isLocked}
         onConfirm={(taskId, index) => { triggerHaptic('success'); game.confirmTask(taskId, index) }}
+        canConfirmTask={game.canConfirmTask}
+        blockedLabel="先顶一小会儿"
         completionMessage="🎉 全部挑战完成！太厉害了！"
         accentColor="#F9D06B"
         accentSoft="#FFF9EE"

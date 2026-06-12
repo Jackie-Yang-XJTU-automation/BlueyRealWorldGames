@@ -152,7 +152,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
                        transition-all duration-100 active:scale-95 touch-action-manipulation select-none"
             style={{ backgroundColor: fault.emoji === '🦠' ? '#E53935' : '#F58634' }}
           >
-            {fault.emoji === '🦠' ? '🦠 消灭病毒！' : '⚡ 快速点击修复！'}
+            {fault.emoji} 快速点击修复！
           </button>
         )
 
@@ -168,8 +168,8 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
                        flex flex-col items-center justify-center gap-2"
             style={{ backgroundColor: '#4CAF50' }}
           >
-            <span className="text-3xl">🔋</span>
-            <span>按住充电！</span>
+            <span className="text-3xl">{fault.emoji}</span>
+            <span>按住修复！</span>
           </button>
         )
 

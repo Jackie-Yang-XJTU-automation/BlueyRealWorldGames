@@ -2,101 +2,73 @@ import type { RandomEvent } from '../types/game'
 
 export const shadowLandsEvents: RandomEvent[] = [
   {
-    id: 'cloud-covers',
-    title: '云遮住了太阳！',
-    description: '影子消失了！快跳到最近的影子，原地数 5 秒等云飘走！',
-    duration: 10,
+    id: 'cloud-bridge',
+    title: '云影桥来了！',
+    description: '大人当侦察员，指向一片安全影子。大家小步走过去，像剧里等云帮忙一样。',
+    duration: 12,
     emoji: '☁️'
   },
   {
-    id: 'crocodile-spots',
-    title: '鳄鱼发现你了！',
-    description: '一只鳄鱼正盯着你！所有人一起学鳄鱼叫三声把它吓跑！',
-    duration: 8,
+    id: 'crocodile-river',
+    title: '鳄鱼河变宽了！',
+    description: '阳光水面太宽，不能硬冲。一起重新找路线，绕到最近的大影子岛。',
+    duration: 12,
     emoji: '🐊'
   },
   {
-    id: 'shadow-moving',
-    title: '影子在移动！',
-    description: '脚下的影子在变！单脚站立保持平衡 5 秒，不准落地！',
+    id: 'no-shortcut',
+    title: 'Coco 想走捷径！',
+    description: '先停住讨论：要不要守规则？全家一起说“守规则更好玩”，再继续。',
+    duration: 10,
+    emoji: '🚫'
+  },
+  {
+    id: 'snickers-gap',
+    title: 'Snickers 过不去！',
+    description: '给小短腿朋友想办法：大人伸出“影子桥”手臂，孩子慢慢跨到下一个影子。',
+    duration: 12,
+    emoji: '🌭'
+  },
+  {
+    id: 'palm-island',
+    title: '被困在棕榈岛！',
+    description: '大家站稳在同一片影子里，数 3 秒观察下一座安全岛，不能急着踩阳光。',
+    duration: 10,
+    emoji: '🌴'
+  },
+  {
+    id: 'picnic-call',
+    title: '妈妈喊吃点心啦！',
+    description: '点心在对岸！先指路，再由孩子决定下一步，不能为了点心破坏规则。',
+    duration: 10,
+    emoji: '🧁'
+  },
+  {
+    id: 'moving-shadow',
+    title: '影子在慢慢移动！',
+    description: '双脚站稳，跟着影子小小挪一步。大人提醒看脚下，不单脚挑战。',
     duration: 10,
     emoji: '🌓'
   },
   {
-    id: 'wind-gust',
-    title: '一阵大风吹来！',
-    description: '风太大了！所有人原地转一圈然后继续跳影子！',
+    id: 'bus-shadow',
+    title: '巴士影子经过！',
+    description: '机会来了！等大人说“可以”，大家用小步快走穿过安全影子，不奔跑。',
     duration: 8,
-    emoji: '🌬️'
+    emoji: '🚌'
   },
   {
-    id: 'leaf-storm',
-    title: '落叶风暴！',
-    description: '落叶砸到水面了！假装被砸到，夸张地倒在地上再爬起来！',
+    id: 'rule-coach',
+    title: 'Bluey 当规则队长！',
+    description: '孩子说一次规则：“阳光是鳄鱼水，影子是安全岛。”说完继续前进。',
+    duration: 8,
+    emoji: '📣'
+  },
+  {
+    id: 'family-map',
+    title: '全家画路线图！',
+    description: '用手指在空中画出下一步路线：先到小影子，再到大影子，最后上岸。',
     duration: 10,
-    emoji: '🍂'
-  },
-  {
-    id: 'rainbow-appears',
-    title: '彩虹桥出现了！',
-    description: '所有玩家手牵手跳 5 下，彩虹会保佑你们安全！',
-    duration: 12,
-    emoji: '🌈'
-  },
-  {
-    id: 'mosquito-attack',
-    title: '蚊子来偷袭！',
-    description: '嗡嗡嗡！拍三下蚊子（在空中拍三下手），然后继续！',
-    duration: 8,
-    emoji: '🦟'
-  },
-  {
-    id: 'frog-leap',
-    title: '青蛙过河！',
-    description: '像青蛙一样蹲下跳 3 次，边跳边喊呱呱呱！',
-    duration: 10,
-    emoji: '🐸'
-  },
-  {
-    id: 'lizard-crossing',
-    title: '蜥蜴在晒太阳！',
-    description: '一只蜥蜴占了你的影子！从它旁边轻轻绕过，不能吵醒它！',
-    duration: 12,
-    emoji: '🦎'
-  },
-  {
-    id: 'grass-tickles',
-    title: '草地上有蚂蚁！',
-    description: '脚下痒痒的！原地跺脚 3 下把蚂蚁抖掉！',
-    duration: 8,
-    emoji: '🐜'
-  },
-  {
-    id: 'sun-too-bright',
-    title: '太阳太刺眼了！',
-    description: '闭上眼睛原地数 5 秒——1、2、3、4、5！睁开继续！',
-    duration: 8,
-    emoji: '😎'
-  },
-  {
-    id: 'shadow-double',
-    title: '你的影子分身了！',
-    description: '有两个影子！跟自己的影子击掌（左手拍右手），继续前进！',
-    duration: 8,
-    emoji: '👥'
-  },
-  {
-    id: 'splash-puddle',
-    title: '踩到水坑了！',
-    description: '假装踩到水坑——夸张地跳起来甩甩脚！让脚变干！',
-    duration: 8,
-    emoji: '💦'
-  },
-  {
-    id: 'cloud-race',
-    title: '云朵赛跑！',
-    description: '两朵云在比赛！猜哪朵先飘过太阳——猜错了的人转一圈！',
-    duration: 12,
-    emoji: '⛅'
+    emoji: '🗺️'
   }
 ]

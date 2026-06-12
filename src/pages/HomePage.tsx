@@ -22,7 +22,7 @@ export function HomePage() {
   const [favorites, setFavorites] = useState<string[]>(getFavorites)
   const [randomGame, setRandomGame] = useState<Game | null>(null)
   const [favoritesExpanded, setFavoritesExpanded] = useState(true)
-  const [focusedGameId, setFocusedGameId] = useState<string | null>(null)
+  const [focusedGameIds, setFocusedGameIds] = useState<string[]>([])
   const cardRefs = useRef(new Map<string, HTMLDivElement>())
   const spotlightGame = useMemo(() => {
     const playableGames = games.filter(game => isPlayableGame(game.id))
@@ -80,16 +80,19 @@ export function HomePage() {
   useEffect(() => {
     const touchQuery = window.matchMedia('(hover: none) and (pointer: coarse)')
     let frame = 0
+    let idleTimer = 0
 
     const updateFocusedCard = () => {
       frame = 0
-      if (!touchQuery.matches || filteredGames.length === 0) {
-        setFocusedGameId(null)
+      const shouldUseTouchFocus = touchQuery.matches || window.innerWidth < 768
+      if (!shouldUseTouchFocus || filteredGames.length === 0) {
+        setFocusedGameIds([])
         return
       }
 
-      const focusY = window.innerHeight * 0.58
-      let nextId: string | null = null
+      const focusY = window.innerHeight * 0.48
+      const visibleCards: { id: string; rect: DOMRect }[] = []
+      let focusedTop = 0
       let bestDistance = Number.POSITIVE_INFINITY
 
       filteredGames.forEach(game => {
@@ -98,20 +101,31 @@ export function HomePage() {
         const rect = node.getBoundingClientRect()
         if (rect.bottom < 120 || rect.top > window.innerHeight - 24) return
 
+        visibleCards.push({ id: game.id, rect })
         const center = rect.top + rect.height / 2
         const distance = Math.abs(center - focusY)
         if (distance < bestDistance) {
           bestDistance = distance
-          nextId = game.id
+          focusedTop = rect.top
         }
       })
 
-      setFocusedGameId(nextId)
+      const nextIds = visibleCards
+        .filter(({ rect }) => Math.abs(rect.top - focusedTop) < 48)
+        .map(({ id }) => id)
+
+      setFocusedGameIds(current => (
+        current.length === nextIds.length && current.every((id, index) => id === nextIds[index])
+          ? current
+          : nextIds
+      ))
     }
 
     const requestUpdate = () => {
       if (frame) return
       frame = window.requestAnimationFrame(updateFocusedCard)
+      window.clearTimeout(idleTimer)
+      idleTimer = window.setTimeout(updateFocusedCard, 120)
     }
 
     requestUpdate()
@@ -121,6 +135,7 @@ export function HomePage() {
 
     return () => {
       if (frame) window.cancelAnimationFrame(frame)
+      window.clearTimeout(idleTimer)
       window.removeEventListener('scroll', requestUpdate)
       window.removeEventListener('resize', requestUpdate)
       touchQuery.removeEventListener('change', requestUpdate)
@@ -250,7 +265,7 @@ export function HomePage() {
             <p className="text-sm text-[#5a5a87]/30 mt-1.5 font-bold">试试换个类型或场地看看？</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="episode-card-grid grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {filteredGames.map((game, i) => (
               <div key={game.id} ref={node => setCardRef(game.id, node)}>
                 <GameCard
@@ -259,7 +274,7 @@ export function HomePage() {
                   onToggleFavorite={handleToggleFavorite}
                   onClick={() => navigate(`/game/${game.id}`)}
                   index={i}
-                  isTouchFocused={focusedGameId === game.id}
+                  isTouchFocused={focusedGameIds.includes(game.id)}
                 />
               </div>
             ))}

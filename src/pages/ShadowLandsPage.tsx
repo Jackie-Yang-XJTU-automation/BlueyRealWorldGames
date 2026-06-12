@@ -201,6 +201,8 @@ export function ShadowLandsPage() {
         animatingTaskId={game.animatingTaskId}
         isLocked={game.isLocked}
         onConfirm={(taskId, index) => { triggerHaptic('success'); game.confirmTask(taskId, index) }}
+        canConfirmTask={game.canConfirmTask}
+        blockedLabel="先守住影子一会儿"
         completionMessage="🎉 全部挑战完成！太厉害了！"
         accentColor="#81C784"
         accentSoft="#E8F5E9"

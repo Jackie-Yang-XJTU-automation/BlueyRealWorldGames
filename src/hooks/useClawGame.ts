@@ -1,9 +1,11 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useTimer } from './useTimer'
 import { useLeaderboard } from './useLeaderboard'
+import { useRandomEvent } from './useRandomEvent'
 import { buildClawTaskLadder, clawTasks } from '../data/clawTasks'
+import { clawEvents } from '../data/clawEvents'
 import type { ClawTask } from '../data/clawTasks'
-import type { LeaderboardEntry } from '../types/game'
+import type { LeaderboardEntry, RandomEvent } from '../types/game'
 
 export type ClawPhase = 'idle' | 'countdown' | 'task' | 'claw' | 'result' | 'finished'
 export type ClawResultType = 'caught' | 'dropped' | 'fault' | null
@@ -21,6 +23,11 @@ function rollResult(): 'caught' | 'dropped' | 'fault' {
   if (r < CLAW_PROBABILITIES.caught) return 'caught'
   if (r < CLAW_PROBABILITIES.caught + CLAW_PROBABILITIES.dropped) return 'dropped'
   return 'fault'
+}
+
+function getEventCoinReward(event: RandomEvent) {
+  if (event.id === 'chilli-bonus-coin' || event.id === 'refund-offer' || event.id === 'tickle-repair') return 1
+  return 0
 }
 
 export function useClawGame() {
@@ -46,6 +53,17 @@ export function useClawGame() {
 
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [currentRank, setCurrentRank] = useState<number | undefined>()
+
+  const applyEventReward = useCallback((event: RandomEvent) => {
+    const coinReward = getEventCoinReward(event)
+    if (coinReward > 0) setCoins(c => c + coinReward)
+    if (event.id === 'tickle-repair') setFaults(f => f + 1)
+  }, [])
+
+  const { currentEvent, startEvents, stopEvents, clearEvent } = useRandomEvent({
+    events: clawEvents,
+    onEventExpire: applyEventReward
+  })
 
   useEffect(() => {
     setLeaderboard(getLeaderboard())
@@ -88,11 +106,12 @@ export function useClawGame() {
   const handleCountdownComplete = useCallback(() => {
     setTaskLadder(buildClawTaskLadder())
     start()
+    startEvents()
     setPhase('task')
-  }, [start])
+  }, [start, startEvents])
 
   const handleTaskComplete = useCallback(() => {
-    if (isPaused) return
+    if (isPaused || currentEvent) return
 
     if (currentTask) {
       setTaskLadder(prev => prev.map((task, index) => (
@@ -105,21 +124,22 @@ export function useClawGame() {
     if (needsBonusCoin) {
       setCoins(c => c + 1)
     }
-  }, [isPaused, currentTask, currentTaskIndex, needsBonusCoin])
+  }, [isPaused, currentEvent, currentTask, currentTaskIndex, needsBonusCoin])
 
   const handleTaskSkip = useCallback(() => {
-    if (isPaused) return
+    if (isPaused || currentEvent) return
     replaceCurrentTask()
-  }, [isPaused, replaceCurrentTask])
+  }, [isPaused, currentEvent, replaceCurrentTask])
 
   const handleInsertCoin = useCallback(() => {
-    if (isPaused || coins <= 0 || phase !== 'task') return
+    if (isPaused || currentEvent || coins <= 0 || phase !== 'task') return
     setCoins(c => c - 1)
+    stopEvents()
     setPhase('claw')
-  }, [isPaused, coins, phase])
+  }, [isPaused, currentEvent, coins, phase, stopEvents])
 
   const handleClawGrab = useCallback(() => {
-    if (isPaused) return
+    if (isPaused || currentEvent) return
 
     // Bad-luck protection: boost catch rate after 2+ consecutive non-catches
     let result = rollResult()
@@ -143,7 +163,7 @@ export function useClawGame() {
     setClawResult(result)
     setPhase('result')
     setShowResult(true)
-  }, [isPaused, streak])
+  }, [isPaused, currentEvent, streak])
 
   const handleContinue = useCallback(() => {
     setShowResult(false)
@@ -151,6 +171,7 @@ export function useClawGame() {
 
     if (prizesRemaining <= 0) {
       stop()
+      stopEvents()
       setEndReason('completed')
       const entryScore = caught
       addEntry(playerName, 0, entryScore)
@@ -158,24 +179,34 @@ export function useClawGame() {
       setCurrentRank(getRank(entryScore))
       setPhase('finished')
     } else {
+      startEvents()
       setPhase('task')
     }
-  }, [prizesRemaining, caught, playerName, addEntry, getLeaderboard, getRank, stop])
+  }, [prizesRemaining, caught, playerName, addEntry, getLeaderboard, getRank, stop, stopEvents, startEvents])
 
-  const handlePause = useCallback(() => pause(), [pause])
-  const handleResume = useCallback(() => resume(), [resume])
+  const handlePause = useCallback(() => {
+    pause()
+    stopEvents()
+  }, [pause, stopEvents])
+
+  const handleResume = useCallback(() => {
+    resume()
+    if (phase === 'task') startEvents()
+  }, [resume, phase, startEvents])
 
   const handleEndGame = useCallback(() => {
     stop()
+    stopEvents()
     setEndReason('quit')
     const entryScore = caught
     addEntry(playerName, 0, entryScore)
     setLeaderboard(getLeaderboard())
     setCurrentRank(getRank(entryScore))
     setPhase('finished')
-  }, [playerName, caught, addEntry, getLeaderboard, getRank, stop])
+  }, [playerName, caught, addEntry, getLeaderboard, getRank, stop, stopEvents])
 
   const handleReset = useCallback(() => {
+    stopEvents()
     reset()
     setPhase('idle')
     setPlayerName('')
@@ -189,7 +220,16 @@ export function useClawGame() {
     setShowResult(false)
     setEndReason('completed')
     setStreak(0)
-  }, [reset])
+  }, [reset, stopEvents])
+
+  const handleEventDone = useCallback(() => {
+    if (!currentEvent) return
+    applyEventReward(currentEvent)
+    clearEvent()
+    if (state === 'running' && phase === 'task') {
+      setTimeout(startEvents, 500)
+    }
+  }, [currentEvent, applyEventReward, clearEvent, state, phase, startEvents])
 
   return {
     state,
@@ -209,6 +249,7 @@ export function useClawGame() {
     allTasksDone,
     needsBonusCoin,
     currentTask,
+    currentEvent,
     clawResult,
     showResult,
     endReason,
@@ -224,6 +265,7 @@ export function useClawGame() {
     handleContinue,
     handlePause,
     handleResume,
+    handleEventDone,
     handleEndGame,
     handleReset,
     setPlayerName,

@@ -457,17 +457,50 @@ body {
   color: #d96b62;
 }
 
-@media (hover: none) and (pointer: coarse) {
+@media (hover: none) and (pointer: coarse), (max-width: 767px) {
   .episode-sticker-card.is-touch-focused {
-    border-color: #abe0fa;
+    z-index: 4;
+    background: #fffef8;
+    border-color: #ffffff;
     box-shadow:
-      0 9px 0 rgba(174, 224, 250, 0.68),
-      0 16px 30px rgba(44, 67, 100, 0.16);
-    transform: translateY(-3px);
+      0 0 0 5px rgba(171, 224, 250, 0.96),
+      0 10px 0 rgba(174, 224, 250, 0.82),
+      0 20px 38px rgba(44, 67, 100, 0.22);
+    transform: translateY(-6px) rotate(-0.5deg) scale(1.035);
+  }
+
+  .episode-card-grid > div:nth-child(even) .episode-sticker-card.is-touch-focused {
+    transform: translateY(-6px) rotate(0.5deg) scale(1.035);
+  }
+
+  .episode-sticker-card.is-touch-focused::after {
+    inset: 8px;
+    border: 2px solid rgba(171, 224, 250, 0.92);
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.72);
+  }
+
+  .episode-sticker-card.is-touch-focused > button {
+    background: linear-gradient(180deg, #fffefa 0%, #fdfbf7 100%);
+  }
+
+  .episode-sticker-card.is-touch-focused .episode-card-cover {
+    filter: saturate(1.12) brightness(1.03);
   }
 
   .episode-sticker-card.is-touch-focused .episode-card-cover > .relative {
-    transform: scale(1.04) rotate(-2deg);
+    transform: translateY(-4px) scale(1.1) rotate(-3deg);
+    box-shadow:
+      0 9px 0 rgba(90, 90, 135, 0.16),
+      0 16px 26px rgba(44, 67, 100, 0.20);
+  }
+
+  .episode-card-grid > div:nth-child(even) .episode-sticker-card.is-touch-focused .episode-card-cover > .relative {
+    transform: translateY(-4px) scale(1.1) rotate(3deg);
+  }
+
+  .episode-sticker-card.is-touch-focused .btv-episode-pill {
+    background: #fff3b0;
+    box-shadow: 0 5px 0 rgba(90, 90, 135, 0.18);
   }
 }
 
