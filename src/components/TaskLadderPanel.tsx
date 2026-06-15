@@ -51,6 +51,8 @@ export function TaskLadderPanel({
   const progress = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0
   const currentTask = tasks[firstUncompletedIndex]
   const currentReady = currentTask && canConfirmTask ? canConfirmTask(currentTask.id) : true
+  const showFullProgress = state === 'paused' || state === 'finished' || completedTasks === tasks.length
+  const showCompactRewards = showRewards && showFullProgress
 
   return (
     <div className="px-4 sm:px-0 mt-5 mb-6">
@@ -76,18 +78,20 @@ export function TaskLadderPanel({
 
         {show && (
           <div className="space-y-3.5 p-4">
-            <div className="mb-1 flex items-center gap-2">
-              <div className="h-2 flex-1 overflow-hidden rounded-full" style={{ backgroundColor: accentTint }}>
-                <div
-                  className="h-full rounded-full transition-all duration-700 ease-out"
-                  style={{
-                    width: `${progress}%`,
-                    background: `linear-gradient(90deg, ${confirmColor}, ${accentColor})`,
-                  }}
-                />
+            {showFullProgress && (
+              <div className="mb-1 flex items-center gap-2">
+                <div className="h-2 flex-1 overflow-hidden rounded-full" style={{ backgroundColor: accentTint }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-700 ease-out"
+                    style={{
+                      width: `${progress}%`,
+                      background: `linear-gradient(90deg, ${confirmColor}, ${accentColor})`,
+                    }}
+                  />
+                </div>
+                <span className="text-[10px] font-extrabold text-[#5a5a87]/25">{progress}%</span>
               </div>
-              <span className="text-[10px] font-extrabold text-[#5a5a87]/25">{progress}%</span>
-            </div>
+            )}
 
             {currentTask && !currentTask.completed && (
               <div
@@ -98,19 +102,26 @@ export function TaskLadderPanel({
                 <div className="relative">
                   <div className="mb-2 flex flex-wrap items-center gap-1.5">
                     <span className="rounded-full bg-btv-dark px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white">
-                      🎬 当前导演卡
+                      🎬 第 {firstUncompletedIndex + 1} 关
                     </span>
                     {currentTask.stageLabel && (
                       <span className="rounded-full bg-white/82 px-2.5 py-1 text-[10px] font-extrabold text-[#5a5a87]/55">
                         {currentTask.stageLabel}
                       </span>
                     )}
-                    {showRewards && (
+                    {showCompactRewards && (
                       <span className="rounded-full bg-[#FFF9EE] px-2.5 py-1 text-[10px] font-extrabold text-[#DCA018]">
                         +{taskScores[firstUncompletedIndex] ?? taskScores[taskScores.length - 1]}⭐
                       </span>
                     )}
                   </div>
+
+                  {currentTask.hostPrompt && (
+                    <div className="mb-3 rounded-[22px] bg-btv-dark px-4 py-3 text-white shadow-[0_4px_0_rgba(44,67,100,0.12)]">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-white/55">对孩子说</p>
+                      <p className="mt-1 text-base font-black leading-snug">“{currentTask.hostPrompt}”</p>
+                    </div>
+                  )}
 
                   <div className="flex gap-3">
                     <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-3xl shadow-[0_3px_0_rgba(44,67,100,0.10)]">
@@ -154,6 +165,7 @@ export function TaskLadderPanel({
               </div>
             )}
 
+            {showFullProgress && (
             <div className="rounded-[24px] border border-[#E3F2FD] bg-[#FDFBF7] p-2.5">
               <div className="mb-2 flex items-center justify-between px-1">
                 <p className="text-[11px] font-black uppercase tracking-widest text-[#5a5a87]/35">五级印章进度</p>
@@ -210,9 +222,11 @@ export function TaskLadderPanel({
                         <p className={`mt-1 text-[13px] font-black leading-snug ${locked ? 'text-[#5a5a87]/55' : 'text-btv-dark'}`}>
                       {task.title}
                     </p>
-                        <p className={`mt-0.5 text-xs font-bold leading-relaxed ${locked ? 'text-[#5a5a87]/42' : 'text-[#5a5a87]/55'}`}>
-                          {locked ? '下一段剧情待解锁，先把当前任务玩完。' : task.description}
-                    </p>
+                        {!locked && (
+                          <p className="mt-0.5 text-xs font-bold leading-relaxed text-[#5a5a87]/55">
+                            {task.description}
+                          </p>
+                        )}
                   </div>
 
                   {isAnimating && <span className="mt-2 shrink-0 text-lg">✅</span>}
@@ -221,6 +235,7 @@ export function TaskLadderPanel({
                 })}
               </div>
             </div>
+            )}
 
             {completedTasks === tasks.length && tasks.length > 0 && (
               <div className="text-center py-3 rounded-2xl" style={{ backgroundColor: `${confirmColor}22` }}>

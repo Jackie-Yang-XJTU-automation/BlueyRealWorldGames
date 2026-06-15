@@ -40,6 +40,7 @@ export interface TaskCard {
   id: string
   title: string
   description: string
+  hostPrompt?: string
   completed: boolean
   emoji?: string
   stageLabel?: string

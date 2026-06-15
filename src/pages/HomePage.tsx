@@ -1,7 +1,8 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { games, getRandomGame } from '../data/games'
+import { games } from '../data/games'
 import { getPlayableGame, isPlayableGame } from '../data/playableGames'
+import { getParentPlayHint } from '../data/parentPlayHints'
 import { EpisodeHero } from '../components/EpisodeHero'
 import { GameCard } from '../components/GameCard'
 import { FilterBar } from '../components/FilterBar'
@@ -9,6 +10,59 @@ import { QRCode } from '../components/QRCode'
 import { useFavorites } from '../hooks/useFavorites'
 import type { FilterOptions, Game } from '../types/game'
 import blueyFamily from '../assets/Family_Pose_Wave_Loop_18.png'
+
+type ScenarioShortcut = {
+  id: string
+  emoji: string
+  label: string
+  hint: string
+  match: (game: Game) => boolean
+}
+
+const SCENARIO_SHORTCUTS: ScenarioShortcut[] = [
+  {
+    id: 'quiet-home',
+    emoji: '🏠',
+    label: '家里安静玩',
+    hint: '客厅可开局',
+    match: game => ['magic-xylophone', 'hospital', 'claw-machine'].includes(game.id) || (game.location === 'indoor' && game.energy === 1),
+  },
+  {
+    id: 'burn-energy',
+    emoji: '⚡',
+    label: '孩子很有电',
+    hint: '释放体力',
+    match: game => ['keepy-uppy', 'shadowlands'].includes(game.id) || game.energy === 3,
+  },
+  {
+    id: 'parents-act',
+    emoji: '🎭',
+    label: '爸妈一起演',
+    hint: '角色扮演',
+    match: game => ['daddy-robot', 'hospital', 'bbq', 'claw-machine'].includes(game.id) || game.type === 'roleplay',
+  },
+  {
+    id: 'quick-five',
+    emoji: '⏱️',
+    label: '5分钟快玩',
+    hint: '先救场一局',
+    match: game => ['magic-xylophone', 'hospital', 'bbq', 'daddy-robot'].includes(game.id),
+  },
+  {
+    id: 'no-materials',
+    emoji: '✨',
+    label: '不用材料',
+    hint: '马上开始',
+    match: game => game.materials.length === 0 || ['daddy-robot', 'shadowlands'].includes(game.id),
+  },
+  {
+    id: 'bedtime',
+    emoji: '🌙',
+    label: '睡前可玩',
+    hint: '低刺激收尾',
+    match: game => ['hospital', 'bbq', 'magic-xylophone'].includes(game.id) || (game.energy === 1 && game.type !== 'active'),
+  },
+]
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -22,6 +76,7 @@ export function HomePage() {
   const [favorites, setFavorites] = useState<string[]>(getFavorites)
   const [randomGame, setRandomGame] = useState<Game | null>(null)
   const [favoritesExpanded, setFavoritesExpanded] = useState(true)
+  const [showFilters, setShowFilters] = useState(false)
   const [focusedGameIds, setFocusedGameIds] = useState<string[]>([])
   const cardRefs = useRef(new Map<string, HTMLDivElement>())
   const spotlightGame = useMemo(() => {
@@ -39,6 +94,14 @@ export function HomePage() {
     })
   }, [filters])
 
+  const sortedFilteredGames = useMemo(() => {
+    return [...filteredGames].sort((a, b) => {
+      const playableDelta = Number(isPlayableGame(b.id)) - Number(isPlayableGame(a.id))
+      if (playableDelta !== 0) return playableDelta
+      return a.episode - b.episode
+    })
+  }, [filteredGames])
+
   const favoriteGames = useMemo(() => {
     return games.filter(g => favorites.includes(g.id))
   }, [favorites])
@@ -49,7 +112,9 @@ export function HomePage() {
   }, [toggleFavorite, getFavorites])
 
   const handleRandomPick = useCallback(() => {
-    const game = getRandomGame()
+    const playableGames = games.filter(game => isPlayableGame(game.id))
+    const pool = playableGames.length > 0 ? playableGames : games
+    const game = pool[Math.floor(Math.random() * pool.length)]
     setRandomGame(game)
   }, [])
 
@@ -57,6 +122,20 @@ export function HomePage() {
     const playable = getPlayableGame(game.id)
     navigate(playable?.route ?? `/game/${game.id}`)
   }, [navigate])
+
+  const pickScenarioGame = useCallback((shortcut: ScenarioShortcut) => {
+    const candidates = games.filter(shortcut.match)
+    const playableCandidates = candidates.filter(game => isPlayableGame(game.id))
+    const pool = playableCandidates.length > 0 ? playableCandidates : candidates
+    if (pool.length === 0) return null
+    return pool[(new Date().getDate() + shortcut.id.length) % pool.length]
+  }, [])
+
+  const scenarioPicks = useMemo(() => (
+    SCENARIO_SHORTCUTS
+      .map(shortcut => ({ shortcut, game: pickScenarioGame(shortcut) }))
+      .filter((item): item is { shortcut: ScenarioShortcut; game: Game } => Boolean(item.game))
+  ), [pickScenarioGame])
 
   const handleFilterChange = useCallback((newFilters: FilterOptions) => {
     setFilters(newFilters)
@@ -85,7 +164,7 @@ export function HomePage() {
     const updateFocusedCard = () => {
       frame = 0
       const shouldUseTouchFocus = touchQuery.matches || window.innerWidth < 768
-      if (!shouldUseTouchFocus || filteredGames.length === 0) {
+      if (!shouldUseTouchFocus || sortedFilteredGames.length === 0) {
         setFocusedGameIds([])
         return
       }
@@ -95,7 +174,7 @@ export function HomePage() {
       let focusedTop = 0
       let bestDistance = Number.POSITIVE_INFINITY
 
-      filteredGames.forEach(game => {
+      sortedFilteredGames.forEach(game => {
         const node = cardRefs.current.get(game.id)
         if (!node) return
         const rect = node.getBoundingClientRect()
@@ -140,7 +219,7 @@ export function HomePage() {
       window.removeEventListener('resize', requestUpdate)
       touchQuery.removeEventListener('change', requestUpdate)
     }
-  }, [filteredGames])
+  }, [sortedFilteredGames])
 
   return (
     <div>
@@ -154,15 +233,65 @@ export function HomePage() {
         playLabel={getPlayableGame(spotlightGame.id)?.label}
       />
 
-      {/* 筛选栏 */}
-      <div className="mb-5 rounded-[28px] border-2 border-white/90 bg-[#FDFBF7]/86 p-3.5 shadow-[0_6px_0_rgba(174,224,250,0.42),0_10px_24px_rgba(44,67,100,0.08)]">
-        <div className="mb-2 flex items-center justify-between gap-2">
-          <h2 className="btv-display text-[13px] uppercase text-[#5a5a87]/72">游戏剧集库</h2>
-          <span className="btv-display rounded-full bg-[#ABE0FA] px-2.5 py-1 text-[10px] text-[#5a5a87] shadow-[0_2px_0_rgba(90,90,135,0.12)]">
-            {filteredGames.length} 集
+      <section aria-label="按周末场景选游戏" className="mb-5">
+        <div className="mb-2 flex items-end justify-between gap-3 px-1">
+          <div>
+            <p className="btv-display text-sm text-[#5a5a87]">周末救场</p>
+            <p className="text-xs font-extrabold text-[#5a5a87]/45">不记剧情也可以直接开演</p>
+          </div>
+          <span className="rounded-full bg-white/80 px-2.5 py-1 text-[10px] font-black text-[#5a5a87]/45 shadow-[0_2px_0_rgba(174,224,250,0.45)]">
+            家长选
           </span>
         </div>
-        <FilterBar filters={filters} onFilterChange={handleFilterChange} onRandomPick={handleRandomPick} />
+        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+          {scenarioPicks.map(({ shortcut, game }) => {
+            const hint = getParentPlayHint(game.id)
+            return (
+            <button
+              key={shortcut.id}
+              type="button"
+              onClick={() => handleOpenGame(game)}
+              className="group min-h-[72px] rounded-[22px] border-2 border-white bg-[#FDFBF7]/90 px-3 py-2.5 text-left shadow-[0_4px_0_rgba(174,224,250,0.40),0_8px_18px_rgba(44,67,100,0.06)] transition-all active:scale-[0.98] sm:min-h-[78px]"
+            >
+              <span className="mb-1 flex items-center gap-2">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#ABE0FA] text-lg shadow-[0_2px_0_rgba(90,90,135,0.12)]">
+                  {shortcut.emoji}
+                </span>
+                <span className="btv-display text-[13px] leading-tight text-[#5a5a87]">{shortcut.label}</span>
+              </span>
+              <span className="block pl-11 text-[11px] font-extrabold leading-snug text-[#5a5a87]/46">{shortcut.hint}</span>
+              <span className="mt-1 block truncate pl-11 text-[10px] font-black text-[#5a5a87]/32">
+                推荐：{game.name} · {hint.setup}
+              </span>
+            </button>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* 筛选栏 */}
+      <div className="mb-5 rounded-[28px] border-2 border-white/90 bg-[#FDFBF7]/86 p-3.5 shadow-[0_6px_0_rgba(174,224,250,0.42),0_10px_24px_rgba(44,67,100,0.08)]">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h2 className="btv-display text-[13px] uppercase text-[#5a5a87]/72">想找别的玩法？</h2>
+            <p className="text-[11px] font-extrabold text-[#5a5a87]/40">
+              常用入口在上面，筛选先收起来，避免开局前看太久。
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowFilters(value => !value)}
+            className="min-h-11 rounded-full bg-[#ABE0FA] px-3 text-[11px] font-black text-[#5a5a87] shadow-[0_2px_0_rgba(90,90,135,0.12)] transition-transform active:scale-95"
+            aria-expanded={showFilters}
+          >
+            {showFilters ? '收起' : `${filteredGames.length} 集`}
+          </button>
+        </div>
+        {showFilters && (
+          <div className="mt-3">
+            <FilterBar filters={filters} onFilterChange={handleFilterChange} onRandomPick={handleRandomPick} />
+          </div>
+        )}
       </div>
 
       {/* 随机选中弹窗 */}
@@ -174,32 +303,32 @@ export function HomePage() {
           className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/30 backdrop-blur-sm px-4"
           onClick={(e) => { if (e.target === e.currentTarget) setRandomGame(null) }}
         >
-          <div className="relative overflow-visible bg-white rounded-[32px] p-8 max-w-sm w-full shadow-2xl text-center border-4 border-btv-yellow animate-jelly">
-            {/* 庆祝星星 */}
-            <div className="absolute -top-3 -left-3 text-2xl animate-decor-float" style={{ animationDelay: '0s' }}>✨</div>
-            <div className="absolute -top-2 -right-3 text-xl animate-decor-float" style={{ animationDelay: '0.3s' }}>🌟</div>
-            <div className="absolute -bottom-1 -left-2 text-2xl animate-decor-float" style={{ animationDelay: '0.6s' }}>💫</div>
-
-            <div className="text-8xl mb-3 drop-shadow-lg">{randomGame.emoji}</div>
-            <h3 className="text-lg font-extrabold text-btv-orange mb-1">🎲 今天抽中了...</h3>
-            <p className="text-3xl font-extrabold text-btv-dark mb-4">{randomGame.name}！</p>
-            <div className="flex items-center justify-center gap-2 text-sm text-[#5a5a87]/45 font-bold mb-6">
-              <span>{randomGame.difficulty === 1 ? '⭐' : randomGame.difficulty === 2 ? '⭐⭐' : '⭐⭐⭐'}</span>
-              <span className="text-[#5a5a87]/20">·</span>
-              <span>{randomGame.minPlayers}-{randomGame.maxPlayers}人</span>
+          <div className="relative w-full max-w-[340px] rounded-[30px] border-[3px] border-[#F9D06B] bg-[#FDFBF7] p-5 text-center shadow-[0_18px_40px_rgba(44,67,100,0.18)] animate-jelly">
+            <div className="mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full bg-[#FFF3E0] px-3 py-1 text-[10px] font-black uppercase tracking-widest text-btv-orange">
+              随机救场
+            </div>
+            <div className="mb-2 text-5xl drop-shadow-sm">{randomGame.emoji}</div>
+            <h3 className="mb-1 text-[13px] font-extrabold text-btv-orange">这局开演</h3>
+            <p className="mb-2 text-2xl font-black leading-tight text-btv-dark">{randomGame.name}</p>
+            <p className="mx-auto mb-3 max-w-[250px] text-sm font-extrabold leading-snug text-[#5a5a87]/58">
+              {getParentPlayHint(randomGame.id).kidHook}
+            </p>
+            <div className="mb-5 flex flex-wrap items-center justify-center gap-1.5 text-[11px] font-black text-[#5a5a87]/48">
+              <span className="rounded-full bg-[#E3F2FD] px-2.5 py-1">{getParentPlayHint(randomGame.id).setup}</span>
+              <span className="rounded-full bg-[#FFF3E0] px-2.5 py-1">{randomGame.minPlayers}-{randomGame.maxPlayers}人</span>
             </div>
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={() => setRandomGame(null)}
-                className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/55 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] hover:text-[#5a5a87]/80 transition-all active:scale-95"
+                className="min-h-12 flex-1 rounded-full bg-[#F0F4FF] px-3 py-3 text-sm font-extrabold text-[#5a5a87]/55 transition-all hover:bg-[#E3ECFD] hover:text-[#5a5a87]/80 active:scale-95"
               >
                 再选一次
               </button>
               <button
                 type="button"
                 onClick={() => { setRandomGame(null); handleOpenGame(randomGame) }}
-                className="btn-btv flex-1"
+                className="btn-btv flex-1 !min-h-12 !px-3 !py-3 !text-sm"
               >
                 {isPlayableGame(randomGame.id) ? '直接开演！' : '打开规则'}
               </button>
@@ -255,7 +384,7 @@ export function HomePage() {
       <section aria-label="全部游戏">
         <h3 className="btv-display mb-3 flex items-center gap-2 text-sm uppercase text-[#5a5a87]/60">
           <span className="h-[2px] w-7 rounded-full bg-[#5a5a87]/12" />
-          全部剧集游戏
+          全部陪玩卡
           <span className="rounded-full bg-white/80 px-2 py-0.5 text-[10px] shadow-[0_2px_0_rgba(174,224,250,0.45)]">{filteredGames.length}</span>
         </h3>
         {filteredGames.length === 0 ? (
@@ -266,13 +395,13 @@ export function HomePage() {
           </div>
         ) : (
           <div className="episode-card-grid grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {filteredGames.map((game, i) => (
+            {sortedFilteredGames.map((game, i) => (
               <div key={game.id} ref={node => setCardRef(game.id, node)}>
                 <GameCard
                   game={game}
                   isFavorite={isFavorite(game.id)}
                   onToggleFavorite={handleToggleFavorite}
-                  onClick={() => navigate(`/game/${game.id}`)}
+                  onClick={() => handleOpenGame(game)}
                   index={i}
                   isTouchFocused={focusedGameIds.includes(game.id)}
                 />

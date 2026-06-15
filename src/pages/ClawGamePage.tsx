@@ -43,7 +43,7 @@ export function ClawGamePage() {
   const [showCountdown, setShowCountdown] = useState(false)
   const [showLandConfirm, setShowLandConfirm] = useState(false)
   const [showLeaderboard, setShowLeaderboard] = useState(false)
-  const [showProgressBoard, setShowProgressBoard] = useState(true)
+  const [showProgressBoard, setShowProgressBoard] = useState(false)
   const [showScoreHelp, setShowScoreHelp] = useState(false)
   const [phraseIndex, setPhraseIndex] = useState(0)
   const phraseTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -206,10 +206,13 @@ export function ClawGamePage() {
                       <span className="rounded-full bg-[#FFF9EE] px-2.5 py-1 text-[10px] font-extrabold text-[#F39C62]">
                         {game.currentTask.stageLabel}
                       </span>
-                      <span className="rounded-full bg-[#E3F2FD] px-2.5 py-1 text-[10px] font-extrabold text-[#5a5a87]/55">
-                        +2🪙
-                      </span>
                     </div>
+                    {game.currentTask.hostPrompt && (
+                      <div className="mb-3 rounded-[22px] bg-btv-dark px-4 py-3 text-left text-white shadow-[0_4px_0_rgba(44,67,100,0.12)]">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-white/55">对孩子说</p>
+                        <p className="mt-1 text-base font-black leading-snug">“{game.currentTask.hostPrompt}”</p>
+                      </div>
+                    )}
                     <h3 className="text-base font-extrabold text-btv-dark mb-1">{game.currentTask.title}</h3>
                     <p className="text-[13px] text-[#5a5a87]/55 leading-relaxed">{game.currentTask.description}</p>
                     <p className="mt-2 text-[11px] font-extrabold text-[#5a5a87]/42">目标：{game.currentTask.stageGoal}</p>
@@ -287,12 +290,12 @@ export function ClawGamePage() {
 
                 {game.phase === 'finished' && (
                   <div className="relative mx-auto w-full rounded-[32px] bg-white/75 border-4 border-white shadow-[0_12px_34px_rgba(44,67,100,0.12)] p-6 text-center">
-                    <div className="text-6xl mb-2">{game.endReason === 'completed' ? '🏆' : '👋'}</div>
+                    <div className="text-6xl mb-2">{game.endReason === 'completed' ? '🎉' : '👋'}</div>
                     <h3 className="text-xl font-extrabold text-btv-dark mb-1">
-                      {game.endReason === 'completed' ? '游戏结束！' : '提前结束'}
+                      {game.endReason === 'completed' ? '这一集完成啦！' : '爪子先休息'}
                     </h3>
                     <p className="text-sm text-[#5a5a87]/50 mb-4">
-                      {game.endReason === 'completed' ? '所有奖品都被抓走了！' : `抓到了 ${game.caught} 个奖品！`}
+                      {game.endReason === 'completed' ? '孩子指挥，家长当爪子，奖品台也收工了。' : `已经抓到 ${game.caught} 个奖品，剩下的下次再开机。`}
                     </p>
 
                     <div className="grid grid-cols-3 gap-2 mb-4">
@@ -317,7 +320,7 @@ export function ClawGamePage() {
                       </button>
                       <button type="button" onClick={() => setShowLeaderboard(true)}
                         className="flex-1 min-h-12 bg-btv-dark text-white font-extrabold rounded-full active:scale-95 transition-transform">
-                        📊 排行榜
+                        📊 家庭记录
                       </button>
                     </div>
                   </div>
@@ -485,27 +488,27 @@ function ClawEventPopup({ event, onDone }: { event: RandomEvent; onDone: () => v
   }, [event])
 
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId} className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/25 px-4 backdrop-blur-sm animate-event-pop-in">
-      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[34px] border-4 border-[#F39C62] bg-[#FDFBF7] p-7 text-center shadow-2xl animate-jelly">
+    <div role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId} className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/20 px-4 backdrop-blur-[2px] animate-event-pop-in">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-[340px] overflow-y-auto rounded-[30px] border-[3px] border-[#F9D06B] bg-[#FDFBF7] p-5 text-center shadow-[0_18px_40px_rgba(44,67,100,0.18)] animate-jelly">
         <div className="mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full bg-[#FFF9EE] px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#F39C62]">
-          🎬 爪子剧情事件
+          爪子意外
         </div>
-        <div className="mb-3 text-7xl">{event.emoji}</div>
-        <h2 id={titleId} className="mb-2 text-xl font-extrabold text-btv-dark">{event.title}</h2>
-        <p id={descId} className="mb-5 text-base font-medium leading-relaxed text-[#5a5a87]/62">{event.description}</p>
-        <div className="mb-5 rounded-2xl bg-[#FFF3E0] px-4 py-3">
-          <p className="text-sm font-extrabold text-btv-orange">⏱ 剩余 {remaining} 秒自动回到奖品台</p>
-          <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-[#FFE0B2]">
+        <div className="mb-2 text-5xl">{event.emoji}</div>
+        <h2 id={titleId} className="mb-2 text-xl font-black text-btv-dark">{event.title}</h2>
+        <p id={descId} className="mb-4 text-[15px] font-extrabold leading-relaxed text-[#5a5a87]/62">{event.description}</p>
+        <div className="mb-3 rounded-[20px] bg-[#FFF3E0] px-4 py-3">
+          <p className="text-[12px] font-extrabold text-btv-orange">照着演一下，{remaining} 秒后回到奖品台</p>
+          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-[#FFE0B2]">
             <div
               className="h-full rounded-full bg-btv-orange transition-all duration-1000 ease-linear"
               style={{ width: `${(remaining / event.duration) * 100}%` }}
             />
           </div>
         </div>
-        <p className="mb-5 rounded-2xl bg-white/80 px-4 py-3 text-[12px] font-extrabold leading-snug text-[#D96B62]/70">
-          🛟 爪子只抓奖品，不抓人；挠痒维修要轻轻来。
+        <p className="mb-4 rounded-[18px] bg-white/82 px-4 py-2.5 text-[12px] font-extrabold leading-snug text-[#D96B62]/70">
+          爪子只抓奖品，不抓人；挠痒维修要轻轻来。
         </p>
-        <button type="button" onClick={onDone} className="btn-btv w-full text-base">
+        <button type="button" onClick={onDone} className="btn-btv w-full !min-h-12 text-base">
           ✅ 完成事件，继续抓
         </button>
       </div>
@@ -544,12 +547,12 @@ function ClawProgressBoard({
         <button
           type="button"
           onClick={onToggle}
-          className="flex min-h-14 items-center justify-between w-full px-5 py-3.5 bg-gradient-to-r from-[#FFF9EE] via-[#F3E5F5] to-[#E3F2FD] border-b-2 border-[#F9D06B]/20"
+          className={`flex min-h-14 items-center justify-between w-full px-5 py-3.5 bg-gradient-to-r from-[#FFF9EE] via-[#F3E5F5] to-[#E3F2FD] ${show ? 'border-b-2 border-[#F9D06B]/20' : ''}`}
         >
           <h3 className="text-sm font-extrabold text-btv-dark flex items-center gap-2">
-            🕹️ 抓娃娃进度
+            🕹️ 主持记录
             <span className="text-[11px] font-bold text-[#5a5a87]/35 bg-white/70 rounded-full px-2 py-0.5">
-              任务 {completedTasks}/{tasks.length || 5}
+              {caught}/{totalPrizes} 奖品
             </span>
           </h3>
           <span className={`text-[#5a5a87]/35 font-bold transition-transform duration-300 ${show ? 'rotate-180' : ''}`}>▼</span>
@@ -567,22 +570,11 @@ function ClawProgressBoard({
               <span className="text-[10px] font-extrabold text-[#5a5a87]/25">奖品 {prizeProgress}%</span>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
-              <div className="rounded-2xl bg-[#FFF9EE] border border-[#FCD882]/45 px-3 py-3 text-center">
-                <p className="text-xl leading-none mb-1">💰</p>
-                <p className="text-[10px] font-extrabold text-[#5a5a87]/40">硬币</p>
-                <p className="text-base font-extrabold text-[#F39C62]">{coins}</p>
-              </div>
-              <div className="rounded-2xl bg-[#E8F5E9]/70 border border-[#90C79A]/35 px-3 py-3 text-center">
-                <p className="text-xl leading-none mb-1">🎁</p>
-                <p className="text-[10px] font-extrabold text-[#5a5a87]/40">已抓</p>
-                <p className="text-base font-extrabold text-[#90C79A]">{caught}</p>
-              </div>
-              <div className="rounded-2xl bg-[#F0F7FF] border border-[#BBDEFB]/70 px-3 py-3 text-center">
-                <p className="text-xl leading-none mb-1">🎯</p>
-                <p className="text-[10px] font-extrabold text-[#5a5a87]/40">目标</p>
-                <p className="text-base font-extrabold text-btv-blue">{totalPrizes}</p>
-              </div>
+            <div className="rounded-2xl bg-white/75 border border-[#E3F2FD] px-4 py-3">
+              <p className="text-[11px] font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-1">给家长看的记录</p>
+              <p className="text-sm font-extrabold text-btv-dark">
+                已经抓住 {caught} 个奖品，还能投 {coins} 次币；孩子继续当指挥官。
+              </p>
             </div>
 
             {tasks.length > 0 && (

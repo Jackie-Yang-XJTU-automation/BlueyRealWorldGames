@@ -338,33 +338,35 @@ function MagicEventPopup({ event, onEnd }: { event: RandomEvent; onEnd: () => vo
   }, [event])
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="魔法突发状况" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/25 backdrop-blur-sm animate-event-pop-in px-4 pointer-events-auto">
-      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-btv-orange bg-white p-7 text-center shadow-2xl animate-jelly">
-        <div className="text-7xl mb-3">{event.emoji}</div>
-        <h2 className="text-xl font-extrabold text-btv-orange mb-2">⚡ 魔法突发状况！</h2>
-        <h3 className="text-xl font-extrabold text-btv-dark mb-2">{event.title}</h3>
-        <p className="text-base text-[#5a5a87]/60 mb-5 leading-relaxed font-medium">{event.description}</p>
-        <div className="bg-[#FFF3E0] rounded-2xl px-4 py-3 mb-5">
-          <p className="text-sm text-btv-orange font-extrabold">⏱ 剩余 {remaining} 秒自动恢复</p>
-          <div className="w-full h-2.5 bg-[#FFE0B2] rounded-full mt-2 overflow-hidden">
+    <div role="dialog" aria-modal="true" aria-label="魔法突发状况" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/20 px-4 backdrop-blur-[2px] animate-event-pop-in pointer-events-auto">
+      <div className="max-h-[calc(100dvh-2rem)] w-full max-w-[340px] overflow-y-auto rounded-[30px] border-[3px] border-[#F9D06B] bg-[#FDFBF7] p-5 text-center shadow-[0_18px_40px_rgba(44,67,100,0.18)] animate-jelly">
+        <div className="mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full bg-[#FFF3E0] px-3 py-1 text-[10px] font-black uppercase tracking-widest text-btv-orange">
+          魔法意外
+        </div>
+        <div className="mb-2 text-5xl">{event.emoji}</div>
+        <h2 className="mb-2 text-xl font-black text-btv-dark">{event.title}</h2>
+        <p className="mb-4 text-[15px] font-extrabold leading-relaxed text-[#5a5a87]/62">{event.description}</p>
+        <div className="mb-4 rounded-[20px] bg-[#FFF3E0] px-4 py-3">
+          <p className="text-[12px] font-extrabold text-btv-orange">照着演一下，{remaining} 秒后魔法恢复</p>
+          <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-[#FFE0B2]">
             <div
-              className="h-full bg-btv-orange rounded-full transition-all duration-1000 ease-linear"
+              className="h-full rounded-full bg-btv-orange transition-all duration-1000 ease-linear"
               style={{ width: `${(remaining / event.duration) * 100}%` }}
             />
           </div>
         </div>
         {!showConfirm ? (
-          <button type="button" onClick={() => setShowConfirm(true)} className="btn-btv btn-btv-red w-full text-lg">
+          <button type="button" onClick={() => setShowConfirm(true)} className="btn-btv btn-btv-red w-full !min-h-12 text-base">
             🧺 魔法乱套了，结束
           </button>
         ) : (
           <div>
-            <p className="text-sm font-extrabold text-[#5a5a87]/50 mb-3">确定要收起木琴了吗？</p>
+            <p className="mb-3 text-sm font-extrabold text-[#5a5a87]/50">确定要收起木琴了吗？</p>
             <div className="flex gap-3">
-              <button type="button" onClick={() => setShowConfirm(false)} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/60 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors">
+              <button type="button" onClick={() => setShowConfirm(false)} className="min-h-12 flex-1 rounded-full bg-[#F0F4FF] py-3 text-sm font-extrabold text-[#5a5a87]/60 transition-colors hover:bg-[#E3ECFD]">
                 继续玩
               </button>
-              <button type="button" onClick={onEnd} className="btn-btv btn-btv-red flex-1">
+              <button type="button" onClick={onEnd} className="btn-btv btn-btv-red flex-1 !min-h-12 text-sm">
                 结束
               </button>
             </div>
@@ -381,17 +383,17 @@ function ResultModal({ game }: { game: ReturnType<typeof useMagicXylophoneGame> 
       <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
-          {game.totalStars > 5000 ? '魔法大师！' : game.totalStars > 2000 ? 'Ding 得漂亮！' : '魔法开始起作用了！'}
+          {game.totalStars > 5000 ? '这一集魔法成功了！' : game.totalStars > 2000 ? 'Ding 得漂亮！' : '大家都轮到啦！'}
         </h2>
-        <p className="text-sm text-[#5a5a87]/50 font-bold mb-3">Bandit 爸爸终于可以动了 👍</p>
+        <p className="text-sm text-[#5a5a87]/50 font-bold mb-3">你们轮流施魔法，也照顾了被冻住的人。</p>
         <ScoreSummary game={game} />
         {game.currentRank && game.currentRank <= 3 && (
-          <p className="text-base font-extrabold text-[#DCA018] mb-3">🏆 星星排名第 {game.currentRank} 名！</p>
+          <p className="text-base font-extrabold text-[#DCA018] mb-3">这次记录可以放到第 {game.currentRank} 位。</p>
         )}
-        <NameInput game={game} placeholder="留下你的名字" />
+        <NameInput game={game} placeholder="给这集取个名字" />
         <div className="flex gap-3">
           <button type="button" onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/55 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">跳过</button>
-          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1">保存成绩！</button>
+          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1">保存记录</button>
         </div>
       </div>
     </div>
@@ -404,14 +406,14 @@ function VictoryModal({ game }: { game: ReturnType<typeof useMagicXylophoneGame>
       <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-[#F9D06B] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
-        <p className="text-xl font-extrabold text-btv-dark mb-1">全魔法通关！</p>
-        <p className="text-sm text-[#5a5a87]/50 font-bold mb-4">Bluey 和 Bingo 都轮到啦！</p>
+        <p className="text-xl font-extrabold text-btv-dark mb-1">这一集完成啦！</p>
+        <p className="text-sm text-[#5a5a87]/50 font-bold mb-4">Bluey 和 Bingo 都轮到，也都被救回来啦。</p>
         <ScoreSummary game={game} />
-        <p className="text-lg font-extrabold text-btv-green mb-5">你是真正的魔法木琴冠军！</p>
-        <NameInput game={game} placeholder="留下冠军的名字" />
+        <p className="text-lg font-extrabold text-btv-green mb-5">你们把等待、轮流和想象力都玩出来了。</p>
+        <NameInput game={game} placeholder="给这集取个名字" />
         <div className="flex gap-3">
           <button type="button" onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/55 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">跳过</button>
-          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1 animate-random-pulse">🏆 记录辉煌！</button>
+          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1 animate-random-pulse">记录这一集</button>
         </div>
       </div>
     </div>

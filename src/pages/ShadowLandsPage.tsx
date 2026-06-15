@@ -270,9 +270,9 @@ function ResultModal({ game }: { game: ReturnType<typeof useShadowLandsGame> }) 
       <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
-          {game.totalStars > 5000 ? '安全着陆！' : game.totalStars > 2000 ? '好险！' : '继续加油！'}
+          {game.totalStars > 5000 ? '安全着陆！' : game.totalStars > 2000 ? '路线规划得真好！' : '影子规则守住了！'}
         </h2>
-        <p className="text-sm text-[#5a5a87]/50 font-bold mb-3">Chilli 妈妈在岸边对你挥手 👋</p>
+        <p className="text-sm text-[#5a5a87]/50 font-bold mb-3">你们慢慢走、看边界，没有为了快而冲过去。</p>
 
         <div className="inline-flex items-center gap-2 bg-[#FFF9EE] rounded-2xl px-5 py-3 mb-3">
           <span className="text-3xl">⭐</span>
@@ -285,12 +285,12 @@ function ResultModal({ game }: { game: ReturnType<typeof useShadowLandsGame> }) 
         </div>
         <p className="text-5xl font-extrabold text-btv-orange timer-text mb-3">{game.formatTime(game.elapsedMs)}</p>
         {game.currentRank && game.currentRank <= 3 && (
-          <p className="text-base font-extrabold text-[#DCA018] mb-3">🏆 星星排名第 {game.currentRank} 名！</p>
+          <p className="text-base font-extrabold text-[#DCA018] mb-3">这次记录可以放到第 {game.currentRank} 位。</p>
         )}
 
         <div className="mb-4">
           <input type="text" value={game.playerName} onChange={e => game.setPlayerName(e.target.value)}
-            placeholder="留下你的名字" maxLength={10}
+            placeholder="给这集取个名字" maxLength={10}
             className="w-full text-center text-lg font-extrabold rounded-full px-5 py-3 border-2 border-[#E3F2FD] focus:border-btv-blue outline-none text-btv-dark placeholder-[#5a5a87]/25"
             onKeyDown={e => e.key === 'Enter' && game.handleSaveScore()} />
           <div className="flex gap-1.5 justify-center mt-2 flex-wrap">
@@ -304,7 +304,7 @@ function ResultModal({ game }: { game: ReturnType<typeof useShadowLandsGame> }) 
         </div>
         <div className="flex gap-3">
           <button type="button" onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/55 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">跳过</button>
-          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1">保存成绩！</button>
+          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1">保存记录</button>
         </div>
       </div>
     </div>
@@ -317,8 +317,8 @@ function VictoryModal({ game }: { game: ReturnType<typeof useShadowLandsGame> })
       <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-[#A5D6A7] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
-        <p className="text-xl font-extrabold text-btv-dark mb-1">影子冠军！</p>
-        <p className="text-sm text-[#5a5a87]/50 font-bold mb-4">Bluey 和 Bingo 为你欢呼！</p>
+        <p className="text-xl font-extrabold text-btv-dark mb-1">这一集完成啦！</p>
+        <p className="text-sm text-[#5a5a87]/50 font-bold mb-4">Bluey 和 Bingo 为你们的安全路线欢呼！</p>
 
         <div className="inline-flex items-center gap-2 bg-[#FFF9EE] rounded-2xl px-5 py-3 mb-3">
           <span className="text-3xl">⭐</span>
@@ -330,11 +330,11 @@ function VictoryModal({ game }: { game: ReturnType<typeof useShadowLandsGame> })
           <span>⚡ {game.eventStars}⭐</span>
         </div>
         <p className="text-5xl font-extrabold text-btv-orange timer-text mb-4">{game.formatTime(game.elapsedMs)}</p>
-        <p className="text-lg font-extrabold text-btv-green mb-5">你是真正的影子陆地冠军！</p>
+        <p className="text-lg font-extrabold text-btv-green mb-5">你们遵守规则、互相提醒，还安全上岸了。</p>
 
         <div className="mb-4">
           <input type="text" value={game.playerName} onChange={e => game.setPlayerName(e.target.value)}
-            placeholder="留下冠军的名字" maxLength={10}
+            placeholder="给这集取个名字" maxLength={10}
             className="w-full text-center text-lg font-extrabold rounded-full px-5 py-3 border-2 border-[#A5D6A7] focus:border-btv-green outline-none text-btv-dark placeholder-[#5a5a87]/25"
             onKeyDown={e => e.key === 'Enter' && game.handleSaveScore()} />
           <div className="flex gap-1.5 justify-center mt-2 flex-wrap">
@@ -348,7 +348,7 @@ function VictoryModal({ game }: { game: ReturnType<typeof useShadowLandsGame> })
         </div>
         <div className="flex gap-3">
           <button type="button" onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/55 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">跳过</button>
-          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1 animate-random-pulse">🏆 记录辉煌！</button>
+          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1 animate-random-pulse">记录这一集</button>
         </div>
       </div>
     </div>

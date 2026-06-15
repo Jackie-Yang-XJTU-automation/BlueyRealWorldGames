@@ -7,6 +7,7 @@ interface GameLeaderboardPanelProps {
   entries: LeaderboardEntry[]
   currentRank?: number
   accentTint?: string
+  hideWhenEmpty?: boolean
 }
 
 export function GameLeaderboardPanel({
@@ -14,8 +15,11 @@ export function GameLeaderboardPanel({
   entries,
   currentRank,
   accentTint = '#E3F2FD',
+  hideWhenEmpty = true,
 }: GameLeaderboardPanelProps) {
   const [open, setOpen] = useState(false)
+
+  if (hideWhenEmpty && entries.length === 0 && !currentRank) return null
 
   return (
     <section className="px-4 sm:px-0 mb-6" aria-label={title}>

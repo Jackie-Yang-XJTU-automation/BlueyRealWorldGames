@@ -3,6 +3,16 @@
 ## 项目简介
 Bluey 主题的亲子互动游戏助手。面向 3-8 岁儿童，PWA 可安装到手机桌面，离线可用。
 
+## 产品北极星
+这个 App 的核心不是儿童手游、规则百科或积分挑战，而是 **给家长看的 Bluey 陪玩提词器**。典型用户是周末有点累、只偶尔看过 Bluey、不一定记得剧情细节、但想陪 3-8 岁孩子真实玩起来的家长。
+
+所有体验改动都优先回答三件事：
+1. **现在玩什么**：家长一眼知道当前游戏和现实场景。
+2. **我对孩子说什么**：运行页必须优先给出一句可直接读给孩子听的主持词或任务提示。
+3. **下一步怎么安全做**：动作、安全边界、暂停和结束必须比积分、排行榜、完整进度更显眼。
+
+避免把体验做成“给孩子独立操作的屏幕游戏”或“给开发者看的系统面板”。孩子可以看一眼，但不应需要持续盯屏、理解分数系统或自己管理任务树。
+
 ## 部署
 - 线上：https://jackie-yang-xjtu-automation.github.io/BlueyRealWorldGames/
 - 部署方式：GitHub Pages + GitHub Actions 自动部署
@@ -27,10 +37,14 @@ src/
     keepyUppyTasks.ts        #   5 个任务关卡
     daddyRobotTasks.ts       #   5 个机器人任务
     daddyRobotEvents.ts      #   机器人故障事件
+    hospitalTasks.ts         #   医院阶梯任务
+    hospitalEvents.ts        #   医院剧情随机事件
     magicXylophoneTasks.ts   #   魔法木琴阶梯任务
     magicXylophoneEvents.ts  #   魔法木琴随机事件
     shadowLandsTasks.ts      #   影子陆地阶梯任务
     shadowLandsEvents.ts     #   影子陆地随机事件
+    bbqTasks.ts              #   假装烧烤阶梯任务
+    bbqEvents.ts             #   假装烧烤剧情随机事件
     clawTasks.ts             #   13 个抓娃娃机任务
     clawEvents.ts            #   抓娃娃机剧情随机事件
   utils/storage.ts           # localStorage 封装
@@ -40,9 +54,11 @@ src/
     useFavorites.ts          # 收藏管理
     useLeaderboard.ts        # 排行榜管理
     useKeepyUppyGame.ts      # 顶气球游戏逻辑
+    useHospitalGame.ts       # 医院游戏逻辑
     useDaddyRobotGame.ts     # 爸爸机器人游戏逻辑
     useShadowLandsGame.ts    # 影子陆地游戏逻辑
     useMagicXylophoneGame.ts # 魔法木琴游戏逻辑
+    useBbqGame.ts            # 假装烧烤游戏逻辑
     useClawGame.ts           # 抓娃娃机游戏逻辑
   components/
     Layout.tsx               # 全局布局 + 导航
@@ -60,9 +76,11 @@ src/
     HomePage.tsx              # 首页（游戏库 + 筛选 + 随机 + 收藏 + 二维码）
     GameDetailPage.tsx        # 游戏详情（PLAYABLE 集中注册可玩游戏）
     KeepyUppyPage.tsx         # 顶气球游戏
+    HospitalPage.tsx          # 医院游戏
     MagicXylophonePage.tsx    # 魔法木琴游戏
     DaddyRobotPage.tsx        # 爸爸机器人游戏
     ShadowLandsPage.tsx       # 影子陆地游戏
+    BbqPage.tsx               # 假装烧烤游戏
     ClawGamePage.tsx          # 抓娃娃机游戏
     TimerPage.tsx             # 通用计时器
     DicePage.tsx              # 虚拟骰子
@@ -72,18 +90,20 @@ src/
 ```
 
 ## 当前进度
-- ✅ P0 MVP：首页 + 5 款可玩游戏（魔法木琴、顶气球、影子陆地、爸爸机器人、抓娃娃机）
+- ✅ P0 MVP：首页 + 7 款可玩游戏（魔法木琴、医院、顶气球、影子陆地、爸爸机器人、假装烧烤、抓娃娃机）
 - ✅ PWA：可安装、离线可用
 - ✅ 移动端触摸适配
 - ✅ GitHub Pages 自动部署
 - ✅ 通用计时器（TimerPage）
 - ✅ 虚拟骰子（DicePage）
 - ✅ PWA 图标规范化（192/512/maskable/apple-touch）
-- ✅ P1：第二个可玩游戏（已超额，实际完成 5 款）
-- ✅ 5 款可玩游戏玩法一致性优化：抓娃娃机接入统一剧情随机事件；影子陆地/爸爸机器人事件更贴剧情；顶气球/影子陆地任务盖章增加节奏门槛
+- ✅ P1：第二个可玩游戏（已超额，实际完成 7 款）
+- ✅ 7 款可玩游戏玩法一致性优化：抓娃娃机接入统一剧情随机事件；影子陆地/爸爸机器人事件更贴剧情；顶气球/影子陆地任务盖章增加节奏门槛
+- ✅ 新增 2 款可玩游戏：医院、假装烧烤，均接入任务阶梯、剧情随机事件、倒计时、暂停与结束确认
+- ✅ 家长主持提词器优化：首页生活场景入口、7 款任务主持词、结算弱化输赢均已落地
 - ⬜ 音效系统（ZzFX <1KB 程序生成）
 - ⬜ T8 今日游戏推荐
-- ⬜ 其余 5 款游戏可玩版本
+- ⬜ 其余 3 款游戏可玩版本
 
 ## 编码规范
 - 组件文件和目录使用 PascalCase 命名
@@ -114,6 +134,8 @@ src/
 6. **开始倒计时**：点「开始玩」后先显示 `<CountdownOverlay emoji="..." onComplete={...} />`，再进入 running 状态。
 7. **暂停/继续**：running 状态显示暂停按钮；暂停时冻结计时器、停止随机事件；显示「继续玩」和「重来」。
 8. **结束确认**：点击结束按钮先弹出确认弹窗，再执行结束逻辑，避免孩子误触。
+9. **家长主持卡优先**：运行中第一屏只突出当前主持词/当前任务/必要动作/安全提醒/暂停结束。星星、排行榜、分数说明、完整五级任务树属于记录层，默认收起或放到暂停、结算、详情中。
+10. **少解释，多可说**：优先写“家长可以直接对孩子说的话”，少写系统术语。好的任务文案像“我们现在是医院，爸爸是病人，你先检查哪里痛”，而不是“完成第 1 阶段任务获得 100 星”。
 
 ## 会话规则
 - 使用中文回复
@@ -159,6 +181,7 @@ Always design with Bluey cartoon + official website aesthetic:
 - `hover` 只能作为桌面增强，不能承载核心趣味、状态变化或可点击暗示。
 - 重要动效必须有触屏等价：按下反馈、滚动聚焦、卡片入场、收藏/任务/事件即时反馈。
 - UI 验收要检查手机滚动和点按手感，不只检查桌面 hover 或静态截图。
+- 可玩游戏运行页默认由家长单手拿手机主持。第一屏信息密度必须低，当前任务必须比星星、排行榜、完整任务树更突出。
 
 **设计原则**
 - 儿童友好：大字号、大按钮、鲜艳但不刺眼的色彩

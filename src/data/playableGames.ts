@@ -10,6 +10,11 @@ export const PLAYABLE_GAMES: Record<string, PlayableGameMeta> = {
     label: '🎵 开始做 Ding！',
     statusLabel: '可深度玩',
   },
+  hospital: {
+    route: '/game/hospital/play',
+    label: '🏥 开始看诊！',
+    statusLabel: '可深度玩',
+  },
   'keepy-uppy': {
     route: '/game/keepy-uppy/play',
     label: '🎈 开始顶气球！',
@@ -23,6 +28,11 @@ export const PLAYABLE_GAMES: Record<string, PlayableGameMeta> = {
   'daddy-robot': {
     route: '/game/daddy-robot/play',
     label: '🤖 启动机器人！',
+    statusLabel: '可深度玩',
+  },
+  bbq: {
+    route: '/game/bbq/play',
+    label: '🍖 开始烧烤！',
     statusLabel: '可深度玩',
   },
   'claw-machine': {

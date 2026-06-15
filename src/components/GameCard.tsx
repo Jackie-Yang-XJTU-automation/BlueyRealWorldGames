@@ -1,6 +1,7 @@
 import { useState, useCallback, type MouseEvent } from 'react'
 import type { Game } from '../types/game'
 import { isPlayableGame } from '../data/playableGames'
+import { getParentPlayHint } from '../data/parentPlayHints'
 
 interface GameCardProps {
   game: Game
@@ -59,8 +60,10 @@ const typeLabels: Record<string, { mark: string; text: string }> = {
   quiet: { mark: '静', text: '安静型' },
 }
 
-function difficultyStars(difficulty: Game['difficulty']) {
-  return '★'.repeat(difficulty) + '☆'.repeat(3 - difficulty)
+const locationLabels: Record<Game['location'], string> = {
+  indoor: '室内',
+  outdoor: '户外',
+  both: '室内外',
 }
 
 export function GameCard({
@@ -73,6 +76,7 @@ export function GameCard({
 }: GameCardProps) {
   const style = typeStyles[game.type] ?? typeStyles.quiet
   const label = typeLabels[game.type] ?? typeLabels.quiet
+  const hint = getParentPlayHint(game.id)
   const [heartBounce, setHeartBounce] = useState(false)
   const playable = isPlayableGame(game.id)
 
@@ -94,13 +98,13 @@ export function GameCard({
         onClick={onClick}
         className="block w-full overflow-hidden rounded-[26px] text-left"
       >
-        <div className={`episode-card-cover ${style.cover} relative flex h-[104px] items-center justify-center overflow-hidden border-b-2 border-white/90`}>
+        <div className={`episode-card-cover ${style.cover} relative flex h-[94px] items-center justify-center overflow-hidden border-b-2 border-white/90`}>
           <span className="btv-episode-pill absolute left-3 top-3 z-20">
             S1E{game.episode}
           </span>
 
-          <div className={`relative z-10 flex h-[74px] w-[74px] items-center justify-center rounded-full border-[6px] border-white ${style.iconBg} shadow-[0_7px_0_rgba(90,90,135,0.13),0_12px_20px_rgba(44,67,100,0.13)] transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105`}>
-            <span className="text-[3.15rem] leading-none drop-shadow-[0_3px_0_rgba(255,255,255,0.82)]">
+          <div className={`relative z-10 flex h-[68px] w-[68px] items-center justify-center rounded-full border-[6px] border-white ${style.iconBg} shadow-[0_7px_0_rgba(90,90,135,0.13),0_12px_20px_rgba(44,67,100,0.13)] transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105`}>
+            <span className="text-[2.9rem] leading-none drop-shadow-[0_3px_0_rgba(255,255,255,0.82)]">
               {game.emoji}
             </span>
           </div>
@@ -113,18 +117,19 @@ export function GameCard({
               {label.text}
             </span>
             <span className={`rounded-full border px-2 py-0.5 text-[9px] font-black shadow-[0_2px_0_rgba(90,90,135,0.12)] ${style.status}`}>
-              {playable ? '可开演' : '规则卡'}
+              {playable ? '马上玩' : '规则'}
             </span>
           </div>
-          <h3 className="btv-display mb-2.5 line-clamp-1 text-[16px] leading-tight text-[#5a5a87] transition-colors group-hover:text-[#4e4e7a]">
+          <h3 className="btv-display mb-1.5 line-clamp-1 text-[16px] leading-tight text-[#5a5a87] transition-colors group-hover:text-[#4e4e7a]">
             {game.name}
           </h3>
-          <div className="flex items-center gap-1 text-[11px] font-black text-[#75759f]/66">
-            <span className="tracking-[1px] text-[#FFC107]" aria-label={`难度 ${game.difficulty}`}>
-              {difficultyStars(game.difficulty)}
-            </span>
-            <span className="text-[#5a5a87]/18">·</span>
-            <span>{game.minPlayers}-{game.maxPlayers}人</span>
+          <p className="mb-2 min-h-[34px] text-[12px] font-extrabold leading-snug text-[#5a5a87]/58">
+            {hint.kidHook}
+          </p>
+          <div className="flex flex-wrap gap-1.5 text-[10px] font-black text-[#75759f]/62">
+            <span className="rounded-full bg-[#E3F2FD] px-2 py-0.5">{hint.setup}</span>
+            <span className="rounded-full bg-[#FFF3E0] px-2 py-0.5">{game.minPlayers}-{game.maxPlayers}人</span>
+            <span className="rounded-full bg-[#EAF7E8] px-2 py-0.5">{locationLabels[game.location]}</span>
           </div>
         </div>
       </button>

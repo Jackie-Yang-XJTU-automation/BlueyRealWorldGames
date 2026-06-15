@@ -9,6 +9,8 @@ import { DaddyRobotPage } from './pages/DaddyRobotPage'
 import { TimerPage } from './pages/TimerPage'
 import { DicePage } from './pages/DicePage'
 import { ClawGamePage } from './pages/ClawGamePage'
+import { HospitalPage } from './pages/HospitalPage'
+import { BbqPage } from './pages/BbqPage'
 
 const router = createBrowserRouter([
   {
@@ -17,9 +19,11 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'game/magic-xylophone/play', element: <MagicXylophonePage /> },
+      { path: 'game/hospital/play', element: <HospitalPage /> },
       { path: 'game/keepy-uppy/play', element: <KeepyUppyPage /> },
       { path: 'game/shadowlands/play', element: <ShadowLandsPage /> },
       { path: 'game/daddy-robot/play', element: <DaddyRobotPage /> },
+      { path: 'game/bbq/play', element: <BbqPage /> },
       { path: 'game/claw-machine/play', element: <ClawGamePage /> },
       { path: 'game/:gameId', element: <GameDetailPage /> },
       { path: 'tools/timer', element: <TimerPage /> },

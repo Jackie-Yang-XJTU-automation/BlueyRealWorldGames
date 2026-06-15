@@ -273,9 +273,9 @@ function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
       <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
-          {game.totalStars > 5000 ? '机器人大师！' : game.totalStars > 2000 ? '干得好，指挥官！' : '继续操控！'}
+          {game.totalStars > 5000 ? '机器人任务完成！' : game.totalStars > 2000 ? '指令说得真清楚！' : '机器人还在开机！'}
         </h2>
-        <p className="text-sm text-[#5a5a87]/50 font-bold mb-3">Bandit 机器人向你致敬 🤖</p>
+        <p className="text-sm text-[#5a5a87]/50 font-bold mb-3">孩子当导演，家长当机器人，这一轮配合起来了。</p>
 
         <div className="inline-flex items-center gap-2 bg-[#FFF9EE] rounded-2xl px-5 py-3 mb-3">
           <span className="text-3xl">⭐</span>
@@ -288,12 +288,12 @@ function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
         </div>
         <p className="text-5xl font-extrabold text-btv-orange timer-text mb-3">{game.formatTime(game.elapsedMs)}</p>
         {game.currentRank && game.currentRank <= 3 && (
-          <p className="text-base font-extrabold text-[#DCA018] mb-3">🏆 星星排名第 {game.currentRank} 名！</p>
+          <p className="text-base font-extrabold text-[#DCA018] mb-3">这次记录可以放到第 {game.currentRank} 位。</p>
         )}
 
         <div className="mb-4">
           <input type="text" value={game.playerName} onChange={e => game.setPlayerName(e.target.value)}
-            placeholder="留下你的名字" maxLength={10}
+            placeholder="给这集取个名字" maxLength={10}
             className="w-full text-center text-lg font-extrabold rounded-full px-5 py-3 border-2 border-[#E3F2FD] focus:border-btv-blue outline-none text-btv-dark placeholder-[#5a5a87]/25"
             onKeyDown={e => e.key === 'Enter' && game.handleSaveScore()} />
           <div className="flex gap-1.5 justify-center mt-2 flex-wrap">
@@ -307,7 +307,7 @@ function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
         </div>
         <div className="flex gap-3">
           <button type="button" onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/55 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">跳过</button>
-          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1">保存成绩！</button>
+          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1">保存记录</button>
         </div>
       </div>
     </div>
@@ -320,8 +320,8 @@ function VictoryModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) 
       <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-[#AB47BC] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
-        <p className="text-xl font-extrabold text-btv-dark mb-1">全指令通关！</p>
-        <p className="text-sm text-[#5a5a87]/50 font-bold mb-4">Bluey 和 Bingo 为你欢呼！</p>
+        <p className="text-xl font-extrabold text-btv-dark mb-1">这一集完成啦！</p>
+        <p className="text-sm text-[#5a5a87]/50 font-bold mb-4">Bluey 和 Bingo 为你们的表演欢呼！</p>
 
         <div className="inline-flex items-center gap-2 bg-[#FFF9EE] rounded-2xl px-5 py-3 mb-3">
           <span className="text-3xl">⭐</span>
@@ -333,11 +333,11 @@ function VictoryModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) 
           <span>⚡ {game.eventStars}⭐</span>
         </div>
         <p className="text-5xl font-extrabold text-btv-orange timer-text mb-4">{game.formatTime(game.elapsedMs)}</p>
-        <p className="text-lg font-extrabold text-btv-green mb-5">你是最棒的机器人指挥官！</p>
+        <p className="text-lg font-extrabold text-btv-green mb-5">你们把指令、故障和温柔维修都玩出来了。</p>
 
         <div className="mb-4">
           <input type="text" value={game.playerName} onChange={e => game.setPlayerName(e.target.value)}
-            placeholder="留下冠军的名字" maxLength={10}
+            placeholder="给这集取个名字" maxLength={10}
             className="w-full text-center text-lg font-extrabold rounded-full px-5 py-3 border-2 border-[#AB47BC] focus:border-[#CE93D8] outline-none text-btv-dark placeholder-[#5a5a87]/25"
             onKeyDown={e => e.key === 'Enter' && game.handleSaveScore()} />
           <div className="flex gap-1.5 justify-center mt-2 flex-wrap">
@@ -351,7 +351,7 @@ function VictoryModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) 
         </div>
         <div className="flex gap-3">
           <button type="button" onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/55 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">跳过</button>
-          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1 animate-random-pulse">🏆 记录辉煌！</button>
+          <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1 animate-random-pulse">记录这一集</button>
         </div>
       </div>
     </div>

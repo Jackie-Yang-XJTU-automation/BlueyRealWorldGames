@@ -23,23 +23,32 @@ interface GameTopHudProps {
   onPause?: () => void
   showEnd?: boolean
   onEnd?: () => void
+  mode?: 'host' | 'score'
+  hostLabel?: string
 }
 
-export function GameTopHud({
-  scoreItems,
-  breakdownItems = [],
-  helpTitle,
-  helpItems,
-  showHelp,
-  onToggleHelp,
-  onBack,
-  showPause = false,
-  onPause,
-  showEnd = false,
-  onEnd,
-}: GameTopHudProps) {
+export function GameTopHud(props: GameTopHudProps) {
+  const {
+    scoreItems,
+    breakdownItems = [],
+    helpTitle,
+    helpItems,
+    showHelp,
+    onToggleHelp,
+    onBack,
+    showPause = false,
+    onPause,
+    showEnd = false,
+    onEnd,
+    mode = 'host',
+    hostLabel = '家长主持',
+  } = props
+  const showScoreChrome = mode === 'score'
+
   return (
-    <div className="relative z-10 px-4 pb-3 pt-4">
+    <>
+    <div className="h-[84px]" aria-hidden="true" />
+    <div className="fixed inset-x-0 top-14 z-[350] px-4 pb-3 pt-2">
       <div className="grid grid-cols-[48px_minmax(0,1fr)_88px] items-center gap-2">
         <button
           type="button"
@@ -50,45 +59,53 @@ export function GameTopHud({
           ←
         </button>
 
-        <div className="relative mx-auto flex min-h-11 max-w-full min-w-0 items-center gap-1 rounded-full border-2 border-white/70 bg-white/88 py-1 pl-2.5 pr-1 shadow-[0_4px_14px_rgba(44,67,100,0.08)] backdrop-blur-sm">
-          <span className="hidden rounded-full bg-[#E3F2FD] px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#5a5a87]/45 sm:inline-flex">
-            本集道具
-          </span>
-          <div className="flex min-w-0 items-center gap-1">
-            {scoreItems.map((item, index) => (
-              <div key={`${item.emoji}-${index}`} className="flex min-w-0 items-center gap-0.5" aria-label={item.label}>
-                {index > 0 && <span className="mx-0.5 text-[#5a5a87]/15">·</span>}
-                <span className="text-sm leading-none sm:text-base">{item.emoji}</span>
-                <span
-                  className={`timer-text text-lg font-black transition-all duration-300 sm:text-xl ${item.bump ? 'animate-score-bump' : ''}`}
-                  style={{ color: item.color ?? '#DCA018' }}
-                >
-                  {item.value}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <button
-            type="button"
-            onClick={onToggleHelp}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F0F4FF] text-[12px] font-extrabold text-[#5a5a87]/55 transition-colors hover:bg-[#E3ECFD] active:scale-95"
-            aria-label="查看分数说明"
-          >
-            ？
-          </button>
-
-          {showHelp && (
-            <div className="absolute right-0 top-full z-[100] mt-2 max-w-[calc(100vw-2rem)] rounded-2xl border-2 border-[#E3F2FD] bg-white px-4 py-3 text-left shadow-lg animate-jelly">
-              <p className="mb-1 text-[11px] font-bold text-[#5a5a87]/50">{helpTitle}</p>
-              {helpItems.map(item => (
-                <p key={item} className="text-xs font-extrabold leading-snug text-[#5a5a87]/65 sm:whitespace-nowrap">
-                  {item}
-                </p>
+        {showScoreChrome ? (
+          <div className="relative mx-auto flex min-h-11 max-w-full min-w-0 items-center gap-1 rounded-full border-2 border-white/70 bg-white/88 py-1 pl-2.5 pr-1 shadow-[0_4px_14px_rgba(44,67,100,0.08)] backdrop-blur-sm">
+            <span className="hidden rounded-full bg-[#E3F2FD] px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#5a5a87]/45 sm:inline-flex">
+              本集道具
+            </span>
+            <div className="flex min-w-0 items-center gap-1">
+              {scoreItems.map((item, index) => (
+                <div key={`${item.emoji}-${index}`} className="flex min-w-0 items-center gap-0.5" aria-label={item.label}>
+                  {index > 0 && <span className="mx-0.5 text-[#5a5a87]/15">·</span>}
+                  <span className="text-sm leading-none sm:text-base">{item.emoji}</span>
+                  <span
+                    className={`timer-text text-lg font-black transition-all duration-300 sm:text-xl ${item.bump ? 'animate-score-bump' : ''}`}
+                    style={{ color: item.color ?? '#DCA018' }}
+                  >
+                    {item.value}
+                  </span>
+                </div>
               ))}
             </div>
-          )}
-        </div>
+
+            <button
+              type="button"
+              onClick={onToggleHelp}
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F0F4FF] text-[12px] font-extrabold text-[#5a5a87]/55 transition-colors hover:bg-[#E3ECFD] active:scale-95"
+              aria-label="查看分数说明"
+            >
+              ？
+            </button>
+
+            {showHelp && (
+              <div className="absolute right-0 top-full z-[100] mt-2 max-w-[calc(100vw-2rem)] rounded-2xl border-2 border-[#E3F2FD] bg-white px-4 py-3 text-left shadow-lg animate-jelly">
+                <p className="mb-1 text-[11px] font-bold text-[#5a5a87]/50">{helpTitle}</p>
+                {helpItems.map(item => (
+                  <p key={item} className="text-xs font-extrabold leading-snug text-[#5a5a87]/65 sm:whitespace-nowrap">
+                    {item}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="mx-auto flex min-h-11 max-w-full min-w-0 items-center justify-center rounded-full border-2 border-white/70 bg-white/82 px-4 py-1 shadow-[0_4px_14px_rgba(44,67,100,0.06)] backdrop-blur-sm">
+            <span className="truncate text-[12px] font-black uppercase tracking-widest text-[#5a5a87]/45">
+              {hostLabel}
+            </span>
+          </div>
+        )}
 
         <div className="flex h-11 items-center justify-end gap-1">
           {showPause && (
@@ -114,7 +131,7 @@ export function GameTopHud({
         </div>
       </div>
 
-      {breakdownItems.length > 0 && (
+      {showScoreChrome && breakdownItems.length > 0 && (
         <div className="mt-1.5 flex justify-center gap-3 whitespace-nowrap text-[10px] font-extrabold text-[#5a5a87]/32">
           {breakdownItems.map((item, index) => (
             <span key={`${item.emoji}-${index}`} className="contents">
@@ -125,6 +142,7 @@ export function GameTopHud({
         </div>
       )}
     </div>
+    </>
   )
 }
 

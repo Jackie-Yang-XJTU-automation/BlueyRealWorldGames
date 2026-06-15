@@ -8,7 +8,7 @@ const RESULT_CONFIG = {
     emoji: '🎉',
     title: '抓住了！',
     description: '爪子紧紧抓住了奖品！\n全家人一起欢呼吧！',
-    actionLabel: '🏆 回到奖品台',
+    actionLabel: '回到奖品台',
     bg: 'bg-[#E8F5E9]',
     border: 'border-[#90C79A]',
     btnBg: 'bg-[#90C79A]',
