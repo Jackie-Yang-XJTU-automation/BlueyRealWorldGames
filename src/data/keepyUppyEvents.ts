@@ -10,14 +10,14 @@ export const keepyUppyEvents: RandomEvent[] = [
   },
   {
     id: 'pat-watching',
-    title: 'Lucky 的爸爸在看表演！',
+    title: '旁边的大人来看表演！',
     description: '下一次碰气球前，先做一个夸张表情。表演越好笑越厉害！',
     duration: 10,
     emoji: '👀'
   },
   {
     id: 'big-girl-bark',
-    title: 'Bluey 发动了「大女孩汪汪叫」！',
+    title: '小队长发动了「大声加油」！',
     description: '所有人原地汪一声，再轻轻碰一次气球，不能冲出去追。',
     duration: 8,
     emoji: '🐕'
@@ -45,7 +45,7 @@ export const keepyUppyEvents: RandomEvent[] = [
   },
   {
     id: 'one-hand',
-    title: 'Chilli 妈妈单手模式！',
+    title: '大人单手模式！',
     description: '只用一只手轻轻顶，另一只手放在肚子上，动作要慢。',
     duration: 12,
     emoji: '🧡'
@@ -101,8 +101,8 @@ export const keepyUppyEvents: RandomEvent[] = [
   },
   {
     id: 'bingo-laugh',
-    title: 'Bingo 笑场了！',
-    description: '每次碰到气球都要笑一声，笑得越夸张越像 Bingo！',
+    title: '小帮手笑场了！',
+    description: '每次碰到气球都要笑一声，笑得越夸张越好！',
     duration: 8,
     emoji: '😂'
   }

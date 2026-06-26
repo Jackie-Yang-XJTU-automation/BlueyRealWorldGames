@@ -17,8 +17,8 @@ const RESULT_CONFIG = {
   dropped: {
     emoji: '😬',
     title: '滑掉了！',
-    description: '爪子碰到了...但又松开了！\n没关系，再做任务挣硬币吧～',
-    actionLabel: '继续挣硬币',
+    description: '爪子碰到了...但又松开了！\n没关系，回到奖品台再想一个办法～',
+    actionLabel: '回到奖品台',
     bg: 'bg-[#FFF8E1]',
     border: 'border-[#FCD882]',
     btnBg: 'bg-[#FCD882]',
@@ -27,8 +27,8 @@ const RESULT_CONFIG = {
   fault: {
     emoji: '⚡',
     title: '机器故障！',
-    description: '爪子机器卡住了！\n快挠痒家长 5 秒来修复！\n\n补偿：+1 🪙 硬币',
-    actionLabel: '修好了，回到任务',
+    description: '爪子机器卡住了！\n轻轻挠家长爪子 5 秒来修复。\n\n机器吐出一枚安慰硬币。',
+    actionLabel: '修好了，回到奖品台',
     bg: 'bg-[#FCE4EC]',
     border: 'border-[#D96B62]',
     btnBg: 'bg-[#D96B62]',
@@ -44,7 +44,7 @@ export function ClawResultPopup({ result, onContinue }: ClawResultPopupProps) {
   return (
     <div className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/20 backdrop-blur-sm px-6" role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId}>
       <div className={`${config.bg} border-4 ${config.border} max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[34px] p-8 text-center shadow-2xl animate-jelly`}>
-        <div className="mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full bg-white/74 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#5a5a87]/55">
+        <div className="mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full bg-white/74 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#5C728D]">
           抓取结果
         </div>
         <div className="text-7xl mb-3">{config.emoji}</div>

@@ -3,7 +3,7 @@ import type { TaskCard } from '../types/game'
 export const hospitalTasks: TaskCard[] = [
   {
     id: 'patient-check-in',
-    title: 'Telemachus 入院',
+    title: '病人入院',
     description: '护士先安慰病人，医生再轻轻检查肚子和背，问出哪里“哎哟”。',
     hostPrompt: '医院开门了，先问病人哪里痛，让他安心躺好。',
     completed: false,
@@ -15,7 +15,7 @@ export const hospitalTasks: TaskCard[] = [
   {
     id: 'xray-diagnosis',
     title: '奇怪 X 光片',
-    description: '护士拍一张想象 X 光，医生宣布肚子里可能有猫、老鼠或章鱼。',
+    description: '护士拍一张想象 X 光，医生宣布肚子里可能有奇怪动物或神秘零件。',
     hostPrompt: '护士来拍 X 光，医生看看肚子里到底有什么。',
     completed: false,
     emoji: '📋',
@@ -26,7 +26,7 @@ export const hospitalTasks: TaskCard[] = [
   {
     id: 'nurse-teamwork',
     title: '护士协作时间',
-    description: 'Nurse Bingo 负责贴创可贴、唱睡觉歌，医生负责听建议。',
+    description: '小护士负责贴空气创可贴、唱睡觉歌，医生负责听建议。',
     hostPrompt: '护士有新发现，医生要认真听她的办法。',
     completed: false,
     emoji: '🩹',
@@ -41,15 +41,15 @@ export const hospitalTasks: TaskCard[] = [
     hostPrompt: '手术开始，只能轻轻假装，看看会不会拿出章鱼。',
     completed: false,
     emoji: '🐙',
-    stageLabel: '剧情冲突',
+    stageLabel: '玩法转折',
     stageGoal: '做 2 次荒诞病情或手术发现。',
     safetyNote: '手术只能假装，所有动作都慢慢来，病人可以随时说暂停。',
   },
   {
     id: 'cheese-cure',
-    title: '奶酪治好了！',
-    description: '护士发现真正办法：用奶酪引出老鼠，猫追着跑，病人终于康复。',
-    hostPrompt: '我们用奶酪把老鼠请出来，猫就会追着跑啦。',
+    title: '妙招治好了！',
+    description: '护士发现真正办法：用一个假装妙招把奇怪东西请出来，病人终于康复。',
+    hostPrompt: '我们用一个假装妙招，把肚子里的奇怪东西请出来。',
     completed: false,
     emoji: '🧀',
     stageLabel: '高潮挑战',

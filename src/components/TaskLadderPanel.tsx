@@ -48,6 +48,8 @@ export function TaskLadderPanel({
   blockedLabel = '未好',
   showRewards = true,
 }: TaskLadderPanelProps) {
+  if (state === 'idle' || (state === 'running' && !show)) return null
+
   const progress = tasks.length > 0 ? Math.round((completedTasks / tasks.length) * 100) : 0
   const currentTask = tasks[firstUncompletedIndex]
   const currentReady = currentTask && canConfirmTask ? canConfirmTask(currentTask.id) : true
@@ -69,11 +71,11 @@ export function TaskLadderPanel({
         >
           <h3 className="flex items-center gap-2 text-sm font-black text-btv-dark">
             <span className="rounded-full bg-white/70 px-2 py-1 shadow-sm">{title}</span>
-            <span className="rounded-full bg-white/80 px-2 py-0.5 text-[11px] font-extrabold text-[#5a5a87]/45">
+            <span className="rounded-full bg-white/80 px-2 py-0.5 text-[11px] font-extrabold text-[#5C728D]">
               {completedTasks}/{tasks.length}
             </span>
           </h3>
-          <span className={`text-[#5a5a87]/35 font-bold transition-transform duration-300 ${show ? 'rotate-180' : ''}`}>▼</span>
+          <span className={`text-[#5C728D] font-bold transition-transform duration-300 ${show ? 'rotate-180' : ''}`}>▼</span>
         </button>
 
         {show && (
@@ -89,7 +91,7 @@ export function TaskLadderPanel({
                     }}
                   />
                 </div>
-                <span className="text-[10px] font-extrabold text-[#5a5a87]/25">{progress}%</span>
+                <span className="text-[10px] font-extrabold text-[#5C728D]">{progress}%</span>
               </div>
             )}
 
@@ -102,10 +104,10 @@ export function TaskLadderPanel({
                 <div className="relative">
                   <div className="mb-2 flex flex-wrap items-center gap-1.5">
                     <span className="rounded-full bg-btv-dark px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white">
-                      🎬 第 {firstUncompletedIndex + 1} 关
+                      🎬 第 {firstUncompletedIndex + 1} 步
                     </span>
                     {currentTask.stageLabel && (
-                      <span className="rounded-full bg-white/82 px-2.5 py-1 text-[10px] font-extrabold text-[#5a5a87]/55">
+                      <span className="rounded-full bg-white/82 px-2.5 py-1 text-[10px] font-extrabold text-[#5C728D]">
                         {currentTask.stageLabel}
                       </span>
                     )}
@@ -118,7 +120,7 @@ export function TaskLadderPanel({
 
                   {currentTask.hostPrompt && (
                     <div className="mb-3 rounded-[22px] bg-btv-dark px-4 py-3 text-white shadow-[0_4px_0_rgba(44,67,100,0.12)]">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-white/55">对孩子说</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-white">对孩子说</p>
                       <p className="mt-1 text-base font-black leading-snug">“{currentTask.hostPrompt}”</p>
                     </div>
                   )}
@@ -129,18 +131,18 @@ export function TaskLadderPanel({
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="text-base font-black leading-snug text-btv-dark">{currentTask.title}</p>
-                      <p className="mt-1 text-[13px] font-bold leading-relaxed text-[#5a5a87]/62">{currentTask.description}</p>
+                      <p className="mt-1 text-[13px] font-bold leading-relaxed text-[#5C728D]">{currentTask.description}</p>
                     </div>
                   </div>
 
                   <div className="mt-3 grid gap-2">
                     {currentTask.stageGoal && (
-                      <p className="rounded-2xl bg-white/70 px-3 py-2 text-[12px] font-extrabold leading-snug text-[#5a5a87]/58">
+                      <p className="rounded-2xl bg-white/70 px-3 py-2 text-[12px] font-extrabold leading-snug text-[#5C728D]">
                         🎯 {currentTask.stageGoal}
                       </p>
                     )}
                     {currentTask.safetyNote && (
-                      <p className="rounded-2xl bg-[#FFF3E0] px-3 py-2 text-[12px] font-extrabold leading-snug text-[#D96B62]/75">
+                      <p className="rounded-2xl bg-[#FFF3E0] px-3 py-2 text-[12px] font-extrabold leading-snug text-[#B5453C]">
                         🛟 {currentTask.safetyNote}
                       </p>
                     )}
@@ -168,8 +170,8 @@ export function TaskLadderPanel({
             {showFullProgress && (
             <div className="rounded-[24px] border border-[#E3F2FD] bg-[#FDFBF7] p-2.5">
               <div className="mb-2 flex items-center justify-between px-1">
-                <p className="text-[11px] font-black uppercase tracking-widest text-[#5a5a87]/35">五级印章进度</p>
-                <p className="text-[11px] font-extrabold text-[#5a5a87]/35">入戏 → 高潮</p>
+                <p className="text-[11px] font-black uppercase tracking-widest text-[#5C728D]">本局印章回放</p>
+                <p className="text-[11px] font-extrabold text-[#5C728D]">已经演过的步骤</p>
               </div>
 
               <div className="space-y-2">
@@ -199,7 +201,7 @@ export function TaskLadderPanel({
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-1.5">
                       {task.stageLabel && (
-                            <span className="rounded-full bg-white/76 px-2 py-0.5 text-[10px] font-extrabold text-[#5a5a87]/50">
+                            <span className="rounded-full bg-white/76 px-2 py-0.5 text-[10px] font-extrabold text-[#5C728D]">
                           {task.stageLabel}
                         </span>
                       )}
@@ -219,11 +221,11 @@ export function TaskLadderPanel({
                         </span>
                       )}
                     </div>
-                        <p className={`mt-1 text-[13px] font-black leading-snug ${locked ? 'text-[#5a5a87]/55' : 'text-btv-dark'}`}>
+                        <p className={`mt-1 text-[13px] font-black leading-snug ${locked ? 'text-[#5C728D]' : 'text-btv-dark'}`}>
                       {task.title}
                     </p>
                         {!locked && (
-                          <p className="mt-0.5 text-xs font-bold leading-relaxed text-[#5a5a87]/55">
+                          <p className="mt-0.5 text-xs font-bold leading-relaxed text-[#5C728D]">
                             {task.description}
                           </p>
                         )}

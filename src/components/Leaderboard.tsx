@@ -9,9 +9,9 @@ export function Leaderboard({ entries, currentRank }: LeaderboardProps) {
   if (entries.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-4xl mb-2">🏆</p>
-        <p className="text-[#5a5a87]/50 font-bold text-lg">还没有记录</p>
-        <p className="text-[#5a5a87]/35 text-sm mt-1">快来挑战第一个纪录吧！</p>
+        <p className="text-4xl mb-2">📒</p>
+        <p className="text-[#5C728D] font-bold text-lg">还没有记录</p>
+        <p className="text-[#5C728D] text-sm mt-1">游戏结束后可以记下这一局。</p>
       </div>
     )
   }
@@ -19,7 +19,7 @@ export function Leaderboard({ entries, currentRank }: LeaderboardProps) {
   return (
     <div className="space-y-2">
       <h3 className="text-lg font-extrabold text-btv-dark mb-3">
-        🏆 家庭排行榜
+        📒 家庭记录
       </h3>
       {entries.map((entry, i) => (
         <div
@@ -32,12 +32,12 @@ export function Leaderboard({ entries, currentRank }: LeaderboardProps) {
           }`}
         >
           <div className="flex items-center gap-3">
-            <span className="text-2xl font-extrabold w-10 text-center">
-              {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}
+            <span className="w-10 text-center text-2xl font-extrabold" aria-hidden="true">
+              📒
             </span>
             <div>
               <p className="font-extrabold text-btv-dark">{entry.name}</p>
-              <p className="text-xs text-[#5a5a87]/50 font-bold">{entry.date}</p>
+              <p className="text-xs text-[#5C728D] font-bold">{entry.date}</p>
             </div>
           </div>
           <div className="text-right flex items-center gap-3">
@@ -49,8 +49,8 @@ export function Leaderboard({ entries, currentRank }: LeaderboardProps) {
         </div>
       ))}
       {currentRank && currentRank > entries.length && (
-        <div className="text-center py-2 text-sm text-[#5a5a87]/50 font-bold">
-          你排在第 {currentRank} 名
+        <div className="text-center py-2 text-sm text-[#5C728D] font-bold">
+          这次也可以写进家庭记录。
         </div>
       )}
     </div>

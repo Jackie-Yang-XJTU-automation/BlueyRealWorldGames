@@ -12,7 +12,7 @@ const TASK_SCORES = [100, 200, 300, 500, 800]
 const ACTION_REWARD = 60
 const RESCUE_REWARD = 120
 const EVENT_REWARD = 500
-const WIZARDS = ['Bluey', 'Bingo', '爸爸', '妈妈']
+const WIZARDS = ['小魔法师', '小救援员', '家长魔法师', '轮到的人']
 const POSE_PROMPTS = [
   '像花园小矮人一样定住',
   '竖起大拇指，露出最夸张的笑',
@@ -162,7 +162,7 @@ export function useMagicXylophoneGame() {
 
     if (action === 'rescue') {
       setIsFrozen(false)
-      setLatestAction('Bingo 救援成功！被冻住的人偷偷眨眨眼。')
+      setLatestAction('小救援员成功！被冻住的人偷偷眨眨眼。')
       addActionReward(RESCUE_REWARD)
       return
     }

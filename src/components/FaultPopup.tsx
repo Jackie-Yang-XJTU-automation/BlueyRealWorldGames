@@ -152,7 +152,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
                        transition-all duration-100 active:scale-95 touch-action-manipulation select-none"
             style={{ backgroundColor: fault.emoji === '🦠' ? '#E53935' : '#F58634' }}
           >
-            {fault.emoji} 快速点击修复！
+            {fault.emoji} 轻轻点修复
           </button>
         )
 
@@ -169,7 +169,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
             style={{ backgroundColor: '#4CAF50' }}
           >
             <span className="text-3xl">{fault.emoji}</span>
-            <span>按住修复！</span>
+            <span>按住慢慢修复</span>
           </button>
         )
 
@@ -184,11 +184,11 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
               style={{ backgroundColor: '#7E57C2' }}
             >
               <span className="text-3xl">🌀</span>
-              <span>快速点击修复！</span>
+              <span>轻轻点修复</span>
             </button>
             {showTapHint && (
-              <p className="text-xs text-[#5a5a87]/50 font-bold">
-                💡 摇晃功能需要 HTTPS 连接，当前请点击按钮修复
+              <p className="text-xs text-[#5C728D] font-bold">
+                💡 摇晃功能需要 HTTPS 连接，也可以点按钮代替修复
               </p>
             )}
           </div>
@@ -205,11 +205,11 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
               style={{ backgroundColor: '#EF5350' }}
             >
               <span className="text-3xl">🔊</span>
-              <span>快速点击修复！</span>
+              <span>说口令后点修复</span>
             </button>
             {showTapHint && (
-              <p className="text-xs text-[#5a5a87]/50 font-bold">
-                💡 声控需要麦克风权限和 HTTPS，当前请点击按钮修复
+              <p className="text-xs text-[#5C728D] font-bold">
+                💡 声控需要麦克风权限和 HTTPS，也可以点按钮代替修复
               </p>
             )}
           </div>
@@ -225,7 +225,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
         <div className={`mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
           isFixed ? 'bg-[#E8F5E9] text-[#4CAF50]' : 'bg-[#F3E5F5] text-[#AB47BC]'
         }`}>
-          {isFixed ? '维修完成' : '🎬 剧情故障'}
+          {isFixed ? '维修完成' : '🤖 小故障'}
         </div>
         <div className="text-7xl mb-3">
           {isFixed ? '✅' : fault.emoji}
@@ -234,7 +234,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
           {isFixed ? '修复成功！' : '🤖 机器人故障！'}
         </h2>
         <h3 id={titleId} className="text-xl font-extrabold text-btv-dark mb-2">{fault.title}</h3>
-        <p id={descId} className="text-base text-[#5a5a87]/60 mb-5 leading-relaxed font-medium">
+        <p id={descId} className="text-base text-[#5C728D] mb-5 leading-relaxed font-medium">
           {fault.description}
         </p>
 
@@ -243,7 +243,7 @@ export function FaultPopup({ fault, onFixed }: FaultPopupProps) {
             <div className="mb-4">
               {renderInteraction()}
             </div>
-            <p className="mb-3 rounded-2xl bg-white/80 px-4 py-3 text-[12px] font-extrabold leading-snug text-[#D96B62]/70">
+            <p className="mb-3 rounded-2xl bg-white/80 px-4 py-3 text-[12px] font-extrabold leading-snug text-[#B5453C]">
               🛟 机器人只能慢慢走，不冲撞家具；修理动作要轻轻来。
             </p>
             <div className="bg-[#FFF3E0] rounded-2xl px-4 py-3 mb-3">

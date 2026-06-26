@@ -98,7 +98,7 @@ export function TimerPage() {
   return (
     <div className="max-w-sm mx-auto">
       <h2 className="page-title-btv text-center mb-1">⏱ 计时器</h2>
-      <p className="text-center text-[#5a5a87]/50 font-bold text-sm mb-6">培养时间观念，玩到时间就停～</p>
+      <p className="text-center text-[#5C728D] font-bold text-sm mb-6">培养时间观念，玩到时间就停～</p>
 
       {/* 圆环计时 */}
       <div className="relative w-56 h-56 mx-auto mb-8">
@@ -117,7 +117,7 @@ export function TimerPage() {
           <span className={`timer-text text-4xl ${state === 'done' ? 'text-btv-red' : 'text-btv-dark'}`}>
             {formatTime(remaining)}
           </span>
-          <span className="text-xs text-[#5a5a87]/50 font-bold mt-1">
+          <span className="text-xs text-[#5C728D] font-bold mt-1">
             {state === 'idle' ? '准备开始' : state === 'running' ? '进行中...' : state === 'paused' ? '已暂停' : '⏰ 时间到！'}
           </span>
         </div>
@@ -193,7 +193,7 @@ export function TimerPage() {
           <div className="bg-white rounded-[32px] p-7 max-w-xs w-full shadow-2xl text-center border-4 border-btv-red animate-jelly">
             <div className="text-8xl mb-3">⏰</div>
             <h2 className="text-2xl font-extrabold text-btv-red mb-1">时间到！</h2>
-            <p className="text-[#5a5a87]/60 font-bold mb-4">
+            <p className="text-[#5C728D] font-bold mb-4">
               计时 {formatTime(totalSeconds)} 已结束
             </p>
             <button onClick={reset} className="btn-btv w-full">

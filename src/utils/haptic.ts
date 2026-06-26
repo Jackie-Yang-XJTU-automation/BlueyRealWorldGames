@@ -1,6 +1,9 @@
+import { playGameSound } from './soundEffects'
+
 // 触觉反馈 — 在关键交互时刻调用，儿童感知到振动更有"玩真的"感觉
 export function triggerHaptic(pattern: 'tap' | 'success' | 'event' | 'finish' = 'tap') {
-  if (!navigator.vibrate) return
+  playGameSound(pattern)
+  if (typeof navigator === 'undefined' || !navigator.vibrate) return
 
   switch (pattern) {
     case 'tap':

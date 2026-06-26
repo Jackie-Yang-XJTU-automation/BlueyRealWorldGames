@@ -1,3 +1,6 @@
+import { useRef } from 'react'
+import { useDialogA11y } from '../hooks/useDialogA11y'
+
 interface HudScoreItem {
   emoji: string
   value: number | string
@@ -54,15 +57,15 @@ export function GameTopHud(props: GameTopHudProps) {
           type="button"
           onClick={onBack ?? (() => window.history.back())}
           aria-label="返回上一页"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-white/70 bg-white/72 text-lg font-extrabold text-[#5a5a87]/58 shadow-sm transition-colors hover:text-[#5a5a87]/80 active:scale-95"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-white/70 bg-white/72 text-lg font-extrabold text-[#5C728D] shadow-sm transition-colors hover:text-[#5C728D] active:scale-95"
         >
           ←
         </button>
 
         {showScoreChrome ? (
           <div className="relative mx-auto flex min-h-11 max-w-full min-w-0 items-center gap-1 rounded-full border-2 border-white/70 bg-white/88 py-1 pl-2.5 pr-1 shadow-[0_4px_14px_rgba(44,67,100,0.08)] backdrop-blur-sm">
-            <span className="hidden rounded-full bg-[#E3F2FD] px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#5a5a87]/45 sm:inline-flex">
-              本集道具
+            <span className="hidden rounded-full bg-[#E3F2FD] px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-[#5C728D] sm:inline-flex">
+              家庭记录
             </span>
             <div className="flex min-w-0 items-center gap-1">
               {scoreItems.map((item, index) => (
@@ -82,17 +85,17 @@ export function GameTopHud(props: GameTopHudProps) {
             <button
               type="button"
               onClick={onToggleHelp}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F0F4FF] text-[12px] font-extrabold text-[#5a5a87]/55 transition-colors hover:bg-[#E3ECFD] active:scale-95"
-              aria-label="查看分数说明"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-[#F0F4FF] text-[12px] font-extrabold text-[#5C728D] transition-colors hover:bg-[#E3ECFD] active:scale-95"
+              aria-label="查看记录说明"
             >
               ？
             </button>
 
             {showHelp && (
               <div className="absolute right-0 top-full z-[100] mt-2 max-w-[calc(100vw-2rem)] rounded-2xl border-2 border-[#E3F2FD] bg-white px-4 py-3 text-left shadow-lg animate-jelly">
-                <p className="mb-1 text-[11px] font-bold text-[#5a5a87]/50">{helpTitle}</p>
+                <p className="mb-1 text-[11px] font-bold text-[#5C728D]">{helpTitle}</p>
                 {helpItems.map(item => (
-                  <p key={item} className="text-xs font-extrabold leading-snug text-[#5a5a87]/65 sm:whitespace-nowrap">
+                  <p key={item} className="text-xs font-extrabold leading-snug text-[#5C728D] sm:whitespace-nowrap">
                     {item}
                   </p>
                 ))}
@@ -101,7 +104,7 @@ export function GameTopHud(props: GameTopHudProps) {
           </div>
         ) : (
           <div className="mx-auto flex min-h-11 max-w-full min-w-0 items-center justify-center rounded-full border-2 border-white/70 bg-white/82 px-4 py-1 shadow-[0_4px_14px_rgba(44,67,100,0.06)] backdrop-blur-sm">
-            <span className="truncate text-[12px] font-black uppercase tracking-widest text-[#5a5a87]/45">
+            <span className="truncate text-[12px] font-black uppercase tracking-widest text-[#5C728D]">
               {hostLabel}
             </span>
           </div>
@@ -132,7 +135,7 @@ export function GameTopHud(props: GameTopHudProps) {
       </div>
 
       {showScoreChrome && breakdownItems.length > 0 && (
-        <div className="mt-1.5 flex justify-center gap-3 whitespace-nowrap text-[10px] font-extrabold text-[#5a5a87]/32">
+        <div className="mt-1.5 flex justify-center gap-3 whitespace-nowrap text-[10px] font-extrabold text-[#5C728D]">
           {breakdownItems.map((item, index) => (
             <span key={`${item.emoji}-${index}`} className="contents">
               {index > 0 && <span className="text-[#5a5a87]/15">+</span>}
@@ -165,15 +168,17 @@ export function GamePauseDialog({
   onEnd,
   endLabel = '🛑 结束',
 }: GamePauseDialogProps) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+  useDialogA11y(dialogRef, onResume)
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby="game-pause-title" aria-describedby="game-pause-desc" className="fixed inset-0 z-[400] flex items-center justify-center bg-white/70 px-6 backdrop-blur-sm">
+    <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="game-pause-title" aria-describedby="game-pause-desc" className="fixed inset-0 z-[400] flex items-center justify-center bg-white/70 px-6 backdrop-blur-sm">
       <div className="max-h-[calc(100dvh-2rem)] w-full max-w-[300px] overflow-y-auto rounded-[34px] border-4 border-[#BBDEFB] bg-[#FDFBF7] p-7 text-center shadow-2xl animate-jelly">
-        <div className="mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full bg-[#E3F2FD] px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#5a5a87]/55">
+        <div className="mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full bg-[#E3F2FD] px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#5C728D]">
           幕间休息
         </div>
         <div className="mb-4 text-5xl">{emoji}</div>
         <h2 id="game-pause-title" className="mb-1 text-xl font-extrabold text-btv-dark">{title}</h2>
-        <p id="game-pause-desc" className="mb-6 text-sm font-bold text-[#5a5a87]/45">{message}</p>
+        <p id="game-pause-desc" className="mb-6 text-sm font-bold text-[#5C728D]">{message}</p>
         <button
           type="button"
           onClick={onResume}
@@ -225,16 +230,18 @@ export function GameConfirmDialog({
 }: GameConfirmDialogProps) {
   const titleId = `${id}-title`
   const descId = `${id}-desc`
+  const dialogRef = useRef<HTMLDivElement>(null)
+  useDialogA11y(dialogRef, onCancel)
 
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId} className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/20 px-6 backdrop-blur-sm animate-event-pop-in">
+    <div ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={descId} className="fixed inset-0 z-[400] flex items-center justify-center bg-[#1C98ED]/20 px-6 backdrop-blur-sm animate-event-pop-in">
       <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[34px] border-4 border-btv-red bg-[#FDFBF7] p-8 text-center shadow-2xl animate-jelly">
         <div className="mx-auto mb-3 inline-flex rotate-[-2deg] rounded-full bg-[#FFF3E0] px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#D96B62]">
           结束确认
         </div>
         <div className="mb-3 text-5xl">{emoji}</div>
         <h2 id={titleId} className="mb-2 text-xl font-extrabold text-btv-dark">{title}</h2>
-        <p id={descId} className="mb-6 text-sm font-bold text-[#5a5a87]/55">{message}</p>
+        <p id={descId} className="mb-6 text-sm font-bold text-[#5C728D]">{message}</p>
         <button
           type="button"
           onClick={onCancel}

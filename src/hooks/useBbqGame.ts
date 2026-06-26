@@ -45,9 +45,10 @@ export function useBbqGame() {
   const [animatingTaskId, setAnimatingTaskId] = useState<string | null>(null)
   const [scoreBump, setScoreBump] = useState(false)
   const [actionCounts, setActionCounts] = useState<Record<BbqActionId, number>>(freshActionCounts)
-  const [latestAction, setLatestAction] = useState('后院烧烤准备开始，Bingo 带着放松椅来了。')
+  const [latestAction, setLatestAction] = useState('后院烧烤准备开始，休息椅也准备好了。')
 
   const starIdRef = useRef(0)
+  const stageRef = useRef(0)
   const totalActions = Object.values(actionCounts).reduce((sum, count) => sum + count, 0)
   const timeStars = state === 'idle' ? 0 : Math.floor(elapsedMs / 1000) * 10
   const totalStars = timeStars + taskStars + eventStars
@@ -76,6 +77,7 @@ export function useBbqGame() {
   const { currentEvent, startEvents, stopEvents } = useRandomEvent({
     events: bbqEvents,
     onEventExpire: event => onExpireRef.current?.(event),
+    getStage: () => (stageRef.current >= 0 ? stageRef.current + 1 : null),
   })
 
   useEffect(() => {
@@ -83,6 +85,7 @@ export function useBbqGame() {
   }, [getLeaderboard])
 
   const firstUncompletedIndex = tasks.findIndex(task => !task.completed)
+  stageRef.current = firstUncompletedIndex
   const completedTasks = tasks.filter(task => task.completed).length
 
   const canConfirmTask = useCallback((taskId: string) => {
@@ -114,12 +117,12 @@ export function useBbqGame() {
     addActionReward()
 
     const nextText: Record<BbqActionId, string> = {
-      gather: 'Bingo 找到一个安全食材，道具碗里又多了一样东西。',
+      gather: '大厨找到一个安全食材，道具碗里又多了一样东西。',
       order: '客人点单成功：香肠、沙拉，还有“我最喜欢的颜色”。',
-      cook: 'Bluey 翻动假装香肠，厨师大声宣布“马上就好”。',
+      cook: '厨师翻动假装香肠，大声宣布“马上就好”。',
       salad: '彩椒沙拉更新！绿色、黄色、红色都可以用安全物品代替。',
       dressing: '沙拉酱登场，今天是泥巴口味，但只许假装倒。',
-      thanks: '大家认真感谢做饭和摆桌的人，Bingo 终于被看见了。',
+      thanks: '大家认真感谢做饭和摆桌的人，大厨终于被看见了。',
     }
     setLatestAction(nextText[action])
   }, [state, currentEvent, addActionReward])
@@ -166,7 +169,7 @@ export function useBbqGame() {
     setTaskStars(0)
     setEventStars(0)
     setActionCounts(freshActionCounts())
-    setLatestAction('后院烧烤准备开始，Bingo 带着放松椅来了。')
+    setLatestAction('后院烧烤准备开始，休息椅也准备好了。')
     stopEvents()
     reset()
   }, [reset, stopEvents])

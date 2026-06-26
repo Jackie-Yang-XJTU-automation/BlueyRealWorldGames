@@ -8,22 +8,23 @@ import { LottieCelebration } from '../components/LottieCelebration'
 import { CountdownOverlay } from '../components/CountdownOverlay'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
 import { TaskLadderPanel } from '../components/TaskLadderPanel'
+import { CurrentHostCard } from '../components/CurrentHostCard'
 import { triggerHaptic } from '../utils/haptic'
 import type { GameFault } from '../types/game'
 
 const PRESET_NAMES = ['爸爸', '妈妈', '宝宝', '爷爷', '奶奶']
 const STORAGE_KEY_PLAYED = 'daddyrobot_played'
 const ROBOT_PHRASES = [
-  'Bandit 机器人正在等待指令！',
+  '家长机器人正在等待指令！',
   '按下按钮告诉机器人做什么～',
   '机器人最喜欢执行你的命令！',
-  'Bingo 说：我也想当机器人！',
+  '小助手说：我也想当机器人！',
   '记住，机器人会严格执行指令哦！',
 ]
 
 export function DaddyRobotPage() {
   const game = useDaddyRobotGame()
-  const [showTasks, setShowTasks] = useState(true)
+  const [showTasks, setShowTasks] = useState(false)
   const [showLandConfirm, setShowLandConfirm] = useState(false)
   const [showCountdown, setShowCountdown] = useState(false)
   const [showScoreHelp, setShowScoreHelp] = useState(false)
@@ -58,26 +59,30 @@ export function DaddyRobotPage() {
     prevEventRef.current = game.currentEvent
   }, [game.state, game.currentEvent, game.showResult, game.showVictory])
 
+  const currentTask = game.tasks[game.firstUncompletedIndex]
+  const currentTaskReady = currentTask ? game.canConfirmTask(currentTask.id) : false
+
   return (
     <div className="max-w-lg mx-auto -mx-4 sm:mx-auto">
       {/* 机器人指挥中心背景 */}
       <div className="relative bg-gradient-to-b from-[#EDE7F6] via-[#F3E5F5] to-[#FCE4EC] -mt-8 rounded-b-[40px] shadow-[inset_0_-8px_30px_rgba(171,71,188,0.08)] overflow-hidden">
 
         <GameTopHud
-          scoreItems={[{ emoji: '⭐', value: game.totalStars, color: '#DCA018', bump: game.scoreBump, label: '星星总数' }]}
+          scoreItems={[{ emoji: '⭐', value: game.totalStars, color: '#DCA018', bump: game.scoreBump, label: '家庭记录' }]}
           breakdownItems={[
             { emoji: '⏱', value: game.timeStars },
             { emoji: '🎯', value: game.taskStars },
             { emoji: '⚡', value: game.eventStars },
           ]}
-          helpTitle="星星怎么来的？"
+          helpTitle="家庭记录怎么来的？"
           helpItems={[
-            '⏱ 坚持越久分越高（每秒 +10⭐）',
-            '🎯 完成挑战任务加分',
-            '⚡ 应对机器人故障加分',
+            '⏱ 指挥时间会被记下',
+            '🎯 完成当前指令会盖章',
+            '⚡ 机器人故障会留下记录',
           ]}
           showHelp={showScoreHelp}
           onToggleHelp={() => setShowScoreHelp(!showScoreHelp)}
+          hostLabel="家长机器人"
           showPause={game.state === 'running'}
           onPause={game.handlePause}
           showEnd={game.state === 'running' && !game.currentEvent}
@@ -125,37 +130,63 @@ export function DaddyRobotPage() {
           </div>
         </div>
 
-        {/* 指令面板 */}
-        <div className="px-4 mb-3">
-          <CommandPanel
-            onCommand={game.handleIssueCommand}
-            counts={game.commandCounts}
-            disabled={game.state !== 'running' || !!game.currentEvent}
-          />
-        </div>
-
         {/* 机器人对话气泡 */}
         {game.state === 'running' && !game.currentEvent && (
           <div className="flex justify-center px-6 mb-3">
             <div className="relative bg-white/85 backdrop-blur-sm rounded-2xl px-4 py-2.5 shadow-[0_2px_12px_rgba(171,71,188,0.08)] border border-[#CE93D8]/30 max-w-xs">
               <div className="absolute -top-1.5 left-6 w-3 h-3 bg-white/85 border-l border-t border-[#CE93D8]/30 rotate-45" />
-              <p className="text-[13px] font-extrabold text-[#7B1FA2]/55 text-center leading-snug">
+              <p className="text-[13px] font-extrabold text-[#7B1FA2] text-center leading-snug">
                 {ROBOT_PHRASES[encourageIndex]}
               </p>
+            </div>
+          </div>
+        )}
+
+        {game.state === 'running' && currentTask && !game.currentEvent && (
+          <div className="px-4">
+            <CurrentHostCard
+              label="指挥官主持卡"
+              stepLabel={`第 ${game.firstUncompletedIndex + 1} 步 / ${game.tasks.length}`}
+              prompt={currentTask.hostPrompt ?? currentTask.title}
+              detail={currentTask.stageGoal ?? currentTask.description}
+              safetyNote={currentTask.safetyNote}
+              accentSoft="#F3E5F5"
+              accentColor="#CE93D8"
+              confirmColor="#AB47BC"
+              canConfirm={currentTaskReady}
+              onConfirm={() => { triggerHaptic('success'); game.confirmTask(currentTask.id, game.firstUncompletedIndex) }}
+              confirmLabel="指令完成，盖章"
+              blockedLabel="先发够这一轮指令"
+            />
+          </div>
+        )}
+
+        {/* 指令控制台 */}
+        {game.state === 'running' && !game.currentEvent && (
+          <div className="px-4 mb-3">
+            <div className="rounded-[28px] border-2 border-white bg-white/70 p-3 shadow-[0_8px_22px_rgba(44,67,100,0.08)]">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <span className="rounded-full bg-[#F3E5F5] px-3 py-1 text-xs font-black text-btv-dark">机器人控制台</span>
+                <span className="text-[11px] font-extrabold text-[#5C728D]">孩子发指令，大人演反应</span>
+              </div>
+              <CommandPanel
+                onCommand={game.handleIssueCommand}
+                counts={game.commandCounts}
+              />
             </div>
           </div>
         )}
         {game.state === 'running' && game.currentEvent && (
           <div className="flex justify-center px-6 mb-3">
             <div className="bg-[#F3E5F5]/90 backdrop-blur-sm rounded-2xl px-4 py-2.5 border-2 border-[#AB47BC]/30 shadow-[0_2px_12px_rgba(171,71,188,0.12)]">
-              <p className="text-[13px] font-extrabold text-[#AB47BC] text-center">🤖 机器人出故障了！快修好它！</p>
+              <p className="text-[13px] font-extrabold text-[#AB47BC] text-center">🤖 机器人出故障了，工程师温柔修好它。</p>
             </div>
           </div>
         )}
         {game.state === 'paused' && (
           <div className="flex justify-center px-6 mb-3">
             <div className="bg-white/60 backdrop-blur-sm rounded-2xl px-4 py-2.5 border border-[#E3F2FD]">
-              <p className="text-[13px] font-extrabold text-[#5a5a87]/35 text-center">⏸ 休息一下，随时继续～</p>
+              <p className="text-[13px] font-extrabold text-[#5C728D] text-center">⏸ 休息一下，随时继续～</p>
             </div>
           </div>
         )}
@@ -165,8 +196,8 @@ export function DaddyRobotPage() {
           {game.state === 'idle' && (
             <div className="flex flex-col items-center gap-2">
               {!hasPlayedBefore && (
-                <p className="text-center text-[#5a5a87]/40 text-xs font-bold">
-                  💡 给爸爸机器人发指令，完成所有任务获取星星！
+                <p className="text-center text-[#5C728D] text-xs font-bold">
+                  💡 给家长机器人发清楚指令，看他怎么夸张地听错和修好。
                 </p>
               )}
               <button
@@ -175,7 +206,7 @@ export function DaddyRobotPage() {
                 className="btn-btv btn-game-action animate-random-pulse"
                 style={{ background: '#AB47BC', boxShadow: '0 4px 14px rgba(171,71,188,0.35)' }}
               >
-                🤖 启动爸爸机器人！
+                🤖 启动家长机器人！
               </button>
             </div>
           )}
@@ -187,7 +218,7 @@ export function DaddyRobotPage() {
                   onClick={() => setShowLandConfirm(true)}
                   className="btn-btv btn-btv-red btn-game-action"
                 >
-                  ⏹ 停止游戏！
+                  ⏹ 结束这一局
                 </button>
               )}
             </div>
@@ -201,7 +232,7 @@ export function DaddyRobotPage() {
       </div>
 
       <TaskLadderPanel
-        title="🤖 机器人任务"
+        title="🤖 机器人步骤"
         tasks={game.tasks}
         completedTasks={game.completedTasks}
         show={showTasks}
@@ -212,7 +243,7 @@ export function DaddyRobotPage() {
         isLocked={game.isLocked}
         onConfirm={(taskId, index) => { triggerHaptic('success'); game.confirmTask(taskId, index) }}
         canConfirmTask={game.canConfirmTask}
-        completionMessage="🎉 全部挑战完成！太厉害了！"
+        completionMessage="🎉 全部机器人步骤完成！"
         accentColor="#CE93D8"
         accentSoft="#F3E5F5"
         accentTint="#F3E5F5"
@@ -220,7 +251,7 @@ export function DaddyRobotPage() {
       />
 
       <GameLeaderboardPanel
-        title="🏆 星星排行榜"
+        title="📒 家长机器人家庭记录"
         entries={game.leaderboard}
         currentRank={game.currentRank}
         accentTint="#F3E5F5"
@@ -243,7 +274,7 @@ export function DaddyRobotPage() {
           id="daddyrobot-end"
           emoji="🤖"
           title="确定关闭机器人？"
-          message={`已经收集了 ${game.totalStars} 颗星星，还没玩够的话可以继续指挥。`}
+          message="已经玩出不少机器人动作，还没玩够的话可以继续指挥。"
           cancelLabel={game.state === 'paused' ? '还没！返回暂停' : '还没！继续玩'}
           confirmLabel="是，关闭！"
           onCancel={() => setShowLandConfirm(false)}
@@ -269,26 +300,26 @@ export function DaddyRobotPage() {
 
 function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
   return (
-    <div role="dialog" aria-modal="true" aria-label="爸爸机器人结算" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/20 backdrop-blur-sm animate-event-pop-in px-4">
+    <div role="dialog" aria-modal="true" aria-label="家长机器人结算" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/20 backdrop-blur-sm animate-event-pop-in px-4">
       <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-2xl font-extrabold text-btv-dark mb-1">
-          {game.totalStars > 5000 ? '机器人任务完成！' : game.totalStars > 2000 ? '指令说得真清楚！' : '机器人还在开机！'}
+          {game.totalStars > 5000 ? '机器人收工啦！' : game.totalStars > 2000 ? '指令说得真清楚！' : '机器人还在开机！'}
         </h2>
-        <p className="text-sm text-[#5a5a87]/50 font-bold mb-3">孩子当导演，家长当机器人，这一轮配合起来了。</p>
+        <p className="text-sm text-[#5C728D] font-bold mb-3">孩子当导演，家长当机器人，这一轮配合起来了。</p>
 
         <div className="inline-flex items-center gap-2 bg-[#FFF9EE] rounded-2xl px-5 py-3 mb-3">
           <span className="text-3xl">⭐</span>
           <span className="text-4xl font-extrabold text-[#DCA018] timer-text">{game.totalStars}</span>
         </div>
-        <div className="flex justify-center gap-4 text-xs font-bold text-[#5a5a87]/50 mb-4">
+        <div className="flex justify-center gap-4 text-xs font-bold text-[#5C728D] mb-4">
           <span>⏱ 时长 {game.timeStars}⭐</span>
-          <span>🎯 任务 {game.taskStars}⭐</span>
+          <span>🎯 印章 {game.taskStars}⭐</span>
           <span>⚡ 事件 {game.eventStars}⭐</span>
         </div>
         <p className="text-5xl font-extrabold text-btv-orange timer-text mb-3">{game.formatTime(game.elapsedMs)}</p>
         {game.currentRank && game.currentRank <= 3 && (
-          <p className="text-base font-extrabold text-[#DCA018] mb-3">这次记录可以放到第 {game.currentRank} 位。</p>
+          <p className="text-base font-extrabold text-[#DCA018] mb-3">这次可以写进家庭记录。</p>
         )}
 
         <div className="mb-4">
@@ -300,13 +331,13 @@ function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
             {PRESET_NAMES.map(name => (
               <button key={name} type="button"
                 onClick={() => game.setPlayerName(name)}
-                className="text-xs font-extrabold px-3 py-1.5 rounded-full bg-[#F0F4FF] text-[#5a5a87]/55 hover:bg-[#E3ECFD] active:scale-95 transition-all"
+                className="text-xs font-extrabold min-h-11 inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-[#F0F4FF] text-[#5C728D] hover:bg-[#E3ECFD] active:scale-95 transition-all"
               >{name}</button>
             ))}
           </div>
         </div>
         <div className="flex gap-3">
-          <button type="button" onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/55 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">跳过</button>
+          <button type="button" onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5C728D] font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">跳过</button>
           <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1">保存记录</button>
         </div>
       </div>
@@ -316,18 +347,18 @@ function ResultModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
 
 function VictoryModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) {
   return (
-    <div role="dialog" aria-modal="true" aria-label="爸爸机器人通关" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/20 backdrop-blur-sm animate-event-pop-in px-4">
+    <div role="dialog" aria-modal="true" aria-label="家长机器人庆祝" className="fixed inset-0 z-[400] flex items-center justify-center bg-[#AB47BC]/20 backdrop-blur-sm animate-event-pop-in px-4">
       <div className="max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] border-4 border-[#AB47BC] bg-white p-7 text-center shadow-2xl animate-jelly">
         <div className="flex justify-center -mt-4 -mb-2"><LottieCelebration className="w-48 h-48" loop /></div>
         <h2 className="text-3xl font-extrabold text-btv-orange mb-1">Wackadoo!</h2>
         <p className="text-xl font-extrabold text-btv-dark mb-1">这一集完成啦！</p>
-        <p className="text-sm text-[#5a5a87]/50 font-bold mb-4">Bluey 和 Bingo 为你们的表演欢呼！</p>
+        <p className="text-sm text-[#5C728D] font-bold mb-4">全家为你们的机器人表演欢呼！</p>
 
         <div className="inline-flex items-center gap-2 bg-[#FFF9EE] rounded-2xl px-5 py-3 mb-3">
           <span className="text-3xl">⭐</span>
           <span className="text-4xl font-extrabold text-[#DCA018] timer-text">{game.totalStars}</span>
         </div>
-        <div className="flex justify-center gap-4 text-xs font-bold text-[#5a5a87]/50 mb-3">
+        <div className="flex justify-center gap-4 text-xs font-bold text-[#5C728D] mb-3">
           <span>⏱ {game.timeStars}⭐</span>
           <span>🎯 {game.taskStars}⭐</span>
           <span>⚡ {game.eventStars}⭐</span>
@@ -344,13 +375,13 @@ function VictoryModal({ game }: { game: ReturnType<typeof useDaddyRobotGame> }) 
             {PRESET_NAMES.map(name => (
               <button key={name} type="button"
                 onClick={() => game.setPlayerName(name)}
-                className="text-xs font-extrabold px-3 py-1.5 rounded-full bg-[#F0F4FF] text-[#5a5a87]/55 hover:bg-[#E3ECFD] active:scale-95 transition-all"
+                className="text-xs font-extrabold min-h-11 inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-[#F0F4FF] text-[#5C728D] hover:bg-[#E3ECFD] active:scale-95 transition-all"
               >{name}</button>
             ))}
           </div>
         </div>
         <div className="flex gap-3">
-          <button type="button" onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5a5a87]/55 font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">跳过</button>
+          <button type="button" onClick={game.handleReset} className="flex-1 bg-[#F0F4FF] text-[#5C728D] font-extrabold py-3.5 rounded-full hover:bg-[#E3ECFD] transition-colors active:scale-95">跳过</button>
           <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1 animate-random-pulse">记录这一集</button>
         </div>
       </div>

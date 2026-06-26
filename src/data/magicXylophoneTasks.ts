@@ -4,9 +4,9 @@ export const magicXylophoneTasks: TaskCard[] = [
   {
     id: 'freeze-unfreeze',
     emoji: '🧊',
-    title: '第1关 · 做个 Ding',
+    title: '第1步 · 做个 Ding',
     description: '冻住一个人，再把他解冻。先试试魔法灵不灵！',
-    hostPrompt: '我们有一把魔法木琴，听到 Ding 就冻住，再 Ding 一下才能动。',
+    hostPrompt: 'Ding 就冻住，再 Ding 才能动。',
     stageLabel: '入戏热身',
     stageGoal: '理解冻住/解冻的核心规则',
     safetyNote: '冻住时只定格，不推不拉。',
@@ -15,9 +15,9 @@ export const magicXylophoneTasks: TaskCard[] = [
   {
     id: 'take-turns',
     emoji: '🔁',
-    title: '第2关 · 轮流魔法师',
+    title: '第2步 · 轮流魔法师',
     description: '把木琴交给别人 2 次，让每个人都有魔法。',
-    hostPrompt: '现在把魔法交给下一个人，Bluey 和 Bingo 都要轮到。',
+    hostPrompt: '现在把魔法交给下一个人，每个人都要轮到。',
     stageLabel: '掌握规则',
     stageGoal: '练习轮流和等待',
     safetyNote: '木琴道具轻轻传，不抢夺。',
@@ -26,7 +26,7 @@ export const magicXylophoneTasks: TaskCard[] = [
   {
     id: 'silly-poses',
     emoji: '🗿',
-    title: '第3关 · 傻傻雕像',
+    title: '第3步 · 傻傻雕像',
     description: '冻住后摆出 3 个安全又好笑的姿势。',
     hostPrompt: '被冻住的人摆一个安全又好笑的姿势，大家只看不推。',
     stageLabel: '协作升级',
@@ -37,22 +37,22 @@ export const magicXylophoneTasks: TaskCard[] = [
   {
     id: 'bingo-rescue',
     emoji: '🧡',
-    title: '第4关 · Bingo 救援',
+    title: '第4步 · 偷偷救援',
     description: '有人被冻住时，让另一个玩家偷偷救援一次。',
-    hostPrompt: 'Bingo 要偷偷救人，被冻住的人只能眨眨眼。',
-    stageLabel: '剧情冲突',
-    stageGoal: '复刻 Bingo 解围的剧情笑点',
+    hostPrompt: '小救援员要偷偷救人，被冻住的人只能眨眨眼。',
+    stageLabel: '玩法转折',
+    stageGoal: '练习“被冻住也能求救”的小笑点',
     safetyNote: '救援只用口令或轻拍肩膀。',
     completed: false
   },
   {
     id: 'team-magic',
     emoji: '🎵',
-    title: '第5关 · 全家合作',
-    description: '完成 12 次魔法动作，用团队合作打败爸爸！',
+    title: '第5步 · 全家合作',
+    description: '完成 12 次魔法动作，用团队合作让大人也笑出来！',
     hostPrompt: '最后一轮，全家轮流做魔法师，把每个人都救回来。',
     stageLabel: '高潮挑战',
-    stageGoal: '全家轮流做魔法 finale',
+    stageGoal: '全家轮流做魔法收尾大演出',
     safetyNote: '结束前一起确认客厅安全。',
     completed: false
   }

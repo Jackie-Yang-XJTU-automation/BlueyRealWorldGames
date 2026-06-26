@@ -32,12 +32,12 @@ export function GameLeaderboardPanel({
           style={{ background: `linear-gradient(90deg, #FFFFFF, ${accentTint}66)` }}
         >
           <span>
-            <span className="block text-sm font-black uppercase tracking-widest text-[#5a5a87]/40">{title}</span>
-            <span className="mt-0.5 block text-[12px] font-extrabold text-[#5a5a87]/34">
+            <span className="block text-sm font-black uppercase tracking-widest text-[#5C728D]">{title}</span>
+            <span className="mt-0.5 block text-[12px] font-extrabold text-[#5C728D]">
               {entries.length > 0 ? `${entries.length} 条家庭记录` : '游戏结束后再记录这一集'}
             </span>
           </span>
-          <span className={`text-[#5a5a87]/35 font-bold transition-transform duration-300 ${open ? 'rotate-180' : ''}`}>▼</span>
+          <span className={`text-[#5C728D] font-bold transition-transform duration-300 ${open ? 'rotate-180' : ''}`}>▼</span>
         </button>
 
         {open && (

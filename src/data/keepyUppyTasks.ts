@@ -4,7 +4,7 @@ export const keepyUppyTasks: TaskCard[] = [
   {
     id: 'warmup',
     emoji: '🎈',
-    title: '第1关 · 红气球醒醒',
+    title: '第1步 · 红气球醒醒',
     description: '全家一起轻轻顶 5 下，先让气球慢慢飞起来～',
     hostPrompt: '我们一起轻轻顶气球，目标是别让它碰到地板。',
     stageLabel: '入戏热身',
@@ -15,9 +15,9 @@ export const keepyUppyTasks: TaskCard[] = [
   {
     id: 'one-hand',
     emoji: '🤏',
-    title: '第2关 · 轻轻碰挑战',
+    title: '第2步 · 轻轻碰挑战',
     description: '只能用小小力气碰气球，连续 3 下都不能拍太重。',
-    hostPrompt: '这一轮只能轻轻碰，像 Bluey 一样控制力气。',
+    hostPrompt: '这一轮只能轻轻碰，练习控制力气。',
     stageLabel: '掌握规则',
     stageGoal: '练习控制力度，不把气球打飞',
     safetyNote: '气球飞远就慢慢走过去。',
@@ -26,7 +26,7 @@ export const keepyUppyTasks: TaskCard[] = [
   {
     id: 'cross-room',
     emoji: '🛋️',
-    title: '第3关 · 客厅小旅行',
+    title: '第3步 · 客厅小旅行',
     description: '选两个安全地点，把气球从起点送到终点，中间不奔跑。',
     hostPrompt: '带气球慢慢去客厅旅行，我们走路，不跑。',
     stageLabel: '协作升级',
@@ -37,22 +37,22 @@ export const keepyUppyTasks: TaskCard[] = [
   {
     id: 'family-relay',
     emoji: '👨‍👩‍👧',
-    title: '第4关 · 全家接力',
+    title: '第4步 · 全家接力',
     description: '按顺序喊名字，每个人都碰一次气球，完成一轮接力！',
     hostPrompt: '喊下一个人的名字，把气球交给他继续顶。',
-    stageLabel: '剧情冲突',
+    stageLabel: '玩法转折',
     stageGoal: '模拟剧里全家一起救气球的混乱',
     safetyNote: '只喊名字，不抢球位。',
     completed: false
   },
   {
     id: 'last-touch-champion',
-    emoji: '🏆',
-    title: '第5关 · Wackadoo 大挑战',
+    emoji: '🎈',
+    title: '第5步 · Wackadoo 大挑战',
     description: '连续顶 10 下不落地，最后一起喊 Wackadoo！',
     hostPrompt: '最后挑战开始，大家一起数，看能坚持多久。',
     stageLabel: '高潮挑战',
-    stageGoal: '完成一轮可庆祝的 finale',
+    stageGoal: '完成一轮可以庆祝的收尾大演出',
     safetyNote: '数数可以慢，不要为了连击冲撞。',
     completed: false
   }

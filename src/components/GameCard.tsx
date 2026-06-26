@@ -100,7 +100,7 @@ export function GameCard({
       >
         <div className={`episode-card-cover ${style.cover} relative flex h-[94px] items-center justify-center overflow-hidden border-b-2 border-white/90`}>
           <span className="btv-episode-pill absolute left-3 top-3 z-20">
-            S1E{game.episode}
+            现实玩法
           </span>
 
           <div className={`relative z-10 flex h-[68px] w-[68px] items-center justify-center rounded-full border-[6px] border-white ${style.iconBg} shadow-[0_7px_0_rgba(90,90,135,0.13),0_12px_20px_rgba(44,67,100,0.13)] transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-105`}>
@@ -123,10 +123,10 @@ export function GameCard({
           <h3 className="btv-display mb-1.5 line-clamp-1 text-[16px] leading-tight text-[#5a5a87] transition-colors group-hover:text-[#4e4e7a]">
             {game.name}
           </h3>
-          <p className="mb-2 min-h-[34px] text-[12px] font-extrabold leading-snug text-[#5a5a87]/58">
+          <p className="mb-2 min-h-[34px] text-[12px] font-extrabold leading-snug text-[#5C728D]">
             {hint.kidHook}
           </p>
-          <div className="flex flex-wrap gap-1.5 text-[10px] font-black text-[#75759f]/62">
+          <div className="flex flex-wrap gap-1.5 text-[10px] font-black text-[#5C728D]">
             <span className="rounded-full bg-[#E3F2FD] px-2 py-0.5">{hint.setup}</span>
             <span className="rounded-full bg-[#FFF3E0] px-2 py-0.5">{game.minPlayers}-{game.maxPlayers}人</span>
             <span className="rounded-full bg-[#EAF7E8] px-2 py-0.5">{locationLabels[game.location]}</span>

@@ -1,6 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { getGameById } from '../data/games'
 import { getPlayableGame } from '../data/playableGames'
+import { getParentPlayHint } from '../data/parentPlayHints'
+import { recordGameLaunch } from '../utils/playHistory'
 
 const difficultyStars: Record<number, string> = { 1: '⭐', 2: '⭐⭐', 3: '⭐⭐⭐' }
 const energyLabels: Record<number, { emoji: string; text: string }> = {
@@ -43,8 +45,8 @@ export function GameDetailPage() {
     return (
       <div className="text-center py-20">
         <p className="text-7xl mb-4">🔍</p>
-        <p className="text-xl font-extrabold text-[#5a5a87]/45">找不到这个游戏</p>
-        <p className="text-sm text-[#5a5a87]/30 mt-1 font-bold">它可能躲到沙发底下去了...</p>
+        <p className="text-xl font-extrabold text-[#5C728D]">找不到这个游戏</p>
+        <p className="text-sm text-[#5C728D] mt-1 font-bold">它可能躲到沙发底下去了...</p>
         <button type="button" onClick={() => navigate('/')} className="btn-btv mt-8">
           回到首页
         </button>
@@ -61,6 +63,7 @@ export function GameDetailPage() {
   const playable = getPlayableGame(game.id)
   const isPlayable = !!playable
   const playLabel = playable?.label
+  const parentHint = getParentPlayHint(game.id)
 
   return (
     <div className="max-w-lg mx-auto -mx-4 sm:mx-auto">
@@ -71,9 +74,9 @@ export function GameDetailPage() {
         <div className={`absolute -bottom-6 -left-8 w-28 h-28 rounded-full ${heroAccent}`} />
 
         <div className="relative text-center">
-          {/* 集数标签 */}
-          <span className="inline-block text-[11px] font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-2">
-            第 {game.episode} 集 · {game.episodeName}
+          {/* 现实玩法标签 */}
+          <span className="inline-block text-[11px] font-extrabold text-[#5C728D] uppercase tracking-widest mb-2">
+            现实玩法灵感 · {game.episodeName}
           </span>
 
           {/* Emoji */}
@@ -82,25 +85,25 @@ export function GameDetailPage() {
           </div>
 
           {/* 游戏名 */}
-          <h2 className="text-[2.25rem] sm:text-[2.75rem] font-black text-btv-dark tracking-tight leading-none mb-3">
+          <h1 className="text-[2.25rem] sm:text-[2.75rem] font-black text-btv-dark tracking-tight leading-none mb-3">
             {game.name}
-          </h2>
+          </h1>
 
           {/* 快速数据条 */}
           <div className="flex flex-wrap gap-1.5 justify-center">
-            <span className="tag-btv bg-white/80 text-[#5a5a87]/70 text-[12px] font-extrabold shadow-sm">
+            <span className="tag-btv bg-white/80 text-[#5C728D] text-[12px] font-extrabold shadow-sm">
               {type.emoji} {type.text}
             </span>
-            <span className="tag-btv bg-white/80 text-[#5a5a87]/70 text-[12px] font-extrabold shadow-sm">
+            <span className="tag-btv bg-white/80 text-[#5C728D] text-[12px] font-extrabold shadow-sm">
               {location.emoji} {location.text}
             </span>
-            <span className="tag-btv bg-white/80 text-[#5a5a87]/70 text-[12px] font-extrabold shadow-sm">
+            <span className="tag-btv bg-white/80 text-[#5C728D] text-[12px] font-extrabold shadow-sm">
               {energy.emoji} {energy.text}
             </span>
-            <span className="tag-btv bg-white/80 text-[#5a5a87]/70 text-[12px] font-extrabold shadow-sm">
+            <span className="tag-btv bg-white/80 text-[#5C728D] text-[12px] font-extrabold shadow-sm">
               {difficultyStars[game.difficulty]}
             </span>
-            <span className="tag-btv bg-white/80 text-[#5a5a87]/70 text-[12px] font-extrabold shadow-sm">
+            <span className="tag-btv bg-white/80 text-[#5C728D] text-[12px] font-extrabold shadow-sm">
               👥 {game.minPlayers}-{game.maxPlayers}人
             </span>
           </div>
@@ -111,15 +114,30 @@ export function GameDetailPage() {
         {/* 简介 — 引用风格 */}
         <div className="text-center py-6 relative">
           <span className="absolute top-0 left-[15%] text-5xl text-[#5a5a87]/8 font-serif select-none pointer-events-none leading-none">"</span>
-          <p className="text-[15px] leading-relaxed font-bold text-[#5a5a87]/65 relative z-10 px-2">
+          <p className="text-[15px] leading-relaxed font-bold text-[#5C728D] relative z-10 px-2">
             {game.description}
           </p>
           <span className="absolute bottom-0 right-[15%] text-5xl text-[#5a5a87]/8 font-serif select-none pointer-events-none leading-none rotate-180">"</span>
         </div>
 
+        <div className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl border-2 border-[#E3F2FD] bg-white p-3.5 shadow-[0_2px_8px_rgba(28,152,237,0.04)]">
+            <h3 className="text-[11px] font-extrabold uppercase tracking-widest text-[#5C728D]">一句话开局</h3>
+            <p className="mt-1 text-[13px] font-black leading-snug text-[#5C728D]">{parentHint.kidHook}</p>
+          </div>
+          <div className="rounded-2xl border-2 border-[#E3F2FD] bg-white p-3.5 shadow-[0_2px_8px_rgba(28,152,237,0.04)]">
+            <h3 className="text-[11px] font-extrabold uppercase tracking-widest text-[#5C728D]">家长怎么演</h3>
+            <p className="mt-1 text-[13px] font-black leading-snug text-[#5C728D]">{parentHint.parentRole}</p>
+          </div>
+          <div className="rounded-2xl border-2 border-[#E3F2FD] bg-white p-3.5 shadow-[0_2px_8px_rgba(28,152,237,0.04)]">
+            <h3 className="text-[11px] font-extrabold uppercase tracking-widest text-[#5C728D]">什么时候玩</h3>
+            <p className="mt-1 text-[13px] font-black leading-snug text-[#5C728D]">{parentHint.bestMoment}</p>
+          </div>
+        </div>
+
         {/* 玩法规则 — 步骤卡片 */}
         <div className="mb-5">
-          <h3 className="text-sm font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-extrabold text-[#5C728D] uppercase tracking-widest mb-3 flex items-center gap-2">
             <span className="w-6 h-[2px] bg-[#5a5a87]/15 rounded-full" />
             怎么玩
             <span className="flex-1 h-[2px] bg-[#5a5a87]/15 rounded-full" />
@@ -134,7 +152,7 @@ export function GameDetailPage() {
                 <span className="shrink-0 w-7 h-7 rounded-full bg-[#E3F2FD] text-[#2C4364] flex items-center justify-center text-xs font-extrabold">
                   {i + 1}
                 </span>
-                <span className="text-[13px] leading-relaxed font-bold text-[#5a5a87]/75 pt-0.5">{rule}</span>
+                <span className="text-[13px] leading-relaxed font-bold text-[#5C728D] pt-0.5">{rule}</span>
               </div>
             ))}
           </div>
@@ -144,7 +162,7 @@ export function GameDetailPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
           {/* 材料 */}
           <div className="bg-white rounded-2xl p-4 border border-[#E3F2FD] shadow-[0_2px_8px_rgba(28,152,237,0.04)]">
-            <h4 className="text-xs font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-2.5">🎒 材料清单</h4>
+            <h4 className="text-xs font-extrabold text-[#5C728D] uppercase tracking-widest mb-2.5">🎒 材料清单</h4>
             {game.materials.length === 0 ? (
               <p className="text-[13px] font-bold text-[#90C79A] flex items-center gap-1.5">
                 <span className="text-base">✨</span> 无需准备，随时开玩！
@@ -152,7 +170,7 @@ export function GameDetailPage() {
             ) : (
               <ul className="space-y-1.5">
                 {game.materials.map((m, i) => (
-                  <li key={i} className="flex items-center gap-2 text-[13px] font-bold text-[#5a5a87]/65">
+                  <li key={i} className="flex items-center gap-2 text-[13px] font-bold text-[#5C728D]">
                     <span className="w-5 h-5 rounded-full bg-[#E8F5E9] flex items-center justify-center text-[10px] shrink-0">✓</span>
                     {m}
                   </li>
@@ -164,14 +182,14 @@ export function GameDetailPage() {
           {/* 贴士 — 温暖便签风格 */}
           <div className="relative bg-[#FFFDF5] rounded-2xl p-4 border-2 border-[#F9D06B]/30 shadow-[0_2px_8px_rgba(249,208,107,0.12)]" style={{ transform: 'rotate(0.3deg)' }}>
             <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-2 rounded-full bg-[#F9D06B]/30" />
-            <h4 className="text-xs font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-2.5">💡 亲子小贴士</h4>
-            <p className="text-[13px] leading-relaxed font-bold text-[#5a5a87]/65">{game.tips}</p>
+            <h4 className="text-xs font-extrabold text-[#5C728D] uppercase tracking-widest mb-2.5">💡 亲子小贴士</h4>
+            <p className="text-[13px] leading-relaxed font-bold text-[#5C728D]">{game.tips}</p>
           </div>
         </div>
 
         {/* 趣味升级 */}
         <div className="mb-6">
-          <h3 className="text-sm font-extrabold text-[#5a5a87]/35 uppercase tracking-widest mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-extrabold text-[#5C728D] uppercase tracking-widest mb-3 flex items-center gap-2">
             <span className="w-6 h-[2px] bg-[#5a5a87]/15 rounded-full" />
             趣味升级
             <span className="flex-1 h-[2px] bg-[#5a5a87]/15 rounded-full" />
@@ -184,7 +202,7 @@ export function GameDetailPage() {
                 style={{ animationDelay: `${i * 80 + 300}ms` }}
               >
                 <span className="text-sm">✨</span>
-                <span className="text-[12px] font-extrabold text-[#5a5a87]/65">{up}</span>
+                <span className="text-[12px] font-extrabold text-[#5C728D]">{up}</span>
               </div>
             ))}
           </div>
@@ -195,7 +213,11 @@ export function GameDetailPage() {
           {isPlayable ? (
             <button
               type="button"
-              onClick={() => playable && navigate(playable.route)}
+              onClick={() => {
+                if (!playable) return
+                recordGameLaunch(game, 'detail', { route: playable.route, note: '详情页' })
+                navigate(playable.route)
+              }}
               className="btn-btv w-full text-2xl animate-random-pulse"
             >
               {playLabel}
@@ -203,8 +225,8 @@ export function GameDetailPage() {
           ) : (
             <div className="text-center py-8 bg-gradient-to-b from-[#E3F2FD] to-[#F0F4FF] rounded-[28px] border-2 border-dashed border-btv-blue/15">
               <p className="text-4xl mb-2">🚧</p>
-              <p className="text-lg font-extrabold text-[#5a5a87]/40">玩法即将推出</p>
-              <p className="text-sm text-[#5a5a87]/25 mt-0.5 font-bold">先看看规则，现实中玩起来吧！</p>
+              <p className="text-lg font-extrabold text-[#5C728D]">玩法即将推出</p>
+              <p className="text-sm text-[#5C728D] mt-0.5 font-bold">先看看规则，现实中玩起来吧！</p>
             </div>
           )}
         </div>

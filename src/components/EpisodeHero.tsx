@@ -47,22 +47,22 @@ export function EpisodeHero({
         <div>
           <div className="btv-display mb-1.5 inline-flex rotate-[-2deg] items-center gap-2 rounded-full bg-[#FFF9EE] px-3 py-1.5 text-[11px] uppercase text-[#F39C62] shadow-[0_3px_0_rgba(243,156,98,0.18)]">
             <span>🎬 现在就玩</span>
-            <span className="rounded-full bg-white px-2 py-0.5 text-[#5a5a87]/55">S1E{game.episode}</span>
+            <span className="rounded-full bg-white px-2 py-0.5 text-[#5C728D]">现实玩法灵感</span>
           </div>
 
           <h1 className="btv-title-pop mb-1 text-[1.65rem] leading-[1.02] sm:text-[2.8rem]">
             周末陪玩小抄
           </h1>
-          <p className="mb-2.5 max-w-sm text-[12px] font-extrabold leading-relaxed text-[#5a5a87]/55 sm:text-[13px]">
+          <p className="mb-2.5 max-w-sm text-[12px] font-extrabold leading-relaxed text-[#5C728D] sm:text-[13px]">
             不用熟剧情。看一眼，照着说，孩子在现实空间里玩起来。
           </p>
 
           <div className="rounded-[22px] border-2 border-[#E3F2FD] bg-white/88 p-2.5 shadow-[0_5px_14px_rgba(44,67,100,0.06)]">
             <div className="mb-2 flex items-center justify-between gap-2">
-              <span className="btv-display rounded-full bg-[#E3F2FD] px-2.5 py-1 text-[10px] uppercase text-[#5a5a87]/62">
+              <span className="btv-display rounded-full bg-[#E3F2FD] px-2.5 py-1 text-[10px] uppercase text-[#5C728D]">
                 今日推荐
               </span>
-              <span className="text-[11px] font-extrabold text-[#5a5a87]/38">
+              <span className="text-[11px] font-extrabold text-[#5C728D]">
                 {playableCount}/{gameCount} 可开演
               </span>
             </div>
@@ -76,10 +76,10 @@ export function EpisodeHero({
               </span>
               <span className="min-w-0 flex-1">
                 <span className="btv-display block text-lg leading-tight text-[#5a5a87]">{game.name}</span>
-                <span className="mt-0.5 block text-[12px] font-black leading-snug text-[#5a5a87]/58">
+                <span className="mt-0.5 block text-[12px] font-black leading-snug text-[#5C728D]">
                   {hint.kidHook}
                 </span>
-                <span className="mt-1 flex flex-wrap gap-1.5 text-[10px] font-extrabold text-[#5a5a87]/42">
+                <span className="mt-1 flex flex-wrap gap-1.5 text-[10px] font-extrabold text-[#5C728D]">
                   <span>{hint.setup}</span>
                   <span>{type.emoji} {type.text}</span>
                   <span>{location.emoji} {location.text}</span>
@@ -111,8 +111,8 @@ export function EpisodeHero({
           type="button"
           onClick={onRandomPick}
           className="flex min-h-12 min-w-12 items-center justify-center rounded-full bg-[#F39C62] text-xl font-black text-white shadow-[0_4px_14px_rgba(243,156,98,0.32)] transition-transform active:scale-95"
-          aria-label="随机抽一集"
-          title="随机抽一集"
+          aria-label="随机抽一个游戏"
+          title="随机抽一个游戏"
         >
           🎲
         </button>

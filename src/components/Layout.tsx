@@ -1,12 +1,25 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { Clouds } from './Clouds'
+import { SoundSettingsCard } from './SoundSettingsCard'
+import { usePlayRouteLogger } from '../hooks/usePlayRouteLogger'
 import blueyLogo from '../assets/bluey-trademark-blue-white.svg'
 
 export function Layout() {
   const location = useLocation()
   const isHome = location.pathname === '/'
   const [showTools, setShowTools] = useState(false)
+  usePlayRouteLogger(location.pathname)
+
+  // Esc 关闭工具菜单（键盘等价于点击外部关闭）
+  useEffect(() => {
+    if (!showTools) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShowTools(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [showTools])
 
   return (
     <div className="min-h-screen bg-btv-sky relative" onClick={() => setShowTools(false)}>
@@ -40,6 +53,13 @@ export function Layout() {
               {showTools && (
                 <div className="absolute right-0 top-full mt-2 bg-white rounded-2xl shadow-xl border-2 border-[#E3F2FD] py-2 min-w-36 z-[100] animate-event-pop-in">
                   <Link
+                    to="/family-log"
+                    onClick={() => setShowTools(false)}
+                    className="flex min-h-11 items-center gap-2 px-4 py-2.5 font-extrabold text-btv-dark hover:bg-[#E3F2FD] transition-colors"
+                  >
+                    <span className="text-lg">📒</span> 家庭记录
+                  </Link>
+                  <Link
                     to="/tools/timer"
                     onClick={() => setShowTools(false)}
                     className="flex min-h-11 items-center gap-2 px-4 py-2.5 font-extrabold text-btv-dark hover:bg-[#E3F2FD] transition-colors"
@@ -53,6 +73,7 @@ export function Layout() {
                   >
                     <span className="text-lg">🎲</span> 骰子
                   </Link>
+                  <SoundSettingsCard />
                 </div>
               )}
             </div>
@@ -75,7 +96,7 @@ export function Layout() {
         <Outlet />
       </main>
 
-      <footer className="text-center py-12 text-[#5a5a87]/40 text-xs font-black tracking-widest uppercase">
+      <footer className="text-center py-12 text-[#5C728D] text-xs font-black tracking-widest uppercase">
         <p>© Ludo Studio · Bluey Real World Games · 和宝宝一起玩真的！</p>
       </footer>
     </div>

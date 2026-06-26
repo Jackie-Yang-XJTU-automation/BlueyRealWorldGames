@@ -6,16 +6,17 @@ import { LottieCelebration } from '../components/LottieCelebration'
 import { GameConfirmDialog, GamePauseDialog, GameTopHud } from '../components/PlayableGameChrome'
 import { RandomEventPopup } from '../components/RandomEventPopup'
 import { TaskLadderPanel } from '../components/TaskLadderPanel'
+import { CurrentHostCard } from '../components/CurrentHostCard'
 import { useHospitalGame, type HospitalActionId } from '../hooks/useHospitalGame'
 import { triggerHaptic } from '../utils/haptic'
 
-const PRESET_NAMES = ['医生', '护士', '病人', 'Bluey', 'Bingo']
+const PRESET_NAMES = ['医生', '护士', '病人', '助手', '家长']
 const STORAGE_KEY_PLAYED = 'hospital_played'
 const HOSPITAL_PHRASES = [
-  'Doctor Bluey 说：大蓝家伙请躺好。',
-  'Nurse Bingo 正在准备 X 光。',
+  '医生说：病人请安心躺好。',
+  '小护士正在准备想象 X 光。',
   '病人可以随时说暂停，医院会认真听。',
-  '如果肚子里有猫，也许奶酪会有用。',
+  '如果肚子里有奇怪东西，也许妙招会有用。',
   '护士的第二次检查可能才是关键。',
 ]
 
@@ -28,15 +29,15 @@ const HOSPITAL_ACTIONS: Array<{
 }> = [
   { id: 'checkup', emoji: '🩺', label: '检查', hint: '问哪里疼', color: '#1C98ED' },
   { id: 'xray', emoji: '📋', label: 'X 光', hint: '看肚子', color: '#5a5a87' },
-  { id: 'diagnose', emoji: '🐱', label: '诊断', hint: '猫进去了', color: '#F58634' },
+  { id: 'diagnose', emoji: '🔎', label: '结果', hint: '奇怪东西', color: '#F58634' },
   { id: 'nurse', emoji: '🩹', label: '护士', hint: '安慰病人', color: '#EC407A' },
   { id: 'operation', emoji: '🐙', label: '手术', hint: '轻轻假装', color: '#AB47BC' },
-  { id: 'cheese', emoji: '🧀', label: '奶酪', hint: '引出老鼠', color: '#4CAF50' },
+  { id: 'cheese', emoji: '💡', label: '妙招', hint: '请出来', color: '#4CAF50' },
 ]
 
 export function HospitalPage() {
   const game = useHospitalGame()
-  const [showTasks, setShowTasks] = useState(true)
+  const [showTasks, setShowTasks] = useState(false)
   const [showEndConfirm, setShowEndConfirm] = useState(false)
   const [showCountdown, setShowCountdown] = useState(false)
   const [showScoreHelp, setShowScoreHelp] = useState(false)
@@ -77,25 +78,27 @@ export function HospitalPage() {
   }
 
   const currentTask = game.tasks[game.firstUncompletedIndex]
+  const currentTaskReady = currentTask ? game.canConfirmTask(currentTask.id) : false
 
   return (
     <div className="max-w-lg mx-auto -mx-4 sm:mx-auto">
       <div className="relative -mt-8 overflow-hidden rounded-b-[40px] bg-gradient-to-b from-[#E3F2FD] via-[#F3E5F5] to-[#FFF9EE] shadow-[inset_0_-8px_30px_rgba(28,152,237,0.08)]">
         <GameTopHud
-          scoreItems={[{ emoji: '⭐', value: game.totalStars, color: '#DCA018', bump: game.scoreBump, label: '星星总数' }]}
+          scoreItems={[{ emoji: '⭐', value: game.totalStars, color: '#DCA018', bump: game.scoreBump, label: '家庭记录' }]}
           breakdownItems={[
             { emoji: '⏱', value: game.timeStars },
             { emoji: '🎯', value: game.taskStars },
             { emoji: '🎬', value: game.eventStars },
           ]}
-          helpTitle="星星怎么来的？"
+          helpTitle="家庭记录怎么来的？"
           helpItems={[
-            '⏱ 看诊越久分越高（每秒 +10⭐）',
-            '🎯 完成医院任务加分',
-            '🎬 医院动作和剧情事件加分',
+            '⏱ 看诊时间会被记下',
+            '🎯 完成当前步骤会盖章',
+            '🎬 好笑动作和突发症状会留下记录',
           ]}
           showHelp={showScoreHelp}
           onToggleHelp={() => setShowScoreHelp(!showScoreHelp)}
+          hostLabel="玩具医院"
           showPause={game.state === 'running'}
           onPause={game.handlePause}
           showEnd={game.state === 'running' && !game.currentEvent}
@@ -125,9 +128,9 @@ export function HospitalPage() {
               <div className="mx-auto mb-3 flex h-28 w-28 items-center justify-center rounded-[28px] bg-[#E3F2FD] text-6xl shadow-inner">
                 🏥
               </div>
-              <p className="text-[11px] font-black uppercase tracking-widest text-[#5a5a87]/35">Hospital</p>
-              <h1 className="text-2xl font-black text-btv-dark">Doctor Bluey 开诊</h1>
-              <p className="mt-2 text-sm font-extrabold leading-relaxed text-[#5a5a87]/55">
+              <p className="text-[11px] font-black uppercase tracking-widest text-[#5C728D]">病历卡</p>
+              <h1 className="text-2xl font-black text-btv-dark">玩具医院开诊</h1>
+              <p className="mt-2 text-sm font-extrabold leading-relaxed text-[#5C728D]">
                 {game.latestAction}
               </p>
             </div>
@@ -138,66 +141,71 @@ export function HospitalPage() {
           </div>
 
           {game.state === 'running' && !game.currentEvent && (
-            <p className="mb-3 text-center text-[13px] font-extrabold text-[#5a5a87]/50">
+            <p className="mb-3 text-center text-[13px] font-extrabold text-[#5C728D]">
               {HOSPITAL_PHRASES[encourageIndex]}
             </p>
           )}
           {game.state === 'paused' && (
-            <p className="mb-3 text-center text-[13px] font-extrabold text-[#5a5a87]/40">
+            <p className="mb-3 text-center text-[13px] font-extrabold text-[#5C728D]">
               ⏸ 医院休诊一下，病人也可以伸伸腿。
             </p>
           )}
 
           {game.state === 'running' && currentTask && !game.currentEvent && (
-            <div className="mb-3 w-full max-w-sm rounded-[24px] border-2 border-white bg-white/88 p-3 text-left shadow-[0_7px_18px_rgba(44,67,100,0.08)]">
-              <div className="mb-2 flex items-center justify-between gap-2">
-                <span className="rounded-full bg-[#E3F2FD] px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-[#5a5a87]/55">
-                  现在这一步
-                </span>
-                <span className="text-[11px] font-extrabold text-[#5a5a87]/35">
-                  第 {game.firstUncompletedIndex + 1} 关
-                </span>
-              </div>
-              <p className="text-base font-black leading-snug text-btv-dark">
-                “{currentTask.hostPrompt ?? currentTask.title}”
-              </p>
-              <p className="mt-1 text-[12px] font-extrabold leading-relaxed text-[#5a5a87]/58">
-                {currentTask.stageGoal ?? currentTask.description}
-              </p>
-            </div>
+            <CurrentHostCard
+              label="病历主持卡"
+              stepLabel={`第 ${game.firstUncompletedIndex + 1} 步 / ${game.tasks.length}`}
+              prompt={currentTask.hostPrompt ?? currentTask.title}
+              detail={currentTask.stageGoal ?? currentTask.description}
+              safetyNote={currentTask.safetyNote}
+              accentSoft="#E3F2FD"
+              accentColor="#8CBAE6"
+              confirmColor="#4CAF50"
+              canConfirm={currentTaskReady}
+              onConfirm={() => { triggerHaptic('success'); game.confirmTask(currentTask.id, game.firstUncompletedIndex) }}
+              confirmLabel="病历完成，盖章"
+              blockedLabel="先完成当前看诊动作"
+            />
           )}
 
-          <div className="mb-4 grid w-full max-w-sm grid-cols-2 gap-2.5 sm:grid-cols-3">
-            {HOSPITAL_ACTIONS.map(action => {
-              const count = game.actionCounts[action.id] ?? 0
-              return (
-                <button
-                  key={action.id}
-                  type="button"
-                  onClick={() => handleAction(action.id)}
-                  disabled={game.state !== 'running' || !!game.currentEvent}
-                  aria-label={`医院动作：${action.label}`}
-                  className="relative flex min-h-[78px] flex-col items-center justify-center gap-0.5 rounded-2xl p-3 font-extrabold text-white shadow-[0_4px_0_rgba(0,0,0,0.15),0_4px_14px_rgba(0,0,0,0.08)] transition-all duration-150 touch-action-manipulation active:translate-y-0.5 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:scale-100"
-                  style={{ backgroundColor: action.color }}
-                >
-                  {count > 0 && (
-                    <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-white/25 text-[10px] text-white">
-                      {count}
-                    </span>
-                  )}
-                  <span className="text-2xl leading-none">{action.emoji}</span>
-                  <span className="text-[13px]">{action.label}</span>
-                  <span className="text-[10px] text-white/75">{action.hint}</span>
-                </button>
-              )
-            })}
-          </div>
+          {game.state === 'running' && !game.currentEvent && (
+            <div className="mb-4 w-full max-w-sm rounded-[28px] border-2 border-white bg-white/76 p-3 shadow-[0_8px_22px_rgba(44,67,100,0.08)]">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <span className="rounded-full bg-[#E3F2FD] px-3 py-1 text-xs font-black text-btv-dark">病历检查单</span>
+                <span className="text-[11px] font-extrabold text-[#5C728D]">检查 → 结果 → 妙招</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                {HOSPITAL_ACTIONS.map(action => {
+                  const count = game.actionCounts[action.id] ?? 0
+                  return (
+                    <button
+                      key={action.id}
+                      type="button"
+                      onClick={() => handleAction(action.id)}
+                      aria-label={`病历动作：${action.label}`}
+                      className="relative flex min-h-[78px] flex-col items-center justify-center gap-0.5 rounded-2xl p-3 font-extrabold text-white shadow-[0_4px_0_rgba(0,0,0,0.15),0_4px_14px_rgba(0,0,0,0.08)] transition-all duration-150 touch-action-manipulation active:translate-y-0.5 active:scale-95"
+                      style={{ backgroundColor: action.color }}
+                    >
+                      {count > 0 && (
+                        <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-white/25 text-[10px] text-white">
+                          {count}
+                        </span>
+                      )}
+                      <span className="text-2xl leading-none">{action.emoji}</span>
+                      <span className="text-[13px]">{action.label}</span>
+                      <span className="text-[10px] text-white">{action.hint}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="flex w-full justify-center px-1">
             {game.state === 'idle' && (
               <div className="flex flex-col items-center gap-2">
                 {!hasPlayedBefore && (
-                  <p className="text-center text-xs font-bold text-[#5a5a87]/45">
+                  <p className="text-center text-xs font-bold text-[#5C728D]">
                     💡 先约定：所有检查和手术都只是假装，病人说停就停。
                   </p>
                 )}
@@ -220,7 +228,7 @@ export function HospitalPage() {
       </div>
 
       <TaskLadderPanel
-        title="🏥 医院任务"
+        title="🏥 医院病历"
         tasks={game.tasks}
         completedTasks={game.completedTasks}
         show={showTasks}
@@ -240,7 +248,7 @@ export function HospitalPage() {
       />
 
       <GameLeaderboardPanel
-        title="🏆 医院排行榜"
+        title="📒 医院家庭记录"
         entries={game.leaderboard}
         currentRank={game.currentRank}
         accentTint="#E3F2FD"
@@ -283,7 +291,7 @@ export function HospitalPage() {
         <ScoreDialog
           game={game}
           title="Wackadoo! 康复出院"
-          subtitle="奶酪计划成功，猫和老鼠都离开了。"
+          subtitle="妙招计划成功，肚子里的奇怪东西离开了。"
           placeholder="给这次看诊取个名字"
           buttonLabel="记录出院"
           victory
@@ -327,23 +335,23 @@ function ScoreDialog({
       <div className={`max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-[32px] bg-white p-7 text-center shadow-2xl animate-jelly ${victory ? 'border-4 border-[#8CBAE6]' : ''}`}>
         <div className="flex justify-center -mb-2 -mt-4"><LottieCelebration className="h-48 w-48" loop /></div>
         <h2 className="mb-1 text-2xl font-extrabold text-btv-dark">{title}</h2>
-        <p className="mb-3 text-sm font-bold text-[#5a5a87]/50">{subtitle}</p>
+        <p className="mb-3 text-sm font-bold text-[#5C728D]">{subtitle}</p>
         <div className="mb-3 inline-flex items-center gap-2 rounded-2xl bg-[#FFF9EE] px-5 py-3">
           <span className="text-3xl">⭐</span>
           <span className="timer-text text-4xl font-extrabold text-[#DCA018]">{game.totalStars}</span>
         </div>
-        <div className="mb-3 flex justify-center gap-4 text-xs font-bold text-[#5a5a87]/50">
+        <div className="mb-3 flex justify-center gap-4 text-xs font-bold text-[#5C728D]">
           <span>⏱ {game.timeStars}⭐</span>
           <span>🎯 {game.taskStars}⭐</span>
           <span>🎬 {game.eventStars}⭐</span>
         </div>
         <p className="timer-text mb-4 text-5xl font-extrabold text-btv-orange">{game.formatTime(game.elapsedMs)}</p>
         {game.currentRank && game.currentRank <= 3 && (
-          <p className="mb-3 text-base font-extrabold text-[#DCA018]">这次记录可以放到第 {game.currentRank} 位。</p>
+          <p className="mb-3 text-base font-extrabold text-[#DCA018]">这次可以写进家庭记录。</p>
         )}
         <NameInput game={game} placeholder={placeholder} />
         <div className="flex gap-3">
-          <button type="button" onClick={game.handleReset} className="flex-1 rounded-full bg-[#F0F4FF] py-3.5 font-extrabold text-[#5a5a87]/55 transition-colors active:scale-95">跳过</button>
+          <button type="button" onClick={game.handleReset} className="flex-1 rounded-full bg-[#F0F4FF] py-3.5 font-extrabold text-[#5C728D] transition-colors active:scale-95">跳过</button>
           <button type="button" onClick={game.handleSaveScore} className="btn-btv flex-1">{buttonLabel}</button>
         </div>
       </div>
@@ -369,7 +377,7 @@ function NameInput({ game, placeholder }: { game: ReturnType<typeof useHospitalG
             key={name}
             type="button"
             onClick={() => game.setPlayerName(name)}
-            className="rounded-full bg-[#F0F4FF] px-3 py-1.5 text-xs font-extrabold text-[#5a5a87]/55 transition-all active:scale-95"
+            className="min-h-11 inline-flex items-center justify-center rounded-full bg-[#F0F4FF] px-3 py-1.5 text-xs font-extrabold text-[#5C728D] transition-all active:scale-95"
           >
             {name}
           </button>

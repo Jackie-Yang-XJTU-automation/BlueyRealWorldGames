@@ -45,9 +45,10 @@ export function useHospitalGame() {
   const [animatingTaskId, setAnimatingTaskId] = useState<string | null>(null)
   const [scoreBump, setScoreBump] = useState(false)
   const [actionCounts, setActionCounts] = useState<Record<HospitalActionId, number>>(freshActionCounts)
-  const [latestAction, setLatestAction] = useState('病人 Telemachus 正在候诊，医生和护士准备入场。')
+  const [latestAction, setLatestAction] = useState('病人正在候诊，医生和护士准备入场。')
 
   const starIdRef = useRef(0)
+  const stageRef = useRef(0)
   const totalActions = Object.values(actionCounts).reduce((sum, count) => sum + count, 0)
   const timeStars = state === 'idle' ? 0 : Math.floor(elapsedMs / 1000) * 10
   const totalStars = timeStars + taskStars + eventStars
@@ -76,6 +77,7 @@ export function useHospitalGame() {
   const { currentEvent, startEvents, stopEvents } = useRandomEvent({
     events: hospitalEvents,
     onEventExpire: event => onExpireRef.current?.(event),
+    getStage: () => (stageRef.current >= 0 ? stageRef.current + 1 : null),
   })
 
   useEffect(() => {
@@ -83,6 +85,7 @@ export function useHospitalGame() {
   }, [getLeaderboard])
 
   const firstUncompletedIndex = tasks.findIndex(task => !task.completed)
+  stageRef.current = firstUncompletedIndex
   const completedTasks = tasks.filter(task => task.completed).length
 
   const canConfirmTask = useCallback((taskId: string) => {
@@ -115,11 +118,11 @@ export function useHospitalGame() {
 
     const nextText: Record<HospitalActionId, string> = {
       checkup: '医生检查肚子：这里有一点“哎哟”，病人表现得很勇敢。',
-      xray: '护士举起 X 光板：肚子里好像有一只猫！',
-      diagnose: '医生认真诊断：猫可能是从肚脐眼进去的。',
-      nurse: 'Nurse Bingo 贴好空气创可贴，还轻轻安慰病人。',
+      xray: '护士举起 X 光板：肚子里好像有一个奇怪东西！',
+      diagnose: '医生认真诊断：奇怪东西可能是从肚脐眼进去的。',
+      nurse: '小护士贴好空气创可贴，还轻轻安慰病人。',
       operation: '手术开始，先拿出一只假装章鱼，大家都愣住了。',
-      cheese: '奶酪登场！老鼠跑出来，猫追着它离开肚子。',
+      cheese: '妙招登场！奇怪东西终于离开肚子。',
     }
     setLatestAction(nextText[action])
   }, [state, currentEvent, addActionReward])
@@ -132,7 +135,7 @@ export function useHospitalGame() {
     setTaskStars(0)
     setTasks(initialTasks)
     setActionCounts(freshActionCounts())
-    setLatestAction('Hospital 开诊！先让病人安心躺好。')
+    setLatestAction('玩具医院开诊！先让病人安心躺好。')
     start()
     startEvents()
   }, [start, startEvents])
@@ -166,7 +169,7 @@ export function useHospitalGame() {
     setTaskStars(0)
     setEventStars(0)
     setActionCounts(freshActionCounts())
-    setLatestAction('病人 Telemachus 正在候诊，医生和护士准备入场。')
+    setLatestAction('病人正在候诊，医生和护士准备入场。')
     stopEvents()
     reset()
   }, [reset, stopEvents])

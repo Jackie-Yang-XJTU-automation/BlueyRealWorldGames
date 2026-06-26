@@ -38,8 +38,8 @@ export const parentPlayHints: Record<string, ParentPlayHint> = {
     bestMoment: '爸妈愿意演',
   },
   shadowlands: {
-    kidHook: '阳光里有鳄鱼，只能踩影子。',
-    setup: '有阳光最好',
+    kidHook: '垫子或影子变安全岛，鳄鱼水在旁边。',
+    setup: '垫子/影子都行',
     parentRole: '当路线侦察员',
     bestMoment: '户外散步',
   },
@@ -62,16 +62,58 @@ export const parentPlayHints: Record<string, ParentPlayHint> = {
     bestMoment: '练习忍住不笑',
   },
   'horsey-ride': {
-    kidHook: '孩子指挥马儿完成安全路线。',
-    setup: '软地面',
-    parentRole: '当慢马',
-    bestMoment: '大人体力够时',
+    kidHook: '孩子指挥慢马照顾马厩，不骑背不快跑。',
+    setup: '软垫和抱枕',
+    parentRole: '当慢马或马车',
+    bestMoment: '只想低速玩时',
   },
   hotel: {
     kidHook: '家里变酒店，孩子安排入住和服务。',
     setup: '纸当房卡',
     parentRole: '当客人',
     bestMoment: '多人一起演',
+  },
+  'spy-game': {
+    kidHook: '孩子当间谍，用秘密装置指挥大人。',
+    setup: '纸片/小盒子',
+    parentRole: '当笨笨守卫',
+    bestMoment: '户外聚会',
+  },
+  shops: {
+    kidHook: '孩子开店，大家终于要正式开张。',
+    setup: '玩具当商品',
+    parentRole: '当顾客',
+    bestMoment: '练习商量角色',
+  },
+  taxi: {
+    kidHook: '孩子开车，大人跟着路况急刹、颠和歪。',
+    setup: '抱枕当方向盘',
+    parentRole: '夸张当乘客',
+    bestMoment: '想马上笑起来',
+  },
+  pirates: {
+    kidHook: '毯子变海盗船，勇敢救出船员。',
+    setup: '毯子/抱枕',
+    parentRole: '当旁白和鲸鱼',
+    bestMoment: '故事冒险',
+  },
+  'freeze-dance': {
+    kidHook: '音乐停就变木头人，定得越呆越好笑。',
+    setup: '不用道具',
+    parentRole: '当领舞兼裁判',
+    bestMoment: '想释放体力时',
+  },
+  featherwand: {
+    kidHook: '挥一下魔法棒，谁就要变身。',
+    setup: '筷子/羽毛',
+    parentRole: '配合被变身',
+    bestMoment: '空手想象游戏',
+  },
+  grannies: {
+    kidHook: '全家变老奶奶，慢慢走还会跳街舞。',
+    setup: '雨伞当拐杖',
+    parentRole: '当另一位奶奶',
+    bestMoment: '夸张角色扮演',
   },
 }
 

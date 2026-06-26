@@ -4,8 +4,8 @@ export const daddyRobotEvents: GameFault[] = [
   {
     id: 'spray-bottle-short',
     title: '💦 喷水短路！',
-    description: 'Chilli 妈妈的喷水瓶命中机器人！快速点修理键，让爸爸机器人慢慢恢复。',
-    duration: 14,
+    description: '机器人短路了！孩子说“慢慢重启”，家长点修理键配合恢复。',
+    duration: 12,
     emoji: '💦',
     interactionType: 'tap',
     totalRequired: 8
@@ -13,8 +13,8 @@ export const daddyRobotEvents: GameFault[] = [
   {
     id: 'wheelie-bin-program',
     title: '🗑️ 垃圾桶程序启动！',
-    description: '爸爸机器人开始重新计算：谁制造了玩具乱糟糟？按住停止按钮，取消垃圾桶路线。',
-    duration: 16,
+    description: '机器人要去收玩具。孩子按住停止，先指挥他慢慢停在原地。',
+    duration: 14,
     emoji: '🗑️',
     interactionType: 'longpress',
     totalRequired: 6
@@ -22,8 +22,8 @@ export const daddyRobotEvents: GameFault[] = [
   {
     id: 'syntax-error',
     title: '📟 Syntax Error！',
-    description: '机器人把小朋友认成吸尘器、脏衣服和小豚鼠。快速修正程序，让他听清楚指令。',
-    duration: 16,
+    description: '机器人听错了！孩子重新说一个短指令，家长点修正程序。',
+    duration: 12,
     emoji: '📟',
     interactionType: 'tap',
     totalRequired: 9
@@ -31,17 +31,17 @@ export const daddyRobotEvents: GameFault[] = [
   {
     id: 'riverdance-overload',
     title: '🕺 跳舞过载！',
-    description: '爸爸机器人跳得太夸张了！轻轻晃动或点击修复键，让他慢慢停下来。',
-    duration: 14,
+    description: '机器人跳舞过载！大家说“慢动作”，让他一点点停下来。',
+    duration: 12,
     emoji: '🕺',
     interactionType: 'shake',
     totalRequired: 7
   },
   {
     id: 'mummy-robot-distraction',
-    title: '🤖 妈妈机器人上线！',
-    description: 'Mummy Robot 正在吸引爸爸机器人注意。小声说“关机”，或点击修复键，偷偷完成关闭。',
-    duration: 16,
+    title: '🤖 备用机器人上线！',
+    description: '备用机器人来帮忙。孩子小声说“关机”，家长配合慢慢关灯。',
+    duration: 12,
     emoji: '🤖',
     interactionType: 'voice',
     totalRequired: 7
@@ -49,7 +49,7 @@ export const daddyRobotEvents: GameFault[] = [
   {
     id: 'crayon-operation',
     title: '🖍️ 蜡笔手术时间！',
-    description: '机器人躺下维修，孩子当工程师，快速点修理键完成温柔手术。',
+    description: '机器人躺下维修，孩子当工程师，点修理键完成温柔手术。',
     duration: 12,
     emoji: '🖍️',
     interactionType: 'tap',

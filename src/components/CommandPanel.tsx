@@ -18,10 +18,10 @@ const COMMANDS: CommandButton[] = [
 interface CommandPanelProps {
   onCommand: (commandId: string) => void
   counts: Record<string, number>
-  disabled: boolean
+  disabled?: boolean
 }
 
-export function CommandPanel({ onCommand, counts, disabled }: CommandPanelProps) {
+export function CommandPanel({ onCommand, counts, disabled = false }: CommandPanelProps) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 w-full">
       {COMMANDS.map((cmd) => {

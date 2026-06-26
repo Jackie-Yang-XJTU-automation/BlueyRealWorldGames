@@ -236,7 +236,7 @@ export function QRCode() {
         <p className="text-base font-extrabold text-btv-dark mb-2">
           扫码打开
         </p>
-        <p className="text-xs text-[#5a5a87]/50 font-bold mb-3">
+        <p className="text-xs text-[#5C728D] font-bold mb-3">
           用手机相机扫一扫，立刻开始玩！
         </p>
         <img
@@ -244,7 +244,7 @@ export function QRCode() {
           alt="扫码打开游戏"
           className="w-40 h-40 mx-auto rounded-2xl shadow-sm"
         />
-        <p className="text-[10px] text-[#5a5a87]/35 font-bold mt-3 truncate max-w-full">
+        <p className="text-[10px] text-[#5C728D] font-bold mt-3 truncate max-w-full">
           {url}
         </p>
       </div>
